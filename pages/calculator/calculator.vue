@@ -46,4 +46,11 @@ onMounted(() => {
   overflow: hidden;
   position: relative;
 }
+
+/* iPhone 4/4S 专门优化 - 确保按钮网格贴近底部 */
+@media screen and (max-width: 320px) and (max-height: 480px) {
+  .calculator {
+    justify-content: space-between;
+  }
+}
 </style> 

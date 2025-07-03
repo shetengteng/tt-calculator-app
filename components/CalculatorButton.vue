@@ -186,11 +186,11 @@ const handleClick = () => {
 }
 
 .shape-rounded {
-  border-radius: 35%;
+  border-radius: 45%;
 }
 
 .shape-square {
-  border-radius: 15%;
+  border-radius: 25%;
 }
 
 /* 小屏幕适配 */
@@ -247,30 +247,30 @@ const handleClick = () => {
   }
 }
 
-/* iPhone 4/4S 专门优化 (320x480) - 按钮缩小2% */
+/* iPhone 4/4S 专门优化 (320x480) - 按钮适当放大 */
 @media screen and (max-width: 320px) and (max-height: 480px) {
   .calculator-button {
-    width: 98rpx;
-    height: 98rpx;
-    font-size: 27rpx;
+    width: 110rpx;
+    height: 110rpx;
+    font-size: 30rpx;
   }
   
   .size-small {
-    width: 78rpx;
-    height: 78rpx;
-    font-size: 24rpx;
+    width: 90rpx;
+    height: 90rpx;
+    font-size: 26rpx;
   }
   
   .size-medium {
-    width: 98rpx;
-    height: 98rpx;
-    font-size: 27rpx;
+    width: 110rpx;
+    height: 110rpx;
+    font-size: 30rpx;
   }
   
   .size-large {
-    width: 118rpx;
-    height: 118rpx;
-    font-size: 31rpx;
+    width: 130rpx;
+    height: 130rpx;
+    font-size: 34rpx;
   }
 }
 

@@ -250,13 +250,15 @@ const handleButtonClick = (buttonData) => {
 /* iPhone 4/4S 专门优化 (320x480) - 按钮网格完全贴近底部 */
 @media screen and (max-width: 320px) and (max-height: 480px) {
   .button-group-section {
-    padding: 100rpx 20rpx 0 20rpx;
-    justify-content: flex-end;
+    padding: 10rpx 20rpx 20rpx 20rpx;
+    align-items: flex-end;
+    justify-content: center;
+    flex-grow: 1;
   }
   
   .button-grid {
-    gap: 12rpx;
-    max-width: 432rpx;
+    gap: 10rpx;
+    max-width: 400rpx;
   }
 }
 
