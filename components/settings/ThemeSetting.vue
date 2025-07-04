@@ -1,13 +1,14 @@
 <template>
   <BaseSettingItem 
     :title="t('menu.theme')" 
-    :description="t('settings.theme')"
+    icon="ri-palette-line"
+    :clickable="true"
+    :showChevron="true"
   >
     <template #control>
       <picker @change="onThemeChange" :value="themeIndex" :range="themeOptions">
         <view class="picker-display">
           <text class="picker-text">{{ themeOptions[themeIndex] }}</text>
-          <text class="picker-arrow">›</text>
         </view>
       </picker>
     </template>
@@ -19,6 +20,14 @@ import { ref, watch, onMounted } from 'vue'
 import BaseSettingItem from './BaseSettingItem.vue'
 import { useTheme } from '@/composables/useTheme.js'
 import { useI18n } from '@/composables/useI18n.js'
+
+// Props
+const props = defineProps({
+  calculator: {
+    type: Object,
+    required: true
+  }
+})
 
 // Emits
 const emit = defineEmits(['change'])
@@ -67,21 +76,20 @@ onMounted(() => {
 .picker-display {
   display: flex;
   align-items: center;
-  padding: 10rpx 20rpx;
-  background: var(--theme-dark-gray);
-  border-radius: 16rpx;
-  min-width: 120rpx;
-  justify-content: space-between;
+  padding: 0;
+  justify-content: flex-end;
 }
 
 .picker-text {
   font-size: 28rpx;
-  color: var(--theme-text-primary);
+  color: var(--settings-text-secondary);
+  font-weight: 400;
 }
 
-.picker-arrow {
-  font-size: 32rpx;
-  color: var(--theme-light-gray);
-  margin-left: 10rpx;
+/* 响应式设计 */
+@media (max-width: 480px) {
+  .picker-text {
+    font-size: 24rpx;
+  }
 }
 </style> 

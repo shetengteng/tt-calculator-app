@@ -1,7 +1,7 @@
 <template>
   <SwitchSetting
     :title="t('settings.autoCopyResult')"
-    :description="t('settings.autoCopyResultDesc')"
+    icon="ri-clipboard-line"
     setting-type="autoCopyResult"
     :model-value="settings.autoCopyResult"
     @change="handleChange"

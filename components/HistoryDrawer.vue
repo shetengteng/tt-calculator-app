@@ -260,8 +260,11 @@ onMounted(() => {
 
 .drawer-content {
   height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .drawer-header {
@@ -301,6 +304,10 @@ onMounted(() => {
 
 .drawer-scroll {
   flex: 1;
+  /* 修复宽度问题 - 确保不超过父容器宽度 */
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .history-list {

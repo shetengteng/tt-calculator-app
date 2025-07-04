@@ -1,13 +1,14 @@
 <template>
   <BaseSettingItem 
     :title="t('settings.clearHistory')" 
-    :description="t('settings.clearHistoryDesc')"
+    icon="ri-delete-bin-line"
     :clickable="true"
     :isDanger="true"
+    :showChevron="true"
     @click="handleClearHistory"
   >
     <template #control>
-      <text class="picker-arrow">›</text>
+      <!-- 不需要额外的控件，因为已经有chevron了 -->
     </template>
   </BaseSettingItem>
 </template>

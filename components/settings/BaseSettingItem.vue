@@ -1,11 +1,17 @@
 <template>
-  <view class="setting-item" @click="handleClick">
+  <view class="setting-item" :class="{ 'clickable': clickable, 'danger': isDanger }" @click="handleClick">
+    <view class="setting-icon" v-if="icon">
+      <text class="icon-text" :class="[icon, { 'danger-icon': isDanger }]"></text>
+    </view>
     <view class="setting-info">
       <text class="setting-title" :class="{ 'danger-text': isDanger }">{{ title }}</text>
-      <text class="setting-description">{{ description }}</text>
+      <text class="setting-description" v-if="description">{{ description }}</text>
     </view>
     <view class="setting-control">
       <slot name="control"></slot>
+      <view class="chevron" v-if="showChevron">
+        <text class="chevron-icon">›</text>
+      </view>
     </view>
   </view>
 </template>
@@ -21,11 +27,19 @@ const props = defineProps({
     type: String,
     default: ''
   },
+  icon: {
+    type: String,
+    default: ''
+  },
   isDanger: {
     type: Boolean,
     default: false
   },
   clickable: {
+    type: Boolean,
+    default: false
+  },
+  showChevron: {
     type: Boolean,
     default: false
   }
@@ -45,41 +59,101 @@ const handleClick = () => {
 <style scoped lang="scss">
 .setting-item {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 30rpx 40rpx;
-  background: var(--theme-drawer-item-background);
-  border-bottom: 1px solid var(--theme-separator);
+  padding: 16rpx 20rpx;
+  background: var(--settings-card-background);
+  border-bottom: 1px solid var(--settings-separator);
+  min-height: 60rpx;
   transition: background-color 0.2s ease;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  &.clickable {
+    cursor: pointer;
+    
+    &:active {
+      background: var(--settings-separator);
+    }
+  }
 }
 
-.setting-item:active {
-  background: var(--theme-drawer-item-hover);
+.setting-icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-text {
+  font-size: 24rpx;
+  color: var(--settings-text-secondary);
+  font-family: 'remixicon';
+  
+  &.danger-icon {
+    color: var(--settings-danger-color);
+  }
 }
 
 .setting-info {
   flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 2rpx;
 }
 
 .setting-title {
-  font-size: 32rpx;
-  color: var(--theme-text-primary);
-  margin-bottom: 6rpx;
+  font-size: 28rpx;
+  font-weight: 400;
+  color: var(--settings-text-primary);
+  line-height: 1.4;
+  
+  &.danger-text {
+    color: var(--settings-danger-color);
+  }
 }
 
 .setting-description {
-  font-size: 26rpx;
-  color: var(--theme-light-gray);
-}
-
-.danger-text {
-  color: #FF3B30 !important;
+  font-size: 24rpx;
+  color: var(--settings-text-secondary);
+  line-height: 1.3;
 }
 
 .setting-control {
   display: flex;
   align-items: center;
+  gap: 8rpx;
+}
+
+.chevron {
+  width: 24rpx;
+  height: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chevron-icon {
+  font-size: 24rpx;
+  color: var(--settings-text-secondary);
+  font-weight: 600;
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+  .setting-item {
+    padding: 14rpx 20rpx;
+  }
+  
+  .setting-title {
+    font-size: 26rpx;
+  }
+  
+  .setting-description {
+    font-size: 22rpx;
+  }
 }
 </style> 

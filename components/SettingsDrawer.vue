@@ -9,45 +9,52 @@
       @touchend="handleDrawerTouchEnd"
     >
       <view class="drawer-content">
-        <!-- 设置页面内容 -->
+        <!-- 设置页面头部 -->
         <view class="drawer-header">
           <text class="drawer-title">{{ t('settings.title') }}</text>
-          <CloseButton @click="closeDrawer" />
+          <view class="header-actions">
+            <CloseButton @click="closeDrawer" />
+          </view>
         </view>
         
-        <!-- 设置选项 -->
+        <!-- 设置页面内容 -->
         <scroll-view class="drawer-scroll" scroll-y="true">
-          <!-- 通用设置 -->
+          <!-- 偏好设置 -->
           <view class="settings-section">
-            <text class="section-title">{{ t('settings.general') }}</text>
-            
-            <LanguageSetting :calculator="calculator" />
-            <ThemeSetting :calculator="calculator" />
-            <DecimalPlacesSetting :calculator="calculator" />
-            <ThousandSeparatorSetting :calculator="calculator" />
+            <view class="section-title">{{ t('settings.general') || '偏好设置' }}</view>
+            <view class="settings-group">
+              <LanguageSetting :calculator="calculator" />
+              <ThemeSetting :calculator="calculator" />
+              <DecimalPlacesSetting :calculator="calculator" />
+              <ThousandSeparatorSetting :calculator="calculator" />
+            </view>
           </view>
           
           <!-- 计算设置 -->
           <view class="settings-section">
-            <text class="section-title">{{ t('settings.calculation') }}</text>
-            
-            <HapticFeedbackSetting :calculator="calculator" />
-            <SoundEffectsSetting :calculator="calculator" />
-            <AutoCopyResultSetting :calculator="calculator" />
+            <view class="section-title">{{ t('settings.calculation') || '计算设置' }}</view>
+            <view class="settings-group">
+              <HapticFeedbackSetting :calculator="calculator" />
+              <SoundEffectsSetting :calculator="calculator" />
+              <AutoCopyResultSetting :calculator="calculator" />
+            </view>
           </view>
           
           <!-- 历史记录设置 -->
           <view class="settings-section">
-            <text class="section-title">{{ t('settings.history') }}</text>
-            
-            <AutoSaveHistorySetting :calculator="calculator" />
-            <ClearHistorySetting :calculator="calculator" />
+            <view class="section-title">{{ t('settings.history') || '历史记录' }}</view>
+            <view class="settings-group">
+              <AutoSaveHistorySetting :calculator="calculator" />
+              <ClearHistorySetting :calculator="calculator" />
+            </view>
           </view>
           
           <!-- 关于 -->
           <view class="settings-section">
-            <text class="section-title">{{ t('settings.about') }}</text>
-            <VersionSetting version="Calculator App v1.0" />
+            <view class="section-title">{{ t('settings.about') || '关于' }}</view>
+            <view class="settings-group">
+              <VersionSetting version="Calculator App v1.0" />
+            </view>
           </view>
         </scroll-view>
       </view>
@@ -104,6 +111,12 @@ const closeDrawer = () => {
   emit('close')
 }
 
+// 编辑配置文件
+const handleEditProfile = () => {
+  // 这里可以添加编辑配置文件的逻辑
+  console.log('Edit profile clicked')
+}
+
 // 触摸手势处理
 const handleDrawerTouchStart = (e) => {
   touchStartX.value = e.touches[0].clientX
@@ -140,10 +153,11 @@ const handleDrawerTouchEnd = (e) => {
   left: -80%;
   width: 80%;
   height: 100vh;
-  background: var(--theme-drawer-background);
+  background: var(--settings-background);
   z-index: 9999;
   transition: left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  box-shadow: 2px 0 10px var(--theme-shadow-color, rgba(0, 0, 0, 0.1));
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
 }
 
 .settings-drawer.drawer-open {
@@ -152,43 +166,70 @@ const handleDrawerTouchEnd = (e) => {
 
 .drawer-content {
   height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
+/* 头部样式 */
 .drawer-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20rpx 40rpx;
-  padding-top: calc(20rpx + var(--status-bar-height));
-  background: var(--theme-drawer-header);
-  border-bottom: 1px solid var(--theme-separator);
+  padding: 12rpx 40rpx 12rpx 40rpx;
+  padding-top: calc(12rpx + var(--status-bar-height));
+  background: var(--settings-card-background);
+  border-bottom: 1px solid var(--settings-separator);
+  height: 100rpx;
+  box-sizing: border-box;
 }
 
 .drawer-title {
-  font-size: 36rpx;
+  font-size: 32rpx;
   font-weight: 600;
-  color: var(--theme-text-primary);
+  color: var(--settings-text-primary);
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+/* 滚动内容 */
 .drawer-scroll {
   flex: 1;
-  padding: 20rpx 0;
+  padding: 24rpx 16rpx;
+  /* 确保滚动区域有明确的高度 */
+  height: 0; /* 配合 flex: 1 使用 */
+  overflow-y: auto;
+  /* 为底部添加额外的安全区域 */
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  /* 修复宽度问题 - 确保不超过父容器宽度 */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* 设置选项样式 */
 .settings-section {
-  margin-bottom: 40rpx;
+  margin-bottom: 32rpx;
 }
 
 .section-title {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: var(--theme-light-gray);
-  text-transform: uppercase;
-  letter-spacing: 0.5rpx;
-  margin: 0 40rpx 20rpx 40rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  color: var(--settings-text-secondary);
+  padding: 16rpx 4rpx;
+  display: block;
+  line-height: 1.4;
+}
+
+.settings-group {
+  background: var(--settings-card-background);
+  border-radius: 16rpx;
+  overflow: hidden;
 }
 
 /* 遮罩层 */
@@ -198,7 +239,7 @@ const handleDrawerTouchEnd = (e) => {
   left: 0;
   width: 100%;
   height: 100vh;
-  background: var(--theme-overlay);
+  background: rgba(0, 0, 0, 0.3);
   z-index: 9998;
   opacity: 0;
   visibility: hidden;
@@ -210,19 +251,35 @@ const handleDrawerTouchEnd = (e) => {
   visibility: visible;
 }
 
-/* 小屏幕适配 */
-@include small-phone {
+/* 响应式设计 */
+@media (max-width: 768px) {
   .settings-drawer {
-    width: 85%;
-    left: -85%;
+    left: -100%;
   }
 }
 
-/* iPhone 4/4S 专门优化 */
-@include iphone4-optimization {
-  .settings-drawer {
-    width: 85%;
-    left: -85%;
+/* 小屏幕适配 */
+@media (max-width: 480px) {
+  .drawer-scroll {
+    padding: 12px;
+  }
+  
+  .profile-container {
+    padding: 12px;
+  }
+  
+  .profile-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+  }
+  
+  .avatar-text {
+    font-size: 20px;
+  }
+  
+  .profile-name {
+    font-size: 16px;
   }
 }
 </style> 

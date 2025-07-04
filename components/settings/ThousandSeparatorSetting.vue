@@ -1,7 +1,7 @@
 <template>
   <SwitchSetting
     :title="t('settings.thousandSeparator')"
-    :description="t('settings.thousandSeparatorDesc')"
+    icon="ri-separator"
     setting-type="thousandSeparator"
     :model-value="settings.thousandSeparator"
     @change="handleChange"

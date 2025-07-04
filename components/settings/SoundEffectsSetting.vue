@@ -1,7 +1,7 @@
 <template>
   <SwitchSetting
     :title="t('settings.soundEffects')"
-    :description="t('settings.soundEffectsDesc')"
+    icon="ri-volume-up-line"
     setting-type="soundEffects"
     :model-value="settings.soundEffects"
     @change="handleChange"

@@ -1,13 +1,14 @@
 <template>
   <BaseSettingItem 
     :title="t('settings.decimalPlaces')" 
-    :description="t('settings.decimalPlacesDesc')"
+    icon="ri-hashtag"
+    :clickable="true"
+    :showChevron="true"
   >
     <template #control>
       <picker @change="onDecimalChange" :value="decimalIndex" :range="decimalOptions">
         <view class="picker-display">
           <text class="picker-text">{{ decimalOptions[decimalIndex] }}</text>
-          <text class="picker-arrow">›</text>
         </view>
       </picker>
     </template>
@@ -65,21 +66,20 @@ watch(() => props.calculator, (newCalculator) => {
 .picker-display {
   display: flex;
   align-items: center;
-  padding: 10rpx 20rpx;
-  background: var(--theme-dark-gray);
-  border-radius: 16rpx;
-  min-width: 120rpx;
-  justify-content: space-between;
+  padding: 0;
+  justify-content: flex-end;
 }
 
 .picker-text {
   font-size: 28rpx;
-  color: var(--theme-text-primary);
+  color: var(--settings-text-secondary);
+  font-weight: 400;
 }
 
-.picker-arrow {
-  font-size: 32rpx;
-  color: var(--theme-light-gray);
-  margin-left: 10rpx;
+/* 响应式设计 */
+@media (max-width: 480px) {
+  .picker-text {
+    font-size: 24rpx;
+  }
 }
 </style> 

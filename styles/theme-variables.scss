@@ -36,6 +36,17 @@
   --theme-drawer-header: #2C2C2E;
   --theme-drawer-item-background: #3A3A3C;
   --theme-drawer-item-hover: #48484A;
+  
+  // 新增设计规范颜色
+  --settings-background: #1C1C1E;
+  --settings-card-background: #2C2C2E;
+  --settings-text-primary: #FFFFFF;
+  --settings-text-secondary: #8E8E93;
+  --settings-primary-color: #00A8E6;
+  --settings-danger-color: #FF3B30;
+  --settings-separator: #3A3A3C;
+  --settings-toggle-active: #00A8E6;
+  --settings-toggle-inactive: #3A3A3C;
 }
 
 // 浅色主题变量（通过JS动态设置）
@@ -68,6 +79,17 @@
   --theme-drawer-header: #F2F2F7;
   --theme-drawer-item-background: #FFFFFF;
   --theme-drawer-item-hover: #E5E5EA;
+  
+  // 新增设计规范颜色（浅色主题）
+  --settings-background: #f8f9fa;
+  --settings-card-background: #ffffff;
+  --settings-text-primary: #1a1a1a;
+  --settings-text-secondary: #666666;
+  --settings-primary-color: #007AFF;
+  --settings-danger-color: #FF3B30;
+  --settings-separator: #E5E5E5;
+  --settings-toggle-active: #007AFF;
+  --settings-toggle-inactive: #E5E5E5;
 }
 
 // 兼容性：映射新变量到旧变量名

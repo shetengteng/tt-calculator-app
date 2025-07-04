@@ -1,7 +1,7 @@
 <template>
   <SwitchSetting
     :title="t('settings.autoSaveHistory')"
-    :description="t('settings.autoSaveHistoryDesc')"
+    icon="ri-save-line"
     setting-type="autoSaveHistory"
     :model-value="settings.autoSaveHistory"
     @change="handleChange"

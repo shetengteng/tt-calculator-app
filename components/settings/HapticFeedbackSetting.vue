@@ -1,7 +1,7 @@
 <template>
   <SwitchSetting
     :title="t('settings.hapticFeedback')"
-    :description="t('settings.hapticFeedbackDesc')"
+    icon="ri-smartphone-line"
     setting-type="hapticFeedback"
     :model-value="settings.hapticFeedback"
     @change="handleChange"
