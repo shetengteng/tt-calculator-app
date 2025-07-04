@@ -1,0 +1,200 @@
+// ============================================
+// Calculator App Mixins
+// ============================================
+
+// 安全区域适配
+@mixin safe-area-top {
+  padding-top: $safe-area-inset-top;
+  padding-top: $safe-area-inset-top-env;
+}
+
+@mixin safe-area-bottom {
+  padding-bottom: $safe-area-inset-bottom;
+  padding-bottom: $safe-area-inset-bottom-env;
+}
+
+// 按钮基础样式
+@mixin button-base {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+  transition: all $transition-medium;
+}
+
+// 按钮尺寸
+@mixin button-size($size: medium) {
+  @if $size == small {
+    width: $calculator-button-size-small;
+    height: $calculator-button-size-small;
+    font-size: $font-size-button-small;
+  } @else if $size == large {
+    width: $calculator-button-size-large;
+    height: $calculator-button-size-large;
+    font-size: $font-size-button-large;
+  } @else {
+    width: $calculator-button-size-medium;
+    height: $calculator-button-size-medium;
+    font-size: $font-size-button-medium;
+  }
+}
+
+// 按钮主题
+@mixin button-theme($theme: blue) {
+  @if $theme == blue {
+    background-color: $button-theme-blue;
+    color: $button-theme-blue-text;
+  } @else if $theme == dark {
+    background-color: $button-theme-dark;
+    color: $button-theme-dark-text;
+  } @else if $theme == light {
+    background-color: $button-theme-light;
+    color: $button-theme-light-text;
+  }
+}
+
+// 按钮激活状态
+@mixin button-active {
+  background-color: $calculator-secondary-background !important;
+  color: $calculator-accent-blue !important;
+}
+
+// 按钮交互效果
+@mixin button-interactions {
+  &:hover {
+    opacity: 0.8;
+  }
+  
+  &:active {
+    transform: scale(0.95);
+    opacity: 0.6;
+  }
+  
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    
+    &:active {
+      transform: none;
+    }
+  }
+}
+
+// 抽屉样式
+@mixin drawer-base {
+  position: fixed;
+  top: 0;
+  height: 100vh;
+  background: $drawer-background;
+  z-index: 1000;
+  transition: left $transition-slow;
+  box-shadow: $shadow-medium;
+}
+
+@mixin drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: $drawer-overlay-background;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all $transition-slow;
+  
+  &.overlay-visible {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+// 响应式断点
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == small {
+    @media screen and (max-width: $breakpoint-small) {
+      @content;
+    }
+  } @else if $breakpoint == medium {
+    @media screen and (max-width: $breakpoint-medium) {
+      @content;
+    }
+  } @else if $breakpoint == large {
+    @media screen and (min-width: $breakpoint-large) {
+      @content;
+    }
+  } @else if $breakpoint == xlarge {
+    @media screen and (min-width: $breakpoint-xlarge) {
+      @content;
+    }
+  }
+}
+
+// 小屏幕适配
+@mixin small-screen {
+  @media screen and (max-width: 750rpx) {
+    @content;
+  }
+}
+
+// 超小屏幕适配
+@mixin extra-small-screen {
+  @media screen and (max-width: 320px) {
+    @content;
+  }
+}
+
+// 低高度屏幕适配
+@mixin low-height-screen {
+  @media screen and (max-height: 600px) {
+    @content;
+  }
+}
+
+// iPhone 4/4S 专门优化
+@mixin iphone4-optimization {
+  @media screen and (max-width: 320px) and (max-height: 480px) {
+    @content;
+  }
+}
+
+// 大屏幕适配
+@mixin large-screen {
+  @media screen and (min-width: 1500rpx) {
+    @content;
+  }
+}
+
+// 文本截断
+@mixin text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// 多行文本截断
+@mixin text-ellipsis-multiline($lines: 2) {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+}
+
+// 居中对齐
+@mixin center-absolute {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+// Flexbox 居中
+@mixin center-flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+} 

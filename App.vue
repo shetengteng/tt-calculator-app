@@ -13,40 +13,10 @@ onHide(() => {
 })
 </script>
 
-<style>
-	/* Import calculator icons */
-	@import './static/calculator-icons.css';
-	
-	/*每个页面公共css */
-	/* Global styles */
-	page {
-		background-color: #2C2C2E;
-		font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, sans-serif;
-		height: 100%;
-		overflow: hidden;
-	}
-	
-	/* 防止页面滚动 */
-	uni-page-body,
-	uni-page-wrapper {
-		height: 100%;
-		overflow: hidden;
-	}
-	
-	.safe-area-inset-bottom {
-		padding-bottom: constant(safe-area-inset-bottom);
-		padding-bottom: env(safe-area-inset-bottom);
-	}
-	
-	.safe-area-inset-top {
-		padding-top: constant(safe-area-inset-top);
-		padding-top: env(safe-area-inset-top);
-	}
-	
-	/* Button press animation */
-	.button-press {
-		transform: scale(0.95);
-		transition: transform 0.1s ease-out;
-		border-radius: 40%;
-	}
+<style lang="scss">
+	@import '@/styles/index.scss';
+	/* 
+	 * 全局样式现在通过 uni.scss 统一管理
+	 * 这里只保留 App 级别特有的样式
+	 */
 </style>

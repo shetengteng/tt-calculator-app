@@ -1,0 +1,83 @@
+// ============================================
+// Calculator App Design Variables
+// ============================================
+
+// 颜色系统
+$calculator-primary-background: #2C2C2E;
+$calculator-secondary-background: #FFFFFF;
+$calculator-accent-blue: #00A8E6;
+$calculator-light-gray: #A6A6A6;
+$calculator-dark-gray: #505050;
+$calculator-text-primary: #FFFFFF;
+$calculator-text-secondary: #000000;
+$calculator-text-muted: #8E8E93;
+
+// 按钮颜色主题
+$button-theme-blue: #00A8E6;
+$button-theme-dark: #505050;
+$button-theme-light: #A6A6A6;
+$button-theme-blue-text: #FFFFFF;
+$button-theme-dark-text: #FFFFFF;
+$button-theme-light-text: #000000;
+
+// 尺寸系统
+$calculator-button-radius: 15px;
+$calculator-button-size-small: 120rpx;
+$calculator-button-size-medium: 140rpx;
+$calculator-button-size-large: 160rpx;
+
+// 字体尺寸
+$font-size-button-xs: 30rpx;
+$font-size-button-small: 34rpx;
+$font-size-button-medium: 38rpx;
+$font-size-button-large: 42rpx;
+$font-size-button-xl: 46rpx;
+$font-size-button-xxl: 50rpx;
+$font-size-display-small: calc(6vw + 32rpx);
+$font-size-display-medium: calc(7vw + 40rpx);
+$font-size-display-large: calc(4vw + 48rpx);
+
+// 间距系统
+$spacing-xs: 8rpx;
+$spacing-sm: 16rpx;
+$spacing-md: 24rpx;
+$spacing-lg: 32rpx;
+$spacing-xl: 40rpx;
+$spacing-xxl: 60rpx;
+
+// 圆角系统
+$border-radius-small: 16rpx;
+$border-radius-medium: 25%;
+$border-radius-large: 45%;
+$border-radius-circle: 50%;
+
+// 阴影系统
+$shadow-light: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+$shadow-medium: 2px 0 10px rgba(0, 0, 0, 0.1);
+$shadow-heavy: 0 8rpx 24rpx rgba(0, 0, 0, 0.2);
+
+// 过渡动画
+$transition-fast: 0.1s ease-out;
+$transition-medium: 0.2s ease;
+$transition-slow: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+// 媒体查询断点
+$breakpoint-small: 320px;
+$breakpoint-medium: 375px;
+$breakpoint-large: 768px;
+$breakpoint-xlarge: 1024px;
+
+// 设备特定
+$status-bar-height: var(--status-bar-height);
+$safe-area-inset-top: constant(safe-area-inset-top);
+$safe-area-inset-bottom: constant(safe-area-inset-bottom);
+$safe-area-inset-top-env: env(safe-area-inset-top);
+$safe-area-inset-bottom-env: env(safe-area-inset-bottom);
+
+// 抽屉样式
+$drawer-width: 80%;
+$drawer-width-small: 85%;
+$drawer-background: #F2F2F7;
+$drawer-header-background: #FFFFFF;
+$drawer-border-color: #E5E5E7;
+$drawer-overlay-background: rgba(0, 0, 0, 0.3); 

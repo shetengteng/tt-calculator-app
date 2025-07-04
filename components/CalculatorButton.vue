@@ -96,154 +96,111 @@ const handleClick = () => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .calculator-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: 50%;
-  font-size: 42rpx;
+  @include button-base;
+  @include button-size(medium);
+  border-radius: $border-radius-circle;
   font-weight: 400;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  user-select: none;
-  width: 140rpx;
-  height: 140rpx;
-  position: relative;
-  overflow: hidden;
 }
 
 /* 主题样式 */
 .theme-blue {
-  background-color: #00A8E6;
-  color: #FFFFFF;
+  @include button-theme(blue);
 }
 
 .theme-dark {
-  background-color: #505050;
-  color: #FFFFFF;
+  @include button-theme(dark);
 }
 
 .theme-light {
-  background-color: #A6A6A6;
-  color: #000000;
+  @include button-theme(light);
 }
 
 /* 激活状态 */
 .calculator-button.active {
-  background-color: #FFFFFF !important;
-  color: #00A8E6 !important;
+  @include button-active;
 }
 
-/* 悬停和点击效果 */
-.calculator-button:hover {
-  opacity: 0.8;
-}
-
-.calculator-button:active {
-  transform: scale(0.95);
-  opacity: 0.6;
-}
-
-/* 禁用状态 */
-.calculator-button.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.calculator-button.disabled:active {
-  transform: none;
+/* 交互效果 */
+.calculator-button {
+  @include button-interactions;
 }
 
 /* 尺寸变体 */
 .size-small {
-  width: 120rpx;
-  height: 120rpx;
-  font-size: 38rpx;
+  @include button-size(small);
 }
 
 .size-medium {
-  width: 140rpx;
-  height: 140rpx;
-  font-size: 42rpx;
+  @include button-size(medium);
 }
 
 .size-large {
-  width: 160rpx;
-  height: 160rpx;
-  font-size: 46rpx;
+  @include button-size(large);
 }
 
 /* 形状变体 */
 .shape-circle {
-  border-radius: 50%;
+  border-radius: $border-radius-circle;
 }
 
 .shape-rounded {
-  border-radius: 45%;
+  border-radius: $border-radius-large;
 }
 
 .shape-square {
-  border-radius: 25%;
+  border-radius: $border-radius-medium;
 }
 
 /* 小屏幕适配 */
-@media screen and (max-width: 750rpx) {
+@include small-screen {
   .calculator-button {
-    width: 120rpx;
-    height: 120rpx;
-    font-size: 38rpx;
+    @include button-size(small);
   }
   
   .size-small {
     width: 100rpx;
     height: 100rpx;
-    font-size: 34rpx;
+    font-size: $font-size-button-small;
   }
   
   .size-medium {
-    width: 120rpx;
-    height: 120rpx;
-    font-size: 38rpx;
+    @include button-size(small);
   }
   
   .size-large {
-    width: 140rpx;
-    height: 140rpx;
-    font-size: 42rpx;
+    @include button-size(medium);
   }
 }
 
 /* 超小屏幕适配 */
-@media screen and (max-width: 640rpx) {
+@include extra-small-screen {
   .calculator-button {
     width: 100rpx;
     height: 100rpx;
-    font-size: 34rpx;
+    font-size: $font-size-button-small;
   }
   
   .size-small {
     width: 80rpx;
     height: 80rpx;
-    font-size: 30rpx;
+    font-size: $font-size-button-xs;
   }
   
   .size-medium {
     width: 100rpx;
     height: 100rpx;
-    font-size: 34rpx;
+    font-size: $font-size-button-small;
   }
   
   .size-large {
-    width: 120rpx;
-    height: 120rpx;
-    font-size: 38rpx;
+    @include button-size(small);
   }
 }
 
-/* iPhone 4/4S 专门优化 (320x480) - 按钮适当放大 */
-@media screen and (max-width: 320px) and (max-height: 480px) {
+/* iPhone 4/4S 专门优化 */
+@include iphone4-optimization {
   .calculator-button {
     width: 110rpx;
     height: 110rpx;
@@ -270,7 +227,7 @@ const handleClick = () => {
 }
 
 /* 大屏幕适配 */
-@media screen and (min-width: 1500rpx) {
+@include large-screen {
   .calculator-button {
     width: 180rpx;
     height: 180rpx;

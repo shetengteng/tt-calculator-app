@@ -12,6 +12,9 @@
  * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
  */
 
+// 导入我们的样式系统
+@import '@/styles/index.scss';
+
 /* 颜色变量 */
 
 /* 行为相关颜色 */
@@ -74,14 +77,3 @@ $uni-color-subtitle: #555555; // 二级标题颜色
 $uni-font-size-subtitle:26px;
 $uni-color-paragraph: #3F536E; // 文章段落颜色
 $uni-font-size-paragraph:15px;
-
-// Calculator App Design Variables
-$calculator-button-radius: 15px;
-$calculator-primary-background: #2C2C2E;
-$calculator-secondary-background: #FFFFFF;
-$calculator-accent-blue: #00A8E6;
-$calculator-light-gray: #A6A6A6;
-$calculator-dark-gray: #505050;
-$calculator-text-primary: #FFFFFF;
-$calculator-text-secondary: #000000;
-$calculator-text-muted: #8E8E93;
