@@ -5,8 +5,11 @@
 // 1. 导入变量（必须最先导入）
 @import './variables.scss';
 
-// 2. 导入混合器
+// 2. 导入主题变量
+@import './theme-variables.scss';
+
+// 3. 导入混合器
 @import './mixins.scss';
 
-// 3. 导入全局样式
+// 4. 导入全局样式
 @import './global.scss';

@@ -106,20 +106,24 @@ const handleClick = () => {
 
 /* 主题样式 */
 .theme-blue {
-  @include button-theme(blue);
+  background-color: var(--theme-button-blue);
+  color: var(--theme-button-blue-text);
 }
 
 .theme-dark {
-  @include button-theme(dark);
+  background-color: var(--theme-button-dark);
+  color: var(--theme-button-dark-text);
 }
 
 .theme-light {
-  @include button-theme(light);
+  background-color: var(--theme-button-light);
+  color: var(--theme-button-light-text);
 }
 
 /* 激活状态 */
 .calculator-button.active {
-  @include button-active;
+  background-color: var(--theme-secondary-background) !important;
+  color: var(--theme-accent-blue) !important;
 }
 
 /* 交互效果 */

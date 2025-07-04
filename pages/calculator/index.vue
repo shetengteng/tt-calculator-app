@@ -19,9 +19,14 @@
       class="calculator" 
       :class="{ 
         'calculator-shifted-left': isSettingsOpen,
-        'calculator-shifted-right': isHistoryOpen
+        'calculator-shifted-right': isHistoryOpen,
+        [`theme-${activeTheme.toLowerCase()}`]: true
       }"
-      :style="{ background: '#2C2C2E' }"
+      :style="{ 
+        background: themeVars.primaryBackground,
+        '--theme-primary-background': themeVars.primaryBackground,
+        '--theme-text-primary': themeVars.textPrimary
+      }"
     >
       <!-- 1. Header Section -->
       <CalculatorHeader 
@@ -53,9 +58,13 @@ import CalculatorButtonGrid from '@/components/CalculatorButtonGrid.vue'
 import SettingsDrawer from '@/components/SettingsDrawer.vue'
 import HistoryDrawer from '@/components/HistoryDrawer.vue'
 import { useCalculator } from '@/composables/useCalculator.js'
+import { useTheme } from '@/composables/useTheme.js'
 
 // 使用计算器组合函数，获取完整的计算器实例
 const calculator = useCalculator()
+
+// 使用主题系统
+const { themeVars, activeTheme } = useTheme()
 
 // 抽屉状态
 const isSettingsOpen = ref(false)
@@ -112,6 +121,19 @@ onMounted(() => {
   overflow: hidden;
   position: relative;
   transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  background-color: var(--theme-primary-background);
+  color: var(--theme-text-primary);
+}
+
+/* 主题样式 */
+.calculator.theme-light {
+  background-color: #FFFFFF;
+  color: #000000;
+}
+
+.calculator.theme-dark {
+  background-color: #2C2C2E;
+  color: #FFFFFF;
 }
 
 /* 设置抽屉打开时向右滑动 */

@@ -1,0 +1,97 @@
+// ============================================
+// Dynamic Theme Variables
+// ============================================
+
+// CSS自定义属性，支持运行时动态切换
+:root {
+  // 主要颜色
+  --theme-primary-background: #2C2C2E;
+  --theme-secondary-background: #1C1C1E;
+  --theme-tertiary-background: #2C2C2E;
+  
+  // 文字颜色
+  --theme-text-primary: #FFFFFF;
+  --theme-text-secondary: #000000;
+  --theme-text-muted: #8E8E93;
+  
+  // 按钮颜色
+  --theme-button-blue: #00A8E6;
+  --theme-button-dark: #505050;
+  --theme-button-light: #A6A6A6;
+  --theme-button-blue-text: #FFFFFF;
+  --theme-button-dark-text: #FFFFFF;
+  --theme-button-light-text: #000000;
+  
+  // 其他颜色
+  --theme-accent-blue: #00A8E6;
+  --theme-light-gray: #A6A6A6;
+  --theme-dark-gray: #505050;
+  --theme-border: #505050;
+  --theme-separator: #505050;
+  --theme-overlay: rgba(0, 0, 0, 0.3);
+  
+  // 抽屉颜色
+  --theme-drawer-background: #2C2C2E;
+  --theme-drawer-header: #2C2C2E;
+  --theme-drawer-item-background: #3A3A3C;
+  --theme-drawer-item-hover: #48484A;
+}
+
+// 浅色主题变量（通过JS动态设置）
+[data-theme="light"],
+.theme-light {
+  --theme-primary-background: #FFFFFF;
+  --theme-secondary-background: #F2F2F7;
+  --theme-tertiary-background: #FFFFFF;
+  
+  --theme-text-primary: #000000;
+  --theme-text-secondary: #FFFFFF;
+  --theme-text-muted: #8E8E93;
+  
+  --theme-button-blue: #007AFF;
+  --theme-button-dark: #E5E5EA;
+  --theme-button-light: #F2F2F7;
+  --theme-button-blue-text: #FFFFFF;
+  --theme-button-dark-text: #000000;
+  --theme-button-light-text: #000000;
+  
+  --theme-accent-blue: #007AFF;
+  --theme-light-gray: #8E8E93;
+  --theme-dark-gray: #C7C7CC;
+  --theme-border: #C6C6C8;
+  --theme-separator: #C6C6C8;
+  --theme-overlay: rgba(0, 0, 0, 0.3);
+  
+  --theme-drawer-background: #F2F2F7;
+  --theme-drawer-header: #F2F2F7;
+  --theme-drawer-item-background: #FFFFFF;
+  --theme-drawer-item-hover: #E5E5EA;
+}
+
+// 兼容性：映射新变量到旧变量名
+$calculator-primary-background: var(--theme-primary-background);
+$calculator-secondary-background: var(--theme-secondary-background);
+$calculator-accent-blue: var(--theme-accent-blue);
+$calculator-light-gray: var(--theme-light-gray);
+$calculator-dark-gray: var(--theme-dark-gray);
+$calculator-text-primary: var(--theme-text-primary);
+$calculator-text-secondary: var(--theme-text-secondary);
+$calculator-text-muted: var(--theme-text-muted);
+
+// 按钮主题变量
+$button-theme-blue: var(--theme-button-blue);
+$button-theme-dark: var(--theme-button-dark);
+$button-theme-light: var(--theme-button-light);
+$button-theme-blue-text: var(--theme-button-blue-text);
+$button-theme-dark-text: var(--theme-button-dark-text);
+$button-theme-light-text: var(--theme-button-light-text);
+
+// 边框和分隔符
+$theme-border: var(--theme-border);
+$theme-separator: var(--theme-separator);
+
+// 抽屉相关
+$theme-drawer-background: var(--theme-drawer-background);
+$theme-drawer-header: var(--theme-drawer-header);
+$theme-drawer-item-background: var(--theme-drawer-item-background);
+$theme-drawer-item-hover: var(--theme-drawer-item-hover); 

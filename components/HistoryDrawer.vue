@@ -244,7 +244,7 @@ onMounted(() => {
   right: -80%;
   width: 80%;
   height: 100vh;
-  background: #2C2C2E;
+  background: var(--theme-drawer-background);
   z-index: 1000;
   transition: right 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
@@ -266,14 +266,14 @@ onMounted(() => {
   align-items: center;
   padding: 20rpx 40rpx;
   padding-top: calc(20rpx + var(--status-bar-height));
-  background: #2C2C2E;
-  border-bottom: 1px solid #505050;
+  background: var(--theme-drawer-header);
+  border-bottom: 1px solid var(--theme-separator);
 }
 
 .drawer-title {
   font-size: 36rpx;
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--theme-text-primary);
 }
 
 .header-actions {
@@ -305,13 +305,13 @@ onMounted(() => {
 
 .history-item {
   padding: 30rpx 40rpx;
-  background: #3A3A3C;
-  border-bottom: 1px solid #505050;
+  background: var(--theme-drawer-item-background);
+  border-bottom: 1px solid var(--theme-separator);
   transition: background-color 0.2s ease;
 }
 
 .history-item:active {
-  background: #48484A;
+  background: var(--theme-drawer-item-hover);
 }
 
 .history-content {
@@ -320,26 +320,26 @@ onMounted(() => {
 }
 
 .timestamp {
-  color: #A6A6A6;
+  color: var(--theme-light-gray);
   font-size: 28rpx;
   margin-bottom: 10rpx;
 }
 
 .result {
-  color: #FFFFFF;
+  color: var(--theme-text-primary);
   font-size: 44rpx;
   font-weight: 400;
   margin-bottom: 4rpx;
 }
 
 .calculation {
-  color: #A6A6A6;
+  color: var(--theme-light-gray);
   font-size: 28rpx;
 }
 
 .separator {
   height: 1rpx;
-  background: #505050;
+  background: var(--theme-separator);
   margin: 30rpx 40rpx 0 40rpx;
 }
 
@@ -349,7 +349,7 @@ onMounted(() => {
 }
 
 .empty-text {
-  color: #A6A6A6;
+  color: var(--theme-light-gray);
   font-size: 32rpx;
 }
 

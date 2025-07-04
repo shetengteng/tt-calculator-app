@@ -144,6 +144,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import CloseButton from './CloseButton.vue'
+import { useTheme } from '@/composables/useTheme.js'
 
 // Props
 const props = defineProps({
@@ -160,9 +161,18 @@ const props = defineProps({
 // Emits
 const emit = defineEmits(['close'])
 
+// 使用主题系统
+const { 
+  currentTheme, 
+  setTheme, 
+  getThemeOptions, 
+  getCurrentThemeIndex,
+  themeVars 
+} = useTheme()
+
 // 设置选项数据
-const themeOptions = ['Light', 'Dark', 'Auto']
-const themeIndex = ref(1) // 默认Dark主题
+const themeOptions = getThemeOptions()
+const themeIndex = ref(getCurrentThemeIndex())
 
 const decimalOptions = ['0', '1', '2', '3', '4', '5']
 const decimalIndex = ref(2) // 默认2位小数
@@ -185,6 +195,8 @@ const closeDrawer = () => {
 // 设置选项处理函数
 const onThemeChange = (e) => {
   themeIndex.value = e.detail.value
+  const selectedTheme = themeOptions[e.detail.value]
+  setTheme(selectedTheme)
   applySettings()
 }
 
@@ -265,13 +277,12 @@ const applySettings = () => {
 // 从本地存储加载设置
 const loadSettings = () => {
   try {
+    // 同步主题索引
+    themeIndex.value = getCurrentThemeIndex()
+    
     const savedSettings = uni.getStorageSync('calculator-settings')
     if (savedSettings) {
-      // 应用保存的设置
-      const themeIndex_found = themeOptions.indexOf(savedSettings.theme)
-      if (themeIndex_found !== -1) {
-        themeIndex.value = themeIndex_found
-      }
+      // 应用保存的设置（主题已通过useTheme管理，这里不需要重复设置）
       
       const decimalIndex_found = decimalOptions.indexOf(savedSettings.decimalPlaces?.toString())
       if (decimalIndex_found !== -1) {
@@ -312,6 +323,11 @@ const handleDrawerTouchEnd = (e) => {
   }
 }
 
+// 监听当前主题变化，同步索引
+watch(currentTheme, () => {
+  themeIndex.value = getCurrentThemeIndex()
+})
+
 // 监听组件挂载，加载设置
 watch(() => props.isOpen, (newVal) => {
   if (newVal) {
@@ -332,7 +348,7 @@ watch(() => props.isOpen, (newVal) => {
   left: -80%;
   width: 80%;
   height: 100vh;
-  background: #2C2C2E;
+  background: var(--theme-drawer-background);
   z-index: 1000;
   transition: left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
@@ -354,14 +370,14 @@ watch(() => props.isOpen, (newVal) => {
   align-items: center;
   padding: 20rpx 40rpx;
   padding-top: calc(20rpx + var(--status-bar-height));
-  background: #2C2C2E;
-  border-bottom: 1px solid #505050;
+  background: var(--theme-drawer-header);
+  border-bottom: 1px solid var(--theme-separator);
 }
 
 .drawer-title {
   font-size: 36rpx;
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--theme-text-primary);
 }
 
 
@@ -379,7 +395,7 @@ watch(() => props.isOpen, (newVal) => {
 .section-title {
   font-size: 28rpx;
   font-weight: 600;
-  color: #A6A6A6;
+  color: var(--theme-light-gray);
   text-transform: uppercase;
   letter-spacing: 0.5rpx;
   margin: 0 40rpx 20rpx 40rpx;
@@ -390,13 +406,13 @@ watch(() => props.isOpen, (newVal) => {
   justify-content: space-between;
   align-items: center;
   padding: 30rpx 40rpx;
-  background: #3A3A3C;
-  border-bottom: 1px solid #505050;
+  background: var(--theme-drawer-item-background);
+  border-bottom: 1px solid var(--theme-separator);
   transition: background-color 0.2s ease;
 }
 
 .setting-item:active {
-  background: #48484A;
+  background: var(--theme-drawer-item-hover);
 }
 
 .setting-info {
@@ -407,13 +423,13 @@ watch(() => props.isOpen, (newVal) => {
 
 .setting-title {
   font-size: 32rpx;
-  color: #FFFFFF;
+  color: var(--theme-text-primary);
   margin-bottom: 6rpx;
 }
 
 .setting-description {
   font-size: 26rpx;
-  color: #A6A6A6;
+  color: var(--theme-light-gray);
 }
 
 .danger-text {
@@ -429,7 +445,7 @@ watch(() => props.isOpen, (newVal) => {
   display: flex;
   align-items: center;
   padding: 10rpx 20rpx;
-  background: #505050;
+  background: var(--theme-dark-gray);
   border-radius: 16rpx;
   min-width: 120rpx;
   justify-content: space-between;
@@ -437,12 +453,12 @@ watch(() => props.isOpen, (newVal) => {
 
 .picker-text {
   font-size: 28rpx;
-  color: #FFFFFF;
+  color: var(--theme-text-primary);
 }
 
 .picker-arrow {
   font-size: 32rpx;
-  color: #A6A6A6;
+  color: var(--theme-light-gray);
   margin-left: 10rpx;
 }
 

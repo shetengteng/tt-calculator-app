@@ -86,19 +86,19 @@ const formatNumber = (value) => {
 }
 
 .secondary-display {
-  color: #8E8E93;
+  color: var(--theme-text-muted);
   font-size: calc(2.5vw + 16rpx);
   margin-bottom: 8rpx;
 }
 
 .secondary-calculation {
-  color: #8E8E93;
+  color: var(--theme-text-muted);
   font-size: calc(2.5vw + 16rpx);
   margin-bottom: 4rpx;
 }
 
 .secondary-result {
-  color: #FFFFFF;
+  color: var(--theme-text-primary);
   font-size: calc(4vw + 20rpx);
   margin-bottom: 20rpx;
 }
@@ -108,14 +108,14 @@ const formatNumber = (value) => {
 }
 
 .calculation {
-  color: #8E8E93;
+  color: var(--theme-text-muted);
   font-size: calc(3.5vw + 24rpx);
   margin-bottom: 10rpx;
   min-height: 40rpx;
 }
 
 .result {
-  color: #FFFFFF;
+  color: var(--theme-text-primary);
   font-size: calc(7vw + 40rpx);
   font-weight: 300;
   line-height: 1.1;
