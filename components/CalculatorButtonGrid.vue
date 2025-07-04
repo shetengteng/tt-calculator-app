@@ -200,7 +200,7 @@ const handleButtonClick = (buttonData) => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .button-group-section {
   display: flex;
   justify-content: center;
@@ -222,7 +222,7 @@ const handleButtonClick = (buttonData) => {
 }
 
 /* 小屏幕适配 */
-@media screen and (max-width: 750rpx) {
+@include small-screen {
   .button-group-section {
     padding: 30rpx;
     padding-bottom: calc(30rpx + var(--window-bottom, 0px));
@@ -235,7 +235,7 @@ const handleButtonClick = (buttonData) => {
 }
 
 /* 超小屏幕适配 */
-@media screen and (max-width: 640rpx) {
+@include extra-small-screen {
   .button-group-section {
     padding: 20rpx;
     padding-bottom: calc(20rpx + var(--window-bottom, 0px));
@@ -247,8 +247,8 @@ const handleButtonClick = (buttonData) => {
   }
 }
 
-/* iPhone 4/4S 专门优化 (320x480) - 按钮网格完全贴近底部 */
-@media screen and (max-width: 320px) and (max-height: 480px) {
+/* iPhone 4/4S 专门优化 - 按钮网格完全贴近底部 */
+@include iphone4-optimization {
   .button-group-section {
     padding: 10rpx 15rpx 20rpx 15rpx;
     align-items: flex-end;
@@ -262,8 +262,23 @@ const handleButtonClick = (buttonData) => {
   }
 }
 
+/* iPhone 5/SE 专门优化 - 按钮网格贴近底部 */
+@include iphone5-optimization {
+  .button-group-section {
+    padding: 15rpx 20rpx 25rpx 20rpx;
+    align-items: flex-end;
+    justify-content: center;
+    flex-grow: 1;
+  }
+  
+  .button-grid {
+    gap: 10rpx;
+    max-width: 480rpx;
+  }
+}
+
 /* 大屏幕适配 */
-@media screen and (min-width: 1500rpx) {
+@include large-screen {
   .button-group-section {
     padding: 60rpx;
     padding-bottom: calc(60rpx + var(--window-bottom, 0px));

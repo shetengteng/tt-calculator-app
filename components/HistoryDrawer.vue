@@ -14,9 +14,7 @@
           <text class="drawer-title">History</text>
           <view class="header-actions">
             <text class="clear-button" @click="clearAllHistory" v-if="hasHistory">Clear</text>
-            <view class="close-button" @click="closeDrawer">
-              <text class="close-icon">×</text>
-            </view>
+            <CloseButton @click="closeDrawer" />
           </view>
         </view>
         
@@ -51,6 +49,7 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
+import CloseButton from './CloseButton.vue'
 
 // Props
 const props = defineProps({
@@ -233,7 +232,7 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .drawer-container {
   position: relative;
 }
@@ -245,7 +244,7 @@ onMounted(() => {
   right: -80%;
   width: 80%;
   height: 100vh;
-  background: #FFFFFF;
+  background: #2C2C2E;
   z-index: 1000;
   transition: right 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
@@ -267,14 +266,14 @@ onMounted(() => {
   align-items: center;
   padding: 20rpx 40rpx;
   padding-top: calc(20rpx + var(--status-bar-height));
-  background: #FFFFFF;
-  border-bottom: 1px solid #E5E5E7;
+  background: #2C2C2E;
+  border-bottom: 1px solid #505050;
 }
 
 .drawer-title {
   font-size: 36rpx;
   font-weight: 600;
-  color: #000000;
+  color: #FFFFFF;
 }
 
 .header-actions {
@@ -296,27 +295,6 @@ onMounted(() => {
   background: rgba(255, 59, 48, 0.2);
 }
 
-.close-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 60rpx;
-  height: 60rpx;
-  border-radius: 50%;
-  background: #F2F2F7;
-  transition: background-color 0.2s ease;
-}
-
-.close-button:active {
-  background: #E5E5E7;
-}
-
-.close-icon {
-  font-size: 48rpx;
-  color: #8E8E93;
-  line-height: 1;
-}
-
 .drawer-scroll {
   flex: 1;
 }
@@ -327,11 +305,13 @@ onMounted(() => {
 
 .history-item {
   padding: 30rpx 40rpx;
+  background: #3A3A3C;
+  border-bottom: 1px solid #505050;
   transition: background-color 0.2s ease;
 }
 
 .history-item:active {
-  background: #F8F8F8;
+  background: #48484A;
 }
 
 .history-content {
@@ -340,26 +320,26 @@ onMounted(() => {
 }
 
 .timestamp {
-  color: #8E8E93;
+  color: #A6A6A6;
   font-size: 28rpx;
   margin-bottom: 10rpx;
 }
 
 .result {
-  color: #000000;
+  color: #FFFFFF;
   font-size: 44rpx;
   font-weight: 400;
   margin-bottom: 4rpx;
 }
 
 .calculation {
-  color: #8E8E93;
+  color: #A6A6A6;
   font-size: 28rpx;
 }
 
 .separator {
   height: 1rpx;
-  background: #E5E5E7;
+  background: #505050;
   margin: 30rpx 40rpx 0 40rpx;
 }
 
@@ -369,7 +349,7 @@ onMounted(() => {
 }
 
 .empty-text {
-  color: #8E8E93;
+  color: #A6A6A6;
   font-size: 32rpx;
 }
 
@@ -393,7 +373,7 @@ onMounted(() => {
 }
 
 /* 小屏幕适配 */
-@media screen and (max-width: 375px) {
+@include small-phone {
   .history-drawer {
     width: 85%;
     right: -85%;
@@ -401,7 +381,7 @@ onMounted(() => {
 }
 
 /* iPhone 4/4S 专门优化 */
-@media screen and (max-width: 320px) and (max-height: 480px) {
+@include iphone4-optimization {
   .history-drawer {
     width: 85%;
     right: -85%;

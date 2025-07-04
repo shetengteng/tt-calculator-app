@@ -148,9 +148,23 @@
   }
 }
 
+// 小尺寸手机适配
+@mixin small-phone {
+  @media screen and (max-width: 375px) {
+    @content;
+  }
+}
+
 // 低高度屏幕适配
 @mixin low-height-screen {
   @media screen and (max-height: 600px) {
+    @content;
+  }
+}
+
+// 超小高度屏幕适配
+@mixin extra-low-height-screen {
+  @media screen and (max-height: 430px) {
     @content;
   }
 }
@@ -162,9 +176,30 @@
   }
 }
 
+// iPhone 5/SE 专门优化 (320x568)
+@mixin iphone5-optimization {
+  @media screen and (max-width: 320px) and (max-height: 568px){
+    @content;
+  }
+}
+
 // 大屏幕适配
 @mixin large-screen {
   @media screen and (min-width: 1500rpx) {
+    @content;
+  }
+}
+
+// 平板屏幕适配
+@mixin tablet-screen {
+  @media screen and (min-width: 768px) {
+    @content;
+  }
+}
+
+// 桌面屏幕适配
+@mixin desktop-screen {
+  @media screen and (min-width: 1024px) {
     @content;
   }
 }

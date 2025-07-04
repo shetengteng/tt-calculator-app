@@ -226,6 +226,33 @@ const handleClick = () => {
   }
 }
 
+/* iPhone 5/SE 专门优化 - 按钮稍微放大 */
+@include iphone5-optimization {
+  .calculator-button {
+    width: 125rpx;
+    height: 125rpx;
+    font-size: 40rpx;
+  }
+  
+  .size-small {
+    width: 105rpx;
+    height: 105rpx;
+    font-size: 36rpx;
+  }
+  
+  .size-medium {
+    width: 125rpx;
+    height: 125rpx;
+    font-size: 40rpx;
+  }
+  
+  .size-large {
+    width: 145rpx;
+    height: 145rpx;
+    font-size: 44rpx;
+  }
+}
+
 /* 大屏幕适配 */
 @include large-screen {
   .calculator-button {

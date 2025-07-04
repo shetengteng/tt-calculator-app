@@ -67,7 +67,7 @@ const formatNumber = (value) => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .display-section {
   flex: 1;
   padding: 20rpx 40rpx;
@@ -122,7 +122,7 @@ const formatNumber = (value) => {
 }
 
 /* 响应式设计 */
-@media screen and (max-width: 320px) {
+@include extra-small-screen {
   .result {
     font-size: calc(6vw + 32rpx);
   }
@@ -140,7 +140,7 @@ const formatNumber = (value) => {
   }
 }
 
-@media screen and (min-width: 768px) {
+@include tablet-screen {
   .display-section {
     max-height: 40vh;
   }
@@ -154,7 +154,7 @@ const formatNumber = (value) => {
   }
 }
 
-@media screen and (min-width: 1024px) {
+@include desktop-screen {
   .result {
     font-size: calc(3vw + 56rpx);
   }
@@ -165,7 +165,7 @@ const formatNumber = (value) => {
 }
 
 /* 低高度屏幕适配 */
-@media screen and (max-height: 600px) {
+@include low-height-screen {
   .display-section {
     min-height: 15vh;
     max-height: 25vh;
@@ -182,7 +182,7 @@ const formatNumber = (value) => {
 }
 
 /* iPhone 4/4S 专门优化 - 严格控制显示区域高度 */
-@media screen and (max-width: 320px) and (max-height: 480px) {
+@include iphone4-optimization {
   .display-section {
     min-height: 12vh !important;
     max-height: 18vh !important;
@@ -220,8 +220,47 @@ const formatNumber = (value) => {
   }
 }
 
+/* iPhone 5/SE 专门优化 - 控制显示区域高度 */
+@include iphone5-optimization {
+  .display-section {
+    min-height: 14vh !important;
+    max-height: 22vh !important;
+    padding: 12rpx 30rpx !important;
+  }
+  
+  .result {
+    font-size: calc(6vw + 30rpx) !important;
+    line-height: 1.1 !important;
+  }
+  
+  .calculation {
+    font-size: calc(3vw + 18rpx) !important;
+    margin-bottom: 8rpx !important;
+    min-height: 38rpx !important;
+  }
+  
+  .secondary-display {
+    font-size: calc(2.3vw + 14rpx) !important;
+    margin-bottom: 6rpx !important;
+  }
+  
+  .secondary-calculation {
+    font-size: calc(2.1vw + 12rpx) !important;
+    margin-bottom: 4rpx !important;
+  }
+  
+  .secondary-result {
+    font-size: calc(3.2vw + 14rpx) !important;
+    margin-bottom: 12rpx !important;
+  }
+  
+  .current-display {
+    margin-bottom: 12rpx !important;
+  }
+}
+
 /* 超小高度屏幕 - 进一步减少显示区域 */
-@media screen and (max-height: 430px) {
+@include extra-low-height-screen {
   .display-section {
     min-height: 10vh !important;
     max-height: 15vh !important;

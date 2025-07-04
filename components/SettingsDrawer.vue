@@ -12,9 +12,7 @@
         <!-- 设置页面内容 -->
         <view class="drawer-header">
           <text class="drawer-title">Settings</text>
-          <view class="close-button" @click="closeDrawer">
-            <text class="close-icon">×</text>
-          </view>
+          <CloseButton @click="closeDrawer" />
         </view>
         
         <!-- 设置选项 -->
@@ -145,6 +143,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
+import CloseButton from './CloseButton.vue'
 
 // Props
 const props = defineProps({
@@ -321,7 +320,7 @@ watch(() => props.isOpen, (newVal) => {
 }, { immediate: true })
 </script>
 
-<style scoped>
+<style scoped lang="scss">  
 .drawer-container {
   position: relative;
 }
@@ -333,7 +332,7 @@ watch(() => props.isOpen, (newVal) => {
   left: -80%;
   width: 80%;
   height: 100vh;
-  background: #F2F2F7;
+  background: #2C2C2E;
   z-index: 1000;
   transition: left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
@@ -355,36 +354,17 @@ watch(() => props.isOpen, (newVal) => {
   align-items: center;
   padding: 20rpx 40rpx;
   padding-top: calc(20rpx + var(--status-bar-height));
-  background: #FFFFFF;
-  border-bottom: 1px solid #E5E5E7;
+  background: #2C2C2E;
+  border-bottom: 1px solid #505050;
 }
 
 .drawer-title {
   font-size: 36rpx;
   font-weight: 600;
-  color: #000000;
+  color: #FFFFFF;
 }
 
-.close-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 60rpx;
-  height: 60rpx;
-  border-radius: 50%;
-  background: #F2F2F7;
-  transition: background-color 0.2s ease;
-}
 
-.close-button:active {
-  background: #E5E5E7;
-}
-
-.close-icon {
-  font-size: 48rpx;
-  color: #8E8E93;
-  line-height: 1;
-}
 
 .drawer-scroll {
   flex: 1;
@@ -399,7 +379,7 @@ watch(() => props.isOpen, (newVal) => {
 .section-title {
   font-size: 28rpx;
   font-weight: 600;
-  color: #8E8E93;
+  color: #A6A6A6;
   text-transform: uppercase;
   letter-spacing: 0.5rpx;
   margin: 0 40rpx 20rpx 40rpx;
@@ -410,13 +390,13 @@ watch(() => props.isOpen, (newVal) => {
   justify-content: space-between;
   align-items: center;
   padding: 30rpx 40rpx;
-  background: #FFFFFF;
-  border-bottom: 1px solid #E5E5E7;
+  background: #3A3A3C;
+  border-bottom: 1px solid #505050;
   transition: background-color 0.2s ease;
 }
 
 .setting-item:active {
-  background: #F8F8F8;
+  background: #48484A;
 }
 
 .setting-info {
@@ -427,13 +407,13 @@ watch(() => props.isOpen, (newVal) => {
 
 .setting-title {
   font-size: 32rpx;
-  color: #000000;
+  color: #FFFFFF;
   margin-bottom: 6rpx;
 }
 
 .setting-description {
   font-size: 26rpx;
-  color: #8E8E93;
+  color: #A6A6A6;
 }
 
 .danger-text {
@@ -449,7 +429,7 @@ watch(() => props.isOpen, (newVal) => {
   display: flex;
   align-items: center;
   padding: 10rpx 20rpx;
-  background: #F2F2F7;
+  background: #505050;
   border-radius: 16rpx;
   min-width: 120rpx;
   justify-content: space-between;
@@ -457,12 +437,12 @@ watch(() => props.isOpen, (newVal) => {
 
 .picker-text {
   font-size: 28rpx;
-  color: #000000;
+  color: #FFFFFF;
 }
 
 .picker-arrow {
   font-size: 32rpx;
-  color: #8E8E93;
+  color: #A6A6A6;
   margin-left: 10rpx;
 }
 
@@ -486,7 +466,7 @@ watch(() => props.isOpen, (newVal) => {
 }
 
 /* 小屏幕适配 */
-@media screen and (max-width: 375px) {
+@include small-phone {
   .settings-drawer {
     width: 85%;
     left: -85%;
@@ -494,7 +474,7 @@ watch(() => props.isOpen, (newVal) => {
 }
 
 /* iPhone 4/4S 专门优化 */
-@media screen and (max-width: 320px) and (max-height: 480px) {
+@include iphone4-optimization {
   .settings-drawer {
     width: 85%;
     left: -85%;

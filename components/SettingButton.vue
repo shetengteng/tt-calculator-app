@@ -16,7 +16,7 @@ const handleClick = () => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .setting-button {
   display: flex;
   align-items: center;
@@ -45,7 +45,7 @@ const handleClick = () => {
 }
 
 /* 低高度屏幕适配 */
-@media screen and (max-height: 600px) {
+@include low-height-screen {
   .setting-button {
     width: 70rpx;
     height: 70rpx;
@@ -59,7 +59,7 @@ const handleClick = () => {
 }
 
 /* iPhone 4/4S 专门优化 */
-@media screen and (max-width: 320px) and (max-height: 480px) {
+@include iphone4-optimization {
   .setting-button {
     width: 60rpx !important;
     height: 60rpx !important;
@@ -73,7 +73,7 @@ const handleClick = () => {
 }
 
 /* 超小高度屏幕 */
-@media screen and (max-height: 430px) {
+@include extra-low-height-screen {
   .setting-button {
     width: 50rpx !important;
     height: 50rpx !important;

@@ -1,8 +1,8 @@
 <template>
-  <view class="history-button" @click="handleClick">
+  <view class="close-button" @click="handleClick">
     <view class="icon-svg">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM13 12H17V14H11V7H13V12Z"/>
+        <path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"/>
       </svg>
     </view>
   </view>
@@ -17,7 +17,7 @@ const handleClick = () => {
 </script>
 
 <style scoped lang="scss">
-.history-button {
+.close-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -29,14 +29,14 @@ const handleClick = () => {
   height: 80rpx;
 }
 
-.history-button:active {
+.close-button:active {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
 .icon-svg {
   width: 48rpx;
   height: 48rpx;
-  color: #FFFFFF;
+  color: #A6A6A6;
 }
 
 .icon-svg svg {
@@ -46,7 +46,7 @@ const handleClick = () => {
 
 /* 低高度屏幕适配 */
 @include low-height-screen {
-  .history-button {
+  .close-button {
     width: 70rpx;
     height: 70rpx;
     padding: 15rpx;
@@ -60,7 +60,7 @@ const handleClick = () => {
 
 /* iPhone 4/4S 专门优化 */
 @include iphone4-optimization {
-  .history-button {
+  .close-button {
     width: 60rpx !important;
     height: 60rpx !important;
     padding: 12rpx !important;
@@ -74,7 +74,7 @@ const handleClick = () => {
 
 /* 超小高度屏幕 */
 @include extra-low-height-screen {
-  .history-button {
+  .close-button {
     width: 50rpx !important;
     height: 50rpx !important;
     padding: 10rpx !important;

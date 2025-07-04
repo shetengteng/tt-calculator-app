@@ -27,7 +27,7 @@ const handleSettings = () => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .header-section {
   display: flex;
   justify-content: space-between;
@@ -53,7 +53,7 @@ const handleSettings = () => {
 }
 
 /* 低高度屏幕适配 */
-@media screen and (max-height: 600px) {
+@include low-height-screen {
   .header-section {
     padding: 10rpx 40rpx;
     padding-top: calc(10rpx + var(--status-bar-height));
@@ -62,7 +62,7 @@ const handleSettings = () => {
 }
 
 /* iPhone 4/4S 专门优化 - 最小化header高度 */
-@media screen and (max-width: 320px) and (max-height: 480px) {
+@include iphone4-optimization {
   .header-section {
     padding: 6rpx 30rpx !important;
     padding-top: calc(6rpx + var(--status-bar-height)) !important;
@@ -71,7 +71,7 @@ const handleSettings = () => {
 }
 
 /* 超小高度屏幕 */
-@media screen and (max-height: 430px) {
+@include extra-low-height-screen {
   .header-section {
     padding: 4rpx 30rpx !important;
     padding-top: calc(4rpx + var(--status-bar-height)) !important;

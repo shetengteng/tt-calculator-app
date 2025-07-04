@@ -95,7 +95,7 @@ onMounted(() => {
 })
 </script>
 
-<style>
+<style lang="scss">
 .calculator-container {
   position: relative;
   height: 100vh;
@@ -125,7 +125,22 @@ onMounted(() => {
 }
 
 /* iPhone 4/4S 专门优化 - 确保按钮网格贴近底部 */
-@media screen and (max-width: 320px) and (max-height: 480px) {
+@include iphone4-optimization {
+  .calculator {
+    justify-content: space-between;
+  }
+  
+  .calculator.calculator-shifted-left {
+    transform: translateX(85%);
+  }
+  
+  .calculator.calculator-shifted-right {
+    transform: translateX(-85%);
+  }
+}
+
+/* iPhone 5/SE 专门优化 - 确保按钮网格贴近底部 */
+@include iphone5-optimization {
   .calculator {
     justify-content: space-between;
   }
@@ -140,7 +155,7 @@ onMounted(() => {
 }
 
 /* 小屏幕适配 */
-@media screen and (max-width: 375px) {
+@include small-phone {
   .calculator.calculator-shifted-left {
     transform: translateX(85%);
   }
