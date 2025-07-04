@@ -34,8 +34,8 @@ const handleSettings = () => {
   align-items: center;
   padding: 30rpx 40rpx;
   padding-top: calc(30rpx + var(--status-bar-height));
-  color: #FFFFFF;
-  background-color: #2C2C2E;
+  color: var(--theme-text-primary);
+  background-color: var(--theme-primary-background);
   flex-shrink: 0;
   min-height: 120rpx;
 }

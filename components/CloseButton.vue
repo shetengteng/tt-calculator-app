@@ -30,13 +30,13 @@ const handleClick = () => {
 }
 
 .close-button:active {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--theme-overlay);
 }
 
 .icon-svg {
   width: 48rpx;
   height: 48rpx;
-  color: #A6A6A6;
+  color: var(--theme-light-gray);
 }
 
 .icon-svg svg {

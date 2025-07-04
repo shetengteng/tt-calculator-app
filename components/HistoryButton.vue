@@ -30,13 +30,13 @@ const handleClick = () => {
 }
 
 .history-button:active {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--theme-overlay);
 }
 
 .icon-svg {
   width: 48rpx;
   height: 48rpx;
-  color: #FFFFFF;
+  color: var(--theme-text-primary);
 }
 
 .icon-svg svg {
