@@ -1,0 +1,103 @@
+{
+  "appTitle": "Calculator",
+  "buttons": {
+    "clear": "Clear",
+    "delete": "Delete",
+    "equals": "Equals",
+    "add": "Add",
+    "subtract": "Subtract",
+    "multiply": "Multiply",
+    "divide": "Divide",
+    "percent": "Percent",
+    "decimal": "Decimal",
+    "plusMinus": "Plus/Minus"
+  },
+  "menu": {
+    "settings": "Settings",
+    "history": "History",
+    "theme": "Theme",
+    "language": "Language",
+    "about": "About"
+  },
+  "themes": {
+    "light": "Light Theme",
+    "dark": "Dark Theme",
+    "auto": "Follow System"
+  },
+  "history": {
+    "title": "History",
+    "clear": "Clear History",
+    "empty": "No calculation history",
+    "copied": "Copied to clipboard",
+    "copyFailed": "Copy failed"
+  },
+  "settings": {
+    "title": "Settings",
+    "general": "General Settings",
+    "display": "Display Settings",
+    "calculation": "Calculation Settings",
+    "history": "History",
+    "about": "About App",
+    "theme": "Theme Settings",
+    "language": "Language Settings",
+    "decimalPlaces": "Decimal Places",
+    "decimalPlacesDesc": "Number of decimal places to display",
+    "thousandSeparator": "Thousand Separator",
+    "thousandSeparatorDesc": "Show commas in large numbers",
+    "hapticFeedback": "Haptic Feedback",
+    "hapticFeedbackDesc": "Vibrate on button press",
+    "soundEffects": "Sound Effects",
+    "soundEffectsDesc": "Play sounds on button press",
+    "autoCopyResult": "Auto Copy Result",
+    "autoCopyResultDesc": "Copy results to clipboard automatically",
+    "autoSaveHistory": "Auto Save History",
+    "autoSaveHistoryDesc": "Automatically save calculation history",
+    "clearHistory": "Clear History",
+    "clearHistoryDesc": "Delete all saved calculations",
+    "confirmClear": "Confirm Clear",
+    "confirmClearContent": "Are you sure you want to clear all calculation history?",
+    "historyCleared": "History cleared",
+    "version": "Version",
+    "developer": "Developer",
+    "description": "A powerful calculator application"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "done": "Done",
+    "ok": "OK",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "errors": {
+    "title": "Error",
+    "divideByZero": "Cannot divide by zero",
+    "invalidOperation": "Invalid operation",
+    "overflow": "Number overflow",
+    "underflow": "Number underflow",
+    "invalidInput": "Invalid input",
+    "calculationError": "Calculation error"
+  },
+  "messages": {
+    "historyClearConfirm": "Are you sure you want to clear all history?",
+    "historyCleared": "History cleared",
+    "settingsSaved": "Settings saved",
+    "themeChanged": "Theme changed",
+    "languageChanged": "Language changed"
+  },
+  "time": {
+    "justNow": "Just now",
+    "minuteAgo": "1 minute ago",
+    "minutesAgo": "{count} minutes ago",
+    "hourAgo": "1 hour ago",
+    "hoursAgo": "{count} hours ago",
+    "dayAgo": "1 day ago",
+    "daysAgo": "{count} days ago",
+    "today": "Today",
+    "yesterday": "Yesterday"
+  }
+} 

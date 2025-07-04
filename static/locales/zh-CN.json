@@ -1,0 +1,103 @@
+{
+  "appTitle": "计算器",
+  "buttons": {
+    "clear": "清空",
+    "delete": "删除",
+    "equals": "等于",
+    "add": "加",
+    "subtract": "减",
+    "multiply": "乘",
+    "divide": "除",
+    "percent": "百分比",
+    "decimal": "小数点",
+    "plusMinus": "正负号"
+  },
+  "menu": {
+    "settings": "设置",
+    "history": "历史记录",
+    "theme": "主题",
+    "language": "语言",
+    "about": "关于"
+  },
+  "themes": {
+    "light": "浅色主题",
+    "dark": "深色主题",
+    "auto": "跟随系统"
+  },
+  "history": {
+    "title": "历史记录",
+    "clear": "清空历史",
+    "empty": "暂无历史记录",
+    "copied": "已复制到剪贴板",
+    "copyFailed": "复制失败"
+  },
+  "settings": {
+    "title": "设置",
+    "general": "通用设置",
+    "display": "显示设置",
+    "calculation": "计算设置",
+    "history": "历史记录",
+    "about": "关于应用",
+    "theme": "主题设置",
+    "language": "语言设置",
+    "decimalPlaces": "小数位数",
+    "decimalPlacesDesc": "设置小数点后的位数",
+    "thousandSeparator": "千位分隔符",
+    "thousandSeparatorDesc": "在大数字中显示逗号",
+    "hapticFeedback": "触觉反馈",
+    "hapticFeedbackDesc": "按键时产生震动反馈",
+    "soundEffects": "音效",
+    "soundEffectsDesc": "按键时播放声音",
+    "autoCopyResult": "自动复制结果",
+    "autoCopyResultDesc": "自动复制计算结果到剪贴板",
+    "autoSaveHistory": "自动保存历史",
+    "autoSaveHistoryDesc": "自动保存计算历史记录",
+    "clearHistory": "清空历史记录",
+    "clearHistoryDesc": "删除所有保存的计算记录",
+    "confirmClear": "确认清空",
+    "confirmClearContent": "确定要清空所有计算历史吗？",
+    "historyCleared": "历史记录已清空",
+    "version": "版本",
+    "developer": "开发者",
+    "description": "一个功能强大的计算器应用"
+  },
+  "common": {
+    "cancel": "取消",
+    "confirm": "确认",
+    "close": "关闭",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "done": "完成",
+    "ok": "确定",
+    "yes": "是",
+    "no": "否"
+  },
+  "errors": {
+    "title": "错误",
+    "divideByZero": "除数不能为零",
+    "invalidOperation": "无效操作",
+    "overflow": "数值溢出",
+    "underflow": "数值下溢",
+    "invalidInput": "输入无效",
+    "calculationError": "计算错误"
+  },
+  "messages": {
+    "historyClearConfirm": "确定要清空所有历史记录吗？",
+    "historyCleared": "历史记录已清空",
+    "settingsSaved": "设置已保存",
+    "themeChanged": "主题已切换",
+    "languageChanged": "语言已切换"
+  },
+  "time": {
+    "justNow": "刚刚",
+    "minuteAgo": "1分钟前",
+    "minutesAgo": "{count}分钟前",
+    "hourAgo": "1小时前",
+    "hoursAgo": "{count}小时前",
+    "dayAgo": "1天前",
+    "daysAgo": "{count}天前",
+    "today": "今天",
+    "yesterday": "昨天"
+  }
+} 

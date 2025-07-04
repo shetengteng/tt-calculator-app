@@ -59,12 +59,16 @@ import SettingsDrawer from '@/components/SettingsDrawer.vue'
 import HistoryDrawer from '@/components/HistoryDrawer.vue'
 import { useCalculator } from '@/composables/useCalculator.js'
 import { useTheme } from '@/composables/useTheme.js'
+import { useI18n } from '@/composables/useI18n.js'
 
 // 使用计算器组合函数，获取完整的计算器实例
 const calculator = useCalculator()
 
 // 使用主题系统
 const { themeVars, activeTheme } = useTheme()
+
+// 使用国际化系统
+const { loadLanguage } = useI18n()
 
 // 抽屉状态
 const isSettingsOpen = ref(false)
@@ -101,6 +105,7 @@ const closeHistory = () => {
 // 生命周期
 onMounted(() => {
   calculator.initializeHistory()
+  loadLanguage()
 })
 </script>
 

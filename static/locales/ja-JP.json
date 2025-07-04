@@ -1,0 +1,103 @@
+{
+  "appTitle": "電卓",
+  "buttons": {
+    "clear": "クリア",
+    "delete": "削除",
+    "equals": "等しい",
+    "add": "加算",
+    "subtract": "減算",
+    "multiply": "乗算",
+    "divide": "除算",
+    "percent": "パーセント",
+    "decimal": "小数点",
+    "plusMinus": "プラス/マイナス"
+  },
+  "menu": {
+    "settings": "設定",
+    "history": "履歴",
+    "theme": "テーマ",
+    "language": "言語",
+    "about": "について"
+  },
+  "themes": {
+    "light": "ライトテーマ",
+    "dark": "ダークテーマ",
+    "auto": "システムに従う"
+  },
+  "history": {
+    "title": "履歴",
+    "clear": "履歴をクリア",
+    "empty": "計算履歴がありません",
+    "copied": "クリップボードにコピーしました",
+    "copyFailed": "コピーに失敗しました"
+  },
+  "settings": {
+    "title": "設定",
+    "general": "一般設定",
+    "display": "表示設定",
+    "calculation": "計算設定",
+    "history": "履歴",
+    "about": "アプリについて",
+    "theme": "テーマ設定",
+    "language": "言語設定",
+    "decimalPlaces": "小数点以下の桁数",
+    "decimalPlacesDesc": "小数点以下の表示桁数を設定",
+    "thousandSeparator": "千の位区切り",
+    "thousandSeparatorDesc": "大きな数値にカンマを表示",
+    "hapticFeedback": "触覚フィードバック",
+    "hapticFeedbackDesc": "ボタンを押すときに振動",
+    "soundEffects": "効果音",
+    "soundEffectsDesc": "ボタンを押すときに音を再生",
+    "autoCopyResult": "結果の自動コピー",
+    "autoCopyResultDesc": "計算結果を自動でクリップボードにコピー",
+    "autoSaveHistory": "履歴の自動保存",
+    "autoSaveHistoryDesc": "計算履歴を自動で保存",
+    "clearHistory": "履歴をクリア",
+    "clearHistoryDesc": "保存されたすべての計算記録を削除",
+    "confirmClear": "クリアの確認",
+    "confirmClearContent": "すべての計算履歴をクリアしてもよろしいですか？",
+    "historyCleared": "履歴がクリアされました",
+    "version": "バージョン",
+    "developer": "開発者",
+    "description": "強力な電卓アプリケーション"
+  },
+  "common": {
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "close": "閉じる",
+    "save": "保存",
+    "delete": "削除",
+    "edit": "編集",
+    "done": "完了",
+    "ok": "OK",
+    "yes": "はい",
+    "no": "いいえ"
+  },
+  "errors": {
+    "title": "エラー",
+    "divideByZero": "ゼロで割ることはできません",
+    "invalidOperation": "無効な操作",
+    "overflow": "数値オーバーフロー",
+    "underflow": "数値アンダーフロー",
+    "invalidInput": "無効な入力",
+    "calculationError": "計算エラー"
+  },
+  "messages": {
+    "historyClearConfirm": "すべての履歴をクリアしてもよろしいですか？",
+    "historyCleared": "履歴がクリアされました",
+    "settingsSaved": "設定が保存されました",
+    "themeChanged": "テーマが変更されました",
+    "languageChanged": "言語が変更されました"
+  },
+  "time": {
+    "justNow": "たった今",
+    "minuteAgo": "1分前",
+    "minutesAgo": "{count}分前",
+    "hourAgo": "1時間前",
+    "hoursAgo": "{count}時間前",
+    "dayAgo": "1日前",
+    "daysAgo": "{count}日前",
+    "today": "今日",
+    "yesterday": "昨日"
+  }
+} 

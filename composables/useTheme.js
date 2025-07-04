@@ -39,6 +39,7 @@ const themes = {
     border: '#C6C6C8',
     separator: '#C6C6C8',
     overlay: 'rgba(0, 0, 0, 0.3)',
+    shadowColor: 'rgba(0, 0, 0, 0.05)',
     
     // 抽屉颜色
     drawerBackground: '#F2F2F7',
@@ -73,6 +74,7 @@ const themes = {
     border: '#505050',
     separator: '#505050',
     overlay: 'rgba(0, 0, 0, 0.3)',
+    shadowColor: 'rgba(0, 0, 0, 0.1)',
     
     // 抽屉颜色
     drawerBackground: '#2C2C2E',

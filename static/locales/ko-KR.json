@@ -1,0 +1,103 @@
+{
+  "appTitle": "계산기",
+  "buttons": {
+    "clear": "지우기",
+    "delete": "삭제",
+    "equals": "같음",
+    "add": "더하기",
+    "subtract": "빼기",
+    "multiply": "곱하기",
+    "divide": "나누기",
+    "percent": "퍼센트",
+    "decimal": "소수점",
+    "plusMinus": "플러스/마이너스"
+  },
+  "menu": {
+    "settings": "설정",
+    "history": "기록",
+    "theme": "테마",
+    "language": "언어",
+    "about": "정보"
+  },
+  "themes": {
+    "light": "밝은 테마",
+    "dark": "어두운 테마",
+    "auto": "시스템 따라가기"
+  },
+  "history": {
+    "title": "기록",
+    "clear": "기록 지우기",
+    "empty": "계산 기록이 없습니다",
+    "copied": "클립보드에 복사됨",
+    "copyFailed": "복사 실패"
+  },
+  "settings": {
+    "title": "설정",
+    "general": "일반 설정",
+    "display": "표시 설정",
+    "calculation": "계산 설정",
+    "history": "기록",
+    "about": "앱 정보",
+    "theme": "테마 설정",
+    "language": "언어 설정",
+    "decimalPlaces": "소수점 자릿수",
+    "decimalPlacesDesc": "소수점 이하 표시 자릿수 설정",
+    "thousandSeparator": "천 단위 구분자",
+    "thousandSeparatorDesc": "큰 숫자에 쉼표 표시",
+    "hapticFeedback": "햅틱 피드백",
+    "hapticFeedbackDesc": "버튼을 누를 때 진동",
+    "soundEffects": "효과음",
+    "soundEffectsDesc": "버튼을 누를 때 소리 재생",
+    "autoCopyResult": "결과 자동 복사",
+    "autoCopyResultDesc": "계산 결과를 자동으로 클립보드에 복사",
+    "autoSaveHistory": "기록 자동 저장",
+    "autoSaveHistoryDesc": "계산 기록을 자동으로 저장",
+    "clearHistory": "기록 지우기",
+    "clearHistoryDesc": "저장된 모든 계산 기록 삭제",
+    "confirmClear": "지우기 확인",
+    "confirmClearContent": "모든 계산 기록을 지우시겠습니까?",
+    "historyCleared": "기록이 지워졌습니다",
+    "version": "버전",
+    "developer": "개발자",
+    "description": "강력한 계산기 애플리케이션"
+  },
+  "common": {
+    "cancel": "취소",
+    "confirm": "확인",
+    "close": "닫기",
+    "save": "저장",
+    "delete": "삭제",
+    "edit": "편집",
+    "done": "완료",
+    "ok": "확인",
+    "yes": "예",
+    "no": "아니오"
+  },
+  "errors": {
+    "title": "오류",
+    "divideByZero": "0으로 나눌 수 없습니다",
+    "invalidOperation": "잘못된 연산",
+    "overflow": "수치 오버플로",
+    "underflow": "수치 언더플로",
+    "invalidInput": "잘못된 입력",
+    "calculationError": "계산 오류"
+  },
+  "messages": {
+    "historyClearConfirm": "모든 기록을 지우시겠습니까?",
+    "historyCleared": "기록이 지워졌습니다",
+    "settingsSaved": "설정이 저장되었습니다",
+    "themeChanged": "테마가 변경되었습니다",
+    "languageChanged": "언어가 변경되었습니다"
+  },
+  "time": {
+    "justNow": "방금 전",
+    "minuteAgo": "1분 전",
+    "minutesAgo": "{count}분 전",
+    "hourAgo": "1시간 전",
+    "hoursAgo": "{count}시간 전",
+    "dayAgo": "1일 전",
+    "daysAgo": "{count}일 전",
+    "today": "오늘",
+    "yesterday": "어제"
+  }
+} 

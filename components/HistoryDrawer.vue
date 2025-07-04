@@ -11,9 +11,9 @@
       <view class="drawer-content">
         <!-- 历史记录页面内容 -->
         <view class="drawer-header">
-          <text class="drawer-title">History</text>
+          <text class="drawer-title">{{ t('history.title') }}</text>
           <view class="header-actions">
-            <text class="clear-button" @click="clearAllHistory" v-if="hasHistory">Clear</text>
+            <text class="clear-button" @click="clearAllHistory" v-if="hasHistory">{{ t('history.clear') }}</text>
             <CloseButton @click="closeDrawer" />
           </view>
         </view>
@@ -31,7 +31,7 @@
             </view>
             
             <view class="empty-history" v-if="!hasHistory">
-              <text class="empty-text">No calculation history</text>
+              <text class="empty-text">{{ t('history.empty') }}</text>
             </view>
           </view>
         </scroll-view>
@@ -50,6 +50,7 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
 import CloseButton from './CloseButton.vue'
+import { useI18n } from '@/composables/useI18n.js'
 
 // Props
 const props = defineProps({
@@ -65,6 +66,9 @@ const props = defineProps({
 
 // Emits
 const emit = defineEmits(['close'])
+
+// 使用国际化系统
+const { t } = useI18n()
 
 // 历史记录数据
 const history = ref([])
@@ -247,7 +251,7 @@ onMounted(() => {
   background: var(--theme-drawer-background);
   z-index: 1000;
   transition: right 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: -2px 0 10px var(--theme-shadow-color, rgba(0, 0, 0, 0.1));
 }
 
 .history-drawer.drawer-open {
@@ -360,7 +364,7 @@ onMounted(() => {
   left: 0;
   width: 100%;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--theme-overlay);
   z-index: 999;
   opacity: 0;
   visibility: hidden;
