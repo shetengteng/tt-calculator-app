@@ -49,7 +49,7 @@
       />
       <CalculatorButton 
         text="×" 
-        theme="dark" 
+        theme="light" 
         action="operator"
         :active="currentOperator === '×'" 
         @click="handleButtonClick"
@@ -76,7 +76,7 @@
       />
       <CalculatorButton 
         text="−" 
-        theme="dark" 
+        theme="light" 
         action="operator"
         :active="currentOperator === '−'" 
         @click="handleButtonClick"
@@ -103,13 +103,19 @@
       />
       <CalculatorButton 
         text="+" 
-        theme="dark" 
+        theme="light" 
         action="operator"
         :active="currentOperator === '+'" 
         @click="handleButtonClick"
       />
       
       <!-- Row 5: Zero, decimal, backspace and equals -->
+	  <CalculatorButton
+	    text="←" 
+	    theme="dark" 
+	    action="backspace"
+	    @click="handleButtonClick"
+	  />
       <CalculatorButton 
         text="0" 
         theme="dark" 
@@ -120,12 +126,6 @@
         text="." 
         theme="dark" 
         action="decimal"
-        @click="handleButtonClick"
-      />
-      <CalculatorButton 
-        text="←" 
-        theme="dark" 
-        action="backspace"
         @click="handleButtonClick"
       />
       <CalculatorButton 

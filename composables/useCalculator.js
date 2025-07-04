@@ -1,12 +1,13 @@
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, watch, nextTick } from 'vue'
+
 
 export function useCalculator() {
   // 响应式数据
   const displayValue = ref('0')
   const calculation = ref('')
   const result = ref('0')
-  const secondaryCalculation = ref('')
-  const secondaryResult = ref('')
+  const secondaryCalculation = ref(null)
+  const secondaryResult = ref(null)
   const waitingForOperand = ref(false)
   const operatorClicked = ref(false)
   const firstOperand = ref(null)
@@ -94,10 +95,11 @@ export function useCalculator() {
       resetCalculator()
       return
     }
-    
+    // 构造完整表达式
+    const fullExpression = `${firstOperand.value} ${currentOperator.value} ${secondOperand.value || inputValue}`
     // Save calculation to history
     const historyItem = {
-      calculation: calculation.value + ' =',
+      calculation: fullExpression + ' =',
       result: formatNumber(calcResult),
       timestamp: new Date()
     }
@@ -115,7 +117,7 @@ export function useCalculator() {
     }
     
     // Update secondary calculation
-    secondaryCalculation.value = calculation.value + ' ='
+    secondaryCalculation.value = fullExpression + ' ='
     secondaryResult.value = formatNumber(calcResult)
     
     result.value = String(calcResult)
@@ -155,8 +157,8 @@ export function useCalculator() {
     displayValue.value = '0'
     calculation.value = ''
     result.value = '0'
-    secondaryCalculation.value = ''
-    secondaryResult.value = ''
+    secondaryCalculation.value = null
+    secondaryResult.value = null
     waitingForOperand.value = false
     operatorClicked.value = false
     firstOperand.value = null
@@ -194,7 +196,7 @@ export function useCalculator() {
 
   const updateCalculation = () => {
     if (currentOperator.value && firstOperand.value !== null) {
-      calculation.value = `${firstOperand.value} ${currentOperator.value} ${operatorClicked.value ? '' : displayValue.value}`
+      calculation.value = `${firstOperand.value} ${currentOperator.value} ${displayValue.value}`
     } else {
       calculation.value = displayValue.value
     }
@@ -259,12 +261,6 @@ export function useCalculator() {
     })
   }
 
-  // 显示历史记录
-  const showHistory = () => {
-    uni.navigateTo({
-      url: '/pages/calculator-history/calculator-history'
-    })
-  }
 
   // 返回所有需要的状态和方法
   return {
@@ -288,7 +284,6 @@ export function useCalculator() {
     percentage,
     backspace,
     copyResult,
-    showHistory,
     initializeHistory,
     formatNumber
   }

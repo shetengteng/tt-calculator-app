@@ -1,28 +1,12 @@
 {
 	"pages": [
 		{
-			"path": "pages/calculator/calculator",
+			"path": "pages/calculator/index",
 			"style": {
 				"navigationBarTitleText": "Calculator",
 				"app-plus": {
 					"titleNView": false
 				}
-			}
-		},
-		{
-			"path": "pages/calculator-history/calculator-history",
-			"style": {
-				"navigationBarTitleText": "History",
-				"app-plus": {
-					"titleNView": false,
-					"animationType": "slide-in-bottom"
-				}
-			}
-		},
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "uni-app"
 			}
 		}
 	],

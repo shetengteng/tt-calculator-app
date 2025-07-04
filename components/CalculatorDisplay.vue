@@ -2,14 +2,14 @@
   <view class="display-section">
     <view class="display-container">
       <!-- Secondary calculation (previous operation) -->
-      <view class="secondary-display" v-if="secondaryCalculation">
+      <view class="secondary-display" v-if="secondaryCalculation && secondaryResult && secondaryCalculation !== '' && secondaryResult !== ''">
         <text class="secondary-calculation">{{ secondaryCalculation }}</text>
         <text class="secondary-result">{{ secondaryResult }}</text>
       </view>
       
       <!-- Current calculation -->
       <view class="current-display">
-        <text class="calculation" v-if="calculation">{{ calculation }}</text>
+        <text class="calculation" v-if="calculation && calculation !== ''">{{ calculation }}</text>
         <text class="result">{{ displayResult }}</text>
       </view>
     </view>

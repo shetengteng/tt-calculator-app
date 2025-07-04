@@ -1,33 +1,29 @@
 <template>
   <view class="header-section">
     <view class="header-left">
-      <text class="app-title">Calculator</text>
+      <SettingButton @click="handleSettings" />
     </view>
     <view class="header-right">
-      <view class="header-button" @click="handleCopy">
-        <text class="icon icon-copy">📋</text>
-        <text class="button-label">Copy</text>
-      </view>
-      <view class="header-button" @click="handleHistory">
-        <text class="icon icon-history">🕒</text>
-        <text class="button-label">History</text>
-      </view>
+      <HistoryButton @click="handleHistory" />
     </view>
   </view>
 </template>
 
 <script setup>
-// 定义事件
-const emit = defineEmits(['copy', 'history'])
+import SettingButton from './SettingButton.vue'
+import HistoryButton from './HistoryButton.vue'
 
-// 处理复制事件
-const handleCopy = () => {
-  emit('copy')
+// 定义事件
+const emit = defineEmits(['settings-click', 'history-click'])
+
+// 处理历史记录事件 - 发射事件而不是导航
+const handleHistory = () => {
+  emit('history-click')
 }
 
-// 处理历史记录事件
-const handleHistory = () => {
-  emit('history')
+// 处理设置事件 - 发射事件而不是导航
+const handleSettings = () => {
+  emit('settings-click')
 }
 </script>
 
@@ -46,43 +42,14 @@ const handleHistory = () => {
 
 .header-left {
   flex: 1;
-}
-
-.app-title {
-  font-size: 36rpx;
-  font-weight: 600;
-  color: #FFFFFF;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .header-right {
+  flex: 1;
   display: flex;
-  align-items: center;
-  gap: 30rpx;
-}
-
-.header-button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10rpx;
-  border-radius: 16rpx;
-  transition: background-color 0.2s ease;
-  cursor: pointer;
-}
-
-.header-button:active {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.icon {
-  font-size: 48rpx;
-  color: #FFFFFF;
-}
-
-.button-label {
-  font-size: 24rpx;
-  color: #FFFFFF;
-  margin-top: 4rpx;
+  justify-content: flex-end;
 }
 
 /* 低高度屏幕适配 */
@@ -91,18 +58,6 @@ const handleHistory = () => {
     padding: 10rpx 40rpx;
     padding-top: calc(10rpx + var(--status-bar-height));
     min-height: 100rpx;
-  }
-  
-  .app-title {
-    font-size: 32rpx;
-  }
-  
-  .icon {
-    font-size: 40rpx;
-  }
-  
-  .button-label {
-    font-size: 20rpx;
   }
 }
 
@@ -113,28 +68,6 @@ const handleHistory = () => {
     padding-top: calc(6rpx + var(--status-bar-height)) !important;
     min-height: 80rpx !important;
   }
-  
-  .app-title {
-    font-size: 28rpx !important;
-    font-weight: 500 !important;
-  }
-  
-  .header-right {
-    gap: 16rpx !important;
-  }
-  
-  .header-button {
-    padding: 4rpx !important;
-  }
-  
-  .icon {
-    font-size: 32rpx !important;
-  }
-  
-  .button-label {
-    font-size: 16rpx !important;
-    margin-top: 2rpx !important;
-  }
 }
 
 /* 超小高度屏幕 */
@@ -143,18 +76,6 @@ const handleHistory = () => {
     padding: 4rpx 30rpx !important;
     padding-top: calc(4rpx + var(--status-bar-height)) !important;
     min-height: 70rpx !important;
-  }
-  
-  .app-title {
-    font-size: 24rpx !important;
-  }
-  
-  .icon {
-    font-size: 28rpx !important;
-  }
-  
-  .button-label {
-    display: none !important;
   }
 }
 </style> 

@@ -18,12 +18,12 @@ const props = defineProps({
     type: String,
     required: true
   },
-  // 按钮主题：blue, gray, dark, light
+  // 按钮主题：blue, dark, light
   theme: {
     type: String,
     default: 'dark',
     validator: (value) => {
-      return ['blue', 'gray', 'dark', 'light'].includes(value)
+      return ['blue', 'dark', 'light'].includes(value)
     }
   },
   // 按钮尺寸：small, medium, large
@@ -103,7 +103,7 @@ const handleClick = () => {
   justify-content: center;
   border: none;
   border-radius: 50%;
-  font-size: 36rpx;
+  font-size: 42rpx;
   font-weight: 400;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -117,11 +117,6 @@ const handleClick = () => {
 /* 主题样式 */
 .theme-blue {
   background-color: #00A8E6;
-  color: #FFFFFF;
-}
-
-.theme-gray {
-  background-color: #505050;
   color: #FFFFFF;
 }
 
@@ -165,19 +160,19 @@ const handleClick = () => {
 .size-small {
   width: 120rpx;
   height: 120rpx;
-  font-size: 32rpx;
+  font-size: 38rpx;
 }
 
 .size-medium {
   width: 140rpx;
   height: 140rpx;
-  font-size: 36rpx;
+  font-size: 42rpx;
 }
 
 .size-large {
   width: 160rpx;
   height: 160rpx;
-  font-size: 40rpx;
+  font-size: 46rpx;
 }
 
 /* 形状变体 */
@@ -198,25 +193,25 @@ const handleClick = () => {
   .calculator-button {
     width: 120rpx;
     height: 120rpx;
-    font-size: 32rpx;
+    font-size: 38rpx;
   }
   
   .size-small {
     width: 100rpx;
     height: 100rpx;
-    font-size: 28rpx;
+    font-size: 34rpx;
   }
   
   .size-medium {
     width: 120rpx;
     height: 120rpx;
-    font-size: 32rpx;
+    font-size: 38rpx;
   }
   
   .size-large {
     width: 140rpx;
     height: 140rpx;
-    font-size: 36rpx;
+    font-size: 42rpx;
   }
 }
 
@@ -225,25 +220,25 @@ const handleClick = () => {
   .calculator-button {
     width: 100rpx;
     height: 100rpx;
-    font-size: 28rpx;
+    font-size: 34rpx;
   }
   
   .size-small {
     width: 80rpx;
     height: 80rpx;
-    font-size: 24rpx;
+    font-size: 30rpx;
   }
   
   .size-medium {
     width: 100rpx;
     height: 100rpx;
-    font-size: 28rpx;
+    font-size: 34rpx;
   }
   
   .size-large {
     width: 120rpx;
     height: 120rpx;
-    font-size: 32rpx;
+    font-size: 38rpx;
   }
 }
 
@@ -252,25 +247,25 @@ const handleClick = () => {
   .calculator-button {
     width: 110rpx;
     height: 110rpx;
-    font-size: 30rpx;
+    font-size: 36rpx;
   }
   
   .size-small {
     width: 90rpx;
     height: 90rpx;
-    font-size: 26rpx;
+    font-size: 32rpx;
   }
   
   .size-medium {
     width: 110rpx;
     height: 110rpx;
-    font-size: 30rpx;
+    font-size: 36rpx;
   }
   
   .size-large {
     width: 130rpx;
     height: 130rpx;
-    font-size: 34rpx;
+    font-size: 40rpx;
   }
 }
 
@@ -279,25 +274,25 @@ const handleClick = () => {
   .calculator-button {
     width: 180rpx;
     height: 180rpx;
-    font-size: 44rpx;
+    font-size: 50rpx;
   }
   
   .size-small {
     width: 160rpx;
     height: 160rpx;
-    font-size: 40rpx;
+    font-size: 46rpx;
   }
   
   .size-medium {
     width: 180rpx;
     height: 180rpx;
-    font-size: 44rpx;
+    font-size: 50rpx;
   }
   
   .size-large {
     width: 200rpx;
     height: 200rpx;
-    font-size: 48rpx;
+    font-size: 54rpx;
   }
 }
 </style> 
