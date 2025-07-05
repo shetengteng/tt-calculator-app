@@ -11,77 +11,63 @@ export const THEMES = {
 const currentTheme = ref(THEMES.DARK)
 const systemTheme = ref(THEMES.DARK)
 
-// 主题变量定义
-const themes = {
-  [THEMES.LIGHT]: {
-    // 主要颜色
-    primaryBackground: '#FFFFFF',
-    secondaryBackground: '#F2F2F7',
-    tertiaryBackground: '#FFFFFF',
-    
-    // 文字颜色
-    textPrimary: '#000000',
-    textSecondary: '#FFFFFF',
-    textMuted: '#8E8E93',
-    
-    // 按钮颜色
-    buttonBlue: '#007AFF',
-    buttonDark: '#E5E5EA',
-    buttonLight: '#F2F2F7',
-    buttonBlueText: '#FFFFFF',
-    buttonDarkText: '#000000',
-    buttonLightText: '#000000',
-    
-    // 其他颜色
-    accentBlue: '#007AFF',
-    lightGray: '#8E8E93',
-    darkGray: '#C7C7CC',
-    border: '#C6C6C8',
-    separator: '#C6C6C8',
-    overlay: 'rgba(0, 0, 0, 0.3)',
-    shadowColor: 'rgba(0, 0, 0, 0.05)',
-    
-    // 抽屉颜色
-    drawerBackground: '#F2F2F7',
-    drawerHeader: '#F2F2F7',
-    drawerItemBackground: '#FFFFFF',
-    drawerItemHover: '#E5E5EA'
-  },
-  
-  [THEMES.DARK]: {
-    // 主要颜色
-    primaryBackground: '#2C2C2E',
-    secondaryBackground: '#1C1C1E',
-    tertiaryBackground: '#2C2C2E',
-    
-    // 文字颜色
-    textPrimary: '#FFFFFF',
-    textSecondary: '#000000',
-    textMuted: '#8E8E93',
-    
-    // 按钮颜色
-    buttonBlue: '#00A8E6',
-    buttonDark: '#505050',
-    buttonLight: '#A6A6A6',
-    buttonBlueText: '#FFFFFF',
-    buttonDarkText: '#FFFFFF',
-    buttonLightText: '#000000',
-    
-    // 其他颜色
-    accentBlue: '#00A8E6',
-    lightGray: '#A6A6A6',
-    darkGray: '#505050',
-    border: '#505050',
-    separator: '#505050',
-    overlay: 'rgba(0, 0, 0, 0.3)',
-    shadowColor: 'rgba(0, 0, 0, 0.1)',
-    
-    // 抽屉颜色
-    drawerBackground: '#2C2C2E',
-    drawerHeader: '#2C2C2E',
-    drawerItemBackground: '#3A3A3C',
-    drawerItemHover: '#48484A'
+// 主题配置缓存
+const themeConfigs = ref({})
+const themeIndex = ref(null)
+
+// 加载主题索引
+const loadThemeIndex = async () => {
+  try {
+    const response = await fetch('/static/themes/index.json')
+    const data = await response.json()
+    themeIndex.value = data
+    return data
+  } catch (error) {
+    console.error('Failed to load theme index:', error)
+    throw new Error('Theme index file is missing or corrupted')
   }
+}
+
+// 加载单个主题配置
+const loadThemeConfig = async (themeId) => {
+  try {
+    // 如果已缓存，直接返回
+    if (themeConfigs.value[themeId]) {
+      return themeConfigs.value[themeId]
+    }
+    
+    const response = await fetch(`/static/themes/${themeId}.json`)
+    const config = await response.json()
+    
+    // 验证配置文件格式（auto主题的colors可以为null）
+    if (!config.colors && themeId !== 'auto') {
+      throw new Error(`Invalid theme config: missing colors for ${themeId}`)
+    }
+    
+    // 缓存配置
+    themeConfigs.value[themeId] = config
+    return config
+  } catch (error) {
+    console.error(`Failed to load theme config for ${themeId}:`, error)
+    throw new Error(`Theme config file ${themeId}.json is missing or corrupted`)
+  }
+}
+
+// 获取所有可用主题
+const getAvailableThemes = async () => {
+  const index = await loadThemeIndex()
+  if (!index) return []
+  
+  const themes = []
+  for (const theme of index.themes) {
+    if (theme.enabled) {
+      const config = await loadThemeConfig(theme.id)
+      if (config) {
+        themes.push(config)
+      }
+    }
+  }
+  return themes
 }
 
 export function useTheme() {
@@ -95,7 +81,35 @@ export function useTheme() {
   
   // 计算当前主题变量
   const themeVars = computed(() => {
-    return themes[activeTheme.value] || themes[THEMES.DARK]
+    const themeId = activeTheme.value.toLowerCase()
+    
+    // 如果是自动主题，使用对应的系统主题配置
+    if (activeTheme.value === THEMES.AUTO) {
+      const fallbackThemeId = systemTheme.value.toLowerCase()
+      if (themeConfigs.value[fallbackThemeId] && themeConfigs.value[fallbackThemeId].colors) {
+        return themeConfigs.value[fallbackThemeId].colors
+      }
+      // 如果系统主题配置还没有加载，返回一个最基本的配置避免应用崩溃
+      console.warn(`System theme configuration not yet loaded for ${fallbackThemeId}`)
+      return {
+        primaryBackground: fallbackThemeId === 'dark' ? '#2C2C2E' : '#FFFFFF',
+        textPrimary: fallbackThemeId === 'dark' ? '#FFFFFF' : '#000000',
+        buttonBlue: fallbackThemeId === 'dark' ? '#00A8E6' : '#007AFF'
+      }
+    }
+    
+    // 从配置文件中获取普通主题
+    if (themeConfigs.value[themeId] && themeConfigs.value[themeId].colors) {
+      return themeConfigs.value[themeId].colors
+    }
+    
+    // 如果配置文件还没有加载，返回一个最基本的配置避免应用崩溃
+    console.warn(`Theme configuration not yet loaded for ${themeId}`)
+    return {
+      primaryBackground: themeId === 'dark' ? '#2C2C2E' : '#FFFFFF',
+      textPrimary: themeId === 'dark' ? '#FFFFFF' : '#000000',
+      buttonBlue: themeId === 'dark' ? '#00A8E6' : '#007AFF'
+    }
   })
   
   // 检测系统主题
@@ -120,9 +134,9 @@ export function useTheme() {
   
   // 应用主题到页面
   const applyTheme = () => {
-    const vars = themeVars.value
-    
     try {
+      const vars = themeVars.value
+      
       // 在H5环境中设置CSS自定义属性到document root
       if (typeof document !== 'undefined') {
         const root = document.documentElement
@@ -132,6 +146,19 @@ export function useTheme() {
           const cssVar = `--theme-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`
           root.style.setProperty(cssVar, vars[key])
         })
+        
+        // 应用设置相关的变量
+        if (vars.settingsBackground) {
+          root.style.setProperty('--settings-background', vars.settingsBackground)
+          root.style.setProperty('--settings-card-background', vars.settingsCardBackground)
+          root.style.setProperty('--settings-text-primary', vars.settingsTextPrimary)
+          root.style.setProperty('--settings-text-secondary', vars.settingsTextSecondary)
+          root.style.setProperty('--settings-primary-color', vars.settingsPrimaryColor)
+          root.style.setProperty('--settings-danger-color', vars.settingsDangerColor)
+          root.style.setProperty('--settings-separator', vars.settingsSeparator)
+          root.style.setProperty('--settings-toggle-active', vars.settingsToggleActive)
+          root.style.setProperty('--settings-toggle-inactive', vars.settingsToggleInactive)
+        }
         
         // 设置主题数据属性用于CSS选择器
         root.setAttribute('data-theme', activeTheme.value.toLowerCase())
@@ -156,6 +183,19 @@ export function useTheme() {
               const cssVar = `--theme-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`
               style.setProperty(cssVar, vars[key])
             })
+            
+            // 应用设置相关的变量
+            if (vars.settingsBackground) {
+              style.setProperty('--settings-background', vars.settingsBackground)
+              style.setProperty('--settings-card-background', vars.settingsCardBackground)
+              style.setProperty('--settings-text-primary', vars.settingsTextPrimary)
+              style.setProperty('--settings-text-secondary', vars.settingsTextSecondary)
+              style.setProperty('--settings-primary-color', vars.settingsPrimaryColor)
+              style.setProperty('--settings-danger-color', vars.settingsDangerColor)
+              style.setProperty('--settings-separator', vars.settingsSeparator)
+              style.setProperty('--settings-toggle-active', vars.settingsToggleActive)
+              style.setProperty('--settings-toggle-inactive', vars.settingsToggleInactive)
+            }
             
             // 设置页面背景色
             style.backgroundColor = vars.primaryBackground
@@ -183,7 +223,9 @@ export function useTheme() {
       console.log('Applied theme:', activeTheme.value, vars)
       
     } catch (error) {
-      console.warn('Failed to apply theme:', error)
+      console.error('Failed to apply theme:', error)
+      // 主题应用失败是严重错误，应该让用户知道
+      throw error
     }
   }
   
@@ -248,12 +290,21 @@ export function useTheme() {
   watch(activeTheme, () => {
     applyTheme()
   }, { immediate: false })
+
+  // 监听主题配置加载完成
+  watch(themeConfigs, () => {
+    // 当主题配置加载完成后，重新应用主题
+    applyTheme()
+  }, { deep: true })
   
   // 初始化
-  onMounted(() => {
+  onMounted(async () => {
     detectSystemTheme()
     loadTheme()
     watchSystemTheme()
+    
+    // 初始化主题配置
+    await initializeThemes()
     
     // 立即应用主题
     applyTheme()
@@ -264,18 +315,66 @@ export function useTheme() {
     }, 100)
   })
   
+  // 初始化主题配置
+  const initializeThemes = async () => {
+    try {
+      // 预加载默认主题
+      const index = await loadThemeIndex()
+      if (index) {
+        // 加载默认主题
+        await loadThemeConfig(index.defaultTheme)
+        
+        // 预加载其他主题
+        for (const theme of index.themes) {
+          if (theme.enabled && theme.id !== index.defaultTheme) {
+            await loadThemeConfig(theme.id)
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Failed to initialize themes:', error)
+      throw error
+    }
+  }
+
+  // 立即初始化主题（在模块加载时就开始）
+  const immediateInit = async () => {
+    try {
+      // 先检测系统主题和加载保存的主题
+      detectSystemTheme()
+      loadTheme()
+      
+      // 初始化主题配置
+      await initializeThemes()
+      
+      // 应用主题
+      applyTheme()
+    } catch (error) {
+      console.error('Failed to initialize themes:', error)
+      // 主题初始化失败是严重错误，应该抛出异常
+      throw new Error('Theme system initialization failed. Please check theme configuration files.')
+    }
+  }
+  
+  // 立即执行初始化
+  immediateInit()
+
   return {
     // 状态
     currentTheme: computed(() => currentTheme.value),
     activeTheme,
     themeVars,
     systemTheme: computed(() => systemTheme.value),
+    themeConfigs: computed(() => themeConfigs.value),
     
     // 方法
     setTheme,
     getThemeOptions,
     getCurrentThemeIndex,
     applyTheme,
+    loadThemeConfig,
+    getAvailableThemes,
+    initializeThemes,
     
     // 常量
     THEMES

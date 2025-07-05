@@ -29,7 +29,7 @@
             <view class="theme-preview" 
                   :style="{ 
                     background: option.value === 'Auto' ? 
-                      'linear-gradient(135deg, ' + themeColors[THEMES.LIGHT].primaryBackground + ' 0%, ' + themeColors[THEMES.LIGHT].primaryBackground + ' 50%, ' + themeColors[THEMES.DARK].primaryBackground + ' 50%, ' + themeColors[THEMES.DARK].primaryBackground + ' 100%)' : 
+                      getAutoThemePreviewBackground : 
                       option.colors.primaryBackground,
                     borderColor: option.colors.border
                   }">
@@ -128,6 +128,8 @@ const {
   setTheme, 
   getThemeOptions, 
   getCurrentThemeIndex,
+  getAvailableThemes,
+  themeConfigs,
   THEMES
 } = useTheme()
 
@@ -139,58 +141,66 @@ const isExpanded = ref(false)
 const themeOptions = getThemeOptions()
 const themeIndex = ref(getCurrentThemeIndex())
 
-// 主题颜色定义 - 使用实际的主题颜色
-const themeColors = {
-  [THEMES.LIGHT]: {
-    primaryBackground: '#FFFFFF',
-    secondaryBackground: '#F2F2F7',
-    textPrimary: '#000000',
-    buttonBlue: '#007AFF',
-    buttonDark: '#E5E5EA',
-    buttonDarkText: '#000000',
+// 获取主题预览颜色
+const getThemePreviewColors = (themeValue) => {
+  const themeId = themeValue.toLowerCase()
+  
+  // 直接从主题配置中获取颜色
+  if (themeConfigs.value[themeId] && themeConfigs.value[themeId].colors) {
+    return themeConfigs.value[themeId].colors
+  }
+  
+  // 如果是自动主题，使用对应的主题配置
+  if (themeValue === 'Auto') {
+    const systemInfo = uni.getSystemInfoSync()
+    const isDark = systemInfo.theme === 'dark' || (new Date().getHours() >= 18 || new Date().getHours() <= 6)
+    const fallbackThemeId = isDark ? 'dark' : 'light'
+    
+    if (themeConfigs.value[fallbackThemeId] && themeConfigs.value[fallbackThemeId].colors) {
+      return themeConfigs.value[fallbackThemeId].colors
+    }
+  }
+  
+  // 如果配置文件还没有加载，返回基本配置
+  console.warn(`Theme configuration not yet loaded for ${themeValue}`)
+  return {
+    primaryBackground: themeId === 'dark' ? '#2C2C2E' : '#FFFFFF',
+    secondaryBackground: themeId === 'dark' ? '#1C1C1E' : '#F2F2F7',
+    textPrimary: themeId === 'dark' ? '#FFFFFF' : '#000000',
+    buttonBlue: themeId === 'dark' ? '#00A8E6' : '#007AFF',
+    buttonDark: themeId === 'dark' ? '#505050' : '#E5E5EA',
+    buttonDarkText: themeId === 'dark' ? '#FFFFFF' : '#000000',
     buttonBlueText: '#FFFFFF',
-    border: '#C6C6C8'
-  },
-  [THEMES.DARK]: {
-    primaryBackground: '#2C2C2E',
-    secondaryBackground: '#1C1C1E',
-    textPrimary: '#FFFFFF',
-    buttonBlue: '#00A8E6',
-    buttonDark: '#505050',
-    buttonDarkText: '#FFFFFF',
-    buttonBlueText: '#FFFFFF',
-    border: '#505050'
+    border: themeId === 'dark' ? '#505050' : '#C6C6C8'
   }
 }
 
-// 获取主题预览颜色
-const getThemePreviewColors = (themeValue) => {
-  if (themeValue === 'Light') {
-    return themeColors[THEMES.LIGHT]
-  } else if (themeValue === 'Dark') {
-    return themeColors[THEMES.DARK]
-  } else if (themeValue === 'Auto') {
-    // 自动主题使用当前激活的主题颜色
-    const systemInfo = uni.getSystemInfoSync()
-    const isDark = systemInfo.theme === 'dark' || (new Date().getHours() >= 18 || new Date().getHours() <= 6)
-    return isDark ? themeColors[THEMES.DARK] : themeColors[THEMES.LIGHT]
+// 获取Auto主题的预览背景
+const getAutoThemePreviewBackground = computed(() => {
+  const lightColors = themeConfigs.value.light?.colors
+  const darkColors = themeConfigs.value.dark?.colors
+  
+  if (lightColors && darkColors) {
+    return `linear-gradient(135deg, ${lightColors.primaryBackground} 0%, ${lightColors.primaryBackground} 50%, ${darkColors.primaryBackground} 50%, ${darkColors.primaryBackground} 100%)`
   }
-  return themeColors[THEMES.DARK]
-}
+  
+  // 如果配置还没有加载，使用硬编码的颜色
+  return 'linear-gradient(135deg, #FFFFFF 0%, #FFFFFF 50%, #2C2C2E 50%, #2C2C2E 100%)'
+})
 
 // 详细主题选项
 const themeOptionsDetailed = computed(() => {
   return themeOptions.map((theme, index) => {
-    const themeMap = {
-      'Light': { name: t('theme.light') || '浅色', description: t('theme.lightDesc') || '经典浅色主题' },
-      'Dark': { name: t('theme.dark') || '深色', description: t('theme.darkDesc') || '护眼深色主题' },
-      'Auto': { name: t('theme.auto') || '自动', description: t('theme.autoDesc') || '跟随系统设置' }
-    }
+    const themeId = theme.toLowerCase()
+    const config = themeConfigs.value[themeId]
+    
+    // 使用配置文件中的数据
     return {
       value: theme,
-      name: themeMap[theme]?.name || theme,
-      description: themeMap[theme]?.description || '',
-      colors: getThemePreviewColors(theme)
+      name: config?.name || theme,
+      description: config?.description || '',
+      colors: config?.colors || getThemePreviewColors(theme),
+      metadata: config?.metadata || {}
     }
   })
 })

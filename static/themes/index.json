@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0",
+  "defaultTheme": "dark",
+  "themes": [
+    {
+      "id": "light",
+      "file": "light.json",
+      "enabled": true
+    },
+    {
+      "id": "dark", 
+      "file": "dark.json",
+      "enabled": true
+    },
+    {
+      "id": "auto",
+      "file": "auto.json", 
+      "enabled": true
+    }
+  ],
+  "categories": [
+    {
+      "id": "system",
+      "name": "系统主题",
+      "nameEn": "System Themes",
+      "description": "内置系统主题"
+    }
+  ]
+} 

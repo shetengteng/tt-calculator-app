@@ -2,23 +2,9 @@
 // Calculator App Design Variables
 // ============================================
 
-// 颜色系统
-$calculator-primary-background: #2C2C2E;
-$calculator-secondary-background: #FFFFFF;
-$calculator-accent-blue: #00A8E6;
-$calculator-light-gray: #A6A6A6;
-$calculator-dark-gray: #505050;
-$calculator-text-primary: #FFFFFF;
-$calculator-text-secondary: #000000;
-$calculator-text-muted: #8E8E93;
-
-// 按钮颜色主题
-$button-theme-blue: #00A8E6;
-$button-theme-dark: #505050;
-$button-theme-light: #A6A6A6;
-$button-theme-blue-text: #FFFFFF;
-$button-theme-dark-text: #FFFFFF;
-$button-theme-light-text: #000000;
+// 颜色系统 - 从主题配置中动态获取
+// 所有颜色变量现在通过 CSS 自定义属性从主题配置文件中读取
+// 在 theme-variables.scss 中定义
 
 // 尺寸系统
 $calculator-button-radius: 15px;
@@ -77,7 +63,4 @@ $safe-area-inset-bottom-env: env(safe-area-inset-bottom);
 // 抽屉样式
 $drawer-width: 80%;
 $drawer-width-small: 85%;
-$drawer-background: #F2F2F7;
-$drawer-header-background: #FFFFFF;
-$drawer-border-color: #E5E5E7;
-$drawer-overlay-background: rgba(0, 0, 0, 0.3); 
+// 抽屉颜色变量已移至 theme-variables.scss 中通过主题配置动态获取 
