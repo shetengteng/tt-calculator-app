@@ -18,7 +18,7 @@
         </view>
         
         <!-- 设置页面内容 -->
-        <scroll-view class="drawer-scroll" scroll-y="true">
+        <scroll-view class="drawer-scroll" scroll-y="true" :style="{ height: scrollHeight + 'px' }">
           <!-- 偏好设置 -->
           <view class="settings-section">
             <view class="section-title">{{ t('settings.general') || '偏好设置' }}</view>
@@ -70,7 +70,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import CloseButton from './CloseButton.vue'
 import LanguageSetting from './settings/LanguageSetting.vue'
 import ThemeSetting from './settings/ThemeSetting.vue'
@@ -105,6 +105,18 @@ const { t } = useI18n()
 // 触摸相关
 const touchStartX = ref(0)
 const touchStartY = ref(0)
+
+// 计算滚动区域高度
+const scrollHeight = computed(() => {
+  // 获取屏幕高度
+  const screenHeight = uni.getSystemInfoSync().windowHeight
+  // 头部高度（包含状态栏）
+  const headerHeight = 50 // 约100rpx转换为px
+  // 留出一些安全边距
+  const safeMargin = 20
+  
+  return screenHeight - headerHeight - safeMargin
+})
 
 // 关闭抽屉
 const closeDrawer = () => {
@@ -167,10 +179,8 @@ const handleDrawerTouchEnd = (e) => {
 .drawer-content {
   height: 100%;
   width: 100%;
-  display: flex;
-  flex-direction: column;
   box-sizing: border-box;
-  overflow: hidden;
+  position: relative;
 }
 
 /* 头部样式 */
@@ -200,16 +210,16 @@ const handleDrawerTouchEnd = (e) => {
 
 /* 滚动内容 */
 .drawer-scroll {
-  flex: 1;
   padding: 24rpx 16rpx;
-  /* 确保滚动区域有明确的高度 */
-  height: 0; /* 配合 flex: 1 使用 */
-  overflow-y: auto;
   /* 为底部添加额外的安全区域 */
   padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
   /* 修复宽度问题 - 确保不超过父容器宽度 */
   width: 100%;
   box-sizing: border-box;
+  /* 确保滚动平滑 */
+  -webkit-overflow-scrolling: touch;
+  /* 启用硬件加速 */
+  transform: translateZ(0);
 }
 
 /* 设置选项样式 */

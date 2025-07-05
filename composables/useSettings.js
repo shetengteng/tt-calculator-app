@@ -5,7 +5,14 @@ const DEFAULT_SETTINGS = {
   decimalPlaces: 2,
   thousandSeparator: true,
   hapticFeedback: true,
-  soundEffects: false,
+  soundType: 'none',
+  soundVolume: 50,
+  soundScenarios: {
+    buttonPress: true,
+    calculation: true,
+    result: true,
+    error: true
+  },
   autoCopyResult: false,
   autoSaveHistory: true
 }
@@ -15,7 +22,9 @@ const settings = reactive({
   decimalPlaces: DEFAULT_SETTINGS.decimalPlaces,
   thousandSeparator: DEFAULT_SETTINGS.thousandSeparator,
   hapticFeedback: DEFAULT_SETTINGS.hapticFeedback,
-  soundEffects: DEFAULT_SETTINGS.soundEffects,
+  soundType: DEFAULT_SETTINGS.soundType,
+  soundVolume: DEFAULT_SETTINGS.soundVolume,
+  soundScenarios: DEFAULT_SETTINGS.soundScenarios,
   autoCopyResult: DEFAULT_SETTINGS.autoCopyResult,
   autoSaveHistory: DEFAULT_SETTINGS.autoSaveHistory
 })
@@ -35,6 +44,24 @@ export function useSettings() {
           }
         })
       }
+      
+      // 迁移旧的音效设置
+      if (savedSettings && savedSettings.soundEffects !== undefined && !savedSettings.soundType) {
+        // 将旧的布尔值转换为新的字符串值
+        settings.soundType = savedSettings.soundEffects ? 'classic' : 'none'
+      }
+      
+      // 确保新的音效设置字段存在
+      if (!settings.soundType) {
+        settings.soundType = DEFAULT_SETTINGS.soundType
+      }
+      if (!settings.soundVolume) {
+        settings.soundVolume = DEFAULT_SETTINGS.soundVolume
+      }
+      if (!settings.soundScenarios) {
+        settings.soundScenarios = { ...DEFAULT_SETTINGS.soundScenarios }
+      }
+      
       isInitialized.value = true
     } catch (error) {
       console.error('Failed to load settings:', error)

@@ -180,8 +180,9 @@ onMounted(async () => {
 }
 
 .language-name {
-  font-size: 28rpx;
+  font-size: 28rpx !important;
   color: var(--settings-text-secondary);
+  font-weight: 400 !important;
 }
 
 .language-collapse {

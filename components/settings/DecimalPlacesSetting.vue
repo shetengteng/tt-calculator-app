@@ -152,6 +152,8 @@ watch(() => props.calculator, (newCalculator) => {
 
 <style scoped lang="scss">
 .decimal-places-setting {
+  background: var(--settings-card-background);
+  border-radius: 16rpx;
   overflow: hidden;
 }
 
@@ -162,9 +164,9 @@ watch(() => props.calculator, (newCalculator) => {
 }
 
 .decimal-text {
-  font-size: 28rpx;
+  font-size: 28rpx !important;
   color: var(--settings-text-secondary);
-  font-weight: 400;
+  font-weight: 400 !important;
 }
 
 .decimal-collapse {

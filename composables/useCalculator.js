@@ -1,4 +1,6 @@
 import { ref, watch, nextTick } from 'vue'
+import { useSound } from './useSound.js'
+import { useSettings } from './useSettings.js'
 
 
 export function useCalculator() {
@@ -15,6 +17,10 @@ export function useCalculator() {
   const currentOperator = ref(null)
   const history = ref([])
   const allClear = ref(true)
+
+  // 音效系统
+  const { playButtonSound, playResultSound } = useSound()
+  const { settings } = useSettings()
 
   // 监听器 - 当计算结果改变时自动更新显示
   watch(result, (newResult) => {
@@ -34,6 +40,11 @@ export function useCalculator() {
 
   // 计算器核心方法
   const appendNumber = (number) => {
+    // 播放按键音效
+    if (settings.soundType !== 'none') {
+      playButtonSound(settings.soundType)
+    }
+    
     if (waitingForOperand.value || displayValue.value === '0') {
       displayValue.value = number
       waitingForOperand.value = false
@@ -47,6 +58,11 @@ export function useCalculator() {
   }
 
   const appendDecimal = () => {
+    // 播放按键音效
+    if (settings.soundType !== 'none') {
+      playButtonSound(settings.soundType)
+    }
+    
     if (waitingForOperand.value) {
       displayValue.value = '0.'
       waitingForOperand.value = false
@@ -60,6 +76,11 @@ export function useCalculator() {
   }
 
   const setOperator = (operator) => {
+    // 播放按键音效
+    if (settings.soundType !== 'none') {
+      playButtonSound(settings.soundType)
+    }
+    
     const inputValue = parseFloat(displayValue.value)
     
     if (firstOperand.value === null) {
@@ -77,6 +98,11 @@ export function useCalculator() {
   }
 
   const calculate = () => {
+    // 播放结果音效
+    if (settings.soundType !== 'none') {
+      playResultSound(settings.soundType)
+    }
+    
     const inputValue = parseFloat(displayValue.value)
     
     if (firstOperand.value === null) {
@@ -144,6 +170,11 @@ export function useCalculator() {
   }
 
   const clear = () => {
+    // 播放按键音效
+    if (settings.soundType !== 'none') {
+      playButtonSound(settings.soundType)
+    }
+    
     if (allClear.value) {
       resetCalculator()
     } else {
@@ -168,6 +199,11 @@ export function useCalculator() {
   }
 
   const toggleSign = () => {
+    // 播放按键音效
+    if (settings.soundType !== 'none') {
+      playButtonSound(settings.soundType)
+    }
+    
     const value = parseFloat(displayValue.value)
     if (!isNaN(value)) {
       displayValue.value = String(-value)
@@ -176,6 +212,11 @@ export function useCalculator() {
   }
 
   const percentage = () => {
+    // 播放按键音效
+    if (settings.soundType !== 'none') {
+      playButtonSound(settings.soundType)
+    }
+    
     const value = parseFloat(displayValue.value)
     if (!isNaN(value)) {
       const percentageValue = value / 100
@@ -186,6 +227,11 @@ export function useCalculator() {
   }
 
   const backspace = () => {
+    // 播放按键音效
+    if (settings.soundType !== 'none') {
+      playButtonSound(settings.soundType)
+    }
+    
     if (displayValue.value.length > 1 && displayValue.value !== 'Error') {
       displayValue.value = displayValue.value.slice(0, -1)
     } else {

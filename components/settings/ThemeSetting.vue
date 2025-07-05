@@ -133,7 +133,7 @@ const {
 } = useTheme()
 
 // 使用国际化系统
-const { t } = useI18n()
+const { t, currentLanguage, setLanguage } = useI18n()
 
 // 组件状态
 const isExpanded = ref(false)
@@ -184,11 +184,15 @@ const themeOptionsDetailed = computed(() => {
     const themeId = theme.toLowerCase()
     const config = themeConfigs.value[themeId]
     
+    // 从 locales 中获取主题名称和描述
+    const themeName = t(`themes.${themeId}`) || theme
+    const themeDescription = t(`themes.${themeId}Desc`) || ''
+    
     // 使用配置文件中的数据
     return {
       value: theme,
-      name: config?.name || theme,
-      description: config?.description || '',
+      name: themeName,
+      description: themeDescription,
       colors: config?.colors || getThemePreviewColors(theme),
       metadata: config?.metadata || {}
     }
@@ -227,6 +231,13 @@ watch(currentTheme, () => {
   themeIndex.value = getCurrentThemeIndex()
 })
 
+// 监听语言变化，重新计算主题选项
+watch(currentLanguage, async () => {
+  // 语言变化时，强制刷新翻译缓存
+  await setLanguage(currentLanguage.value, true)
+  console.log('Language changed, theme options updated with fresh translations')
+})
+
 // 初始化主题选项
 const initializeThemeOptions = async () => {
   try {
@@ -263,8 +274,9 @@ onMounted(async () => {
 }
 
 .theme-name {
-  font-size: 28rpx;
+  font-size: 28rpx !important;
   color: var(--settings-text-secondary);
+  font-weight: 400 !important;
 }
 
 .theme-collapse {
