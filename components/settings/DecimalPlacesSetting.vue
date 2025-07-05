@@ -74,7 +74,7 @@ const decimalOptionsDetailed = computed(() => [
     value: 0,
     name: t('settings.decimalPlacesOptions_0') || '整数',
     description: t('settings.decimalPlacesOptions_0_desc') || '不显示小数位',
-    icon: 'ri-number-0'
+    icon: 'ri-hashtag'
   },
   {
     value: 1,

@@ -8,8 +8,7 @@
   "author": "Calculator Team",
   "preview": {
     "primaryColor": "#00A8E6",
-    "backgroundColor": "#2C2C2E",
-    "thumbnail": "/static/themes/previews/dark.png"
+    "backgroundColor": "#2C2C2E"
   },
   "metadata": {
     "category": "system",

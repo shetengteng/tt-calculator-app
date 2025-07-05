@@ -8,8 +8,7 @@
   "author": "Calculator Team",
   "preview": {
     "primaryColor": "#007AFF",
-    "backgroundColor": "linear-gradient(135deg, #FFFFFF 0%, #FFFFFF 50%, #2C2C2E 50%, #2C2C2E 100%)",
-    "thumbnail": "/static/themes/previews/auto.png"
+    "backgroundColor": "linear-gradient(135deg, #FFFFFF 0%, #FFFFFF 50%, #2C2C2E 50%, #2C2C2E 100%)"
   },
   "metadata": {
     "category": "system",

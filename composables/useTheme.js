@@ -1,23 +1,25 @@
 import { ref, computed, watch, onMounted } from 'vue'
 
-// 主题类型
-export const THEMES = {
-  LIGHT: 'Light',
-  DARK: 'Dark',
-  AUTO: 'Auto'
-}
+// 动态主题类型（将从配置文件加载）
+export const THEMES = ref({})
 
 // 当前主题状态
-const currentTheme = ref(THEMES.DARK)
-const systemTheme = ref(THEMES.DARK)
+const currentTheme = ref('Dark')
+const systemTheme = ref('Dark')
 
 // 主题配置缓存
 const themeConfigs = ref({})
 const themeIndex = ref(null)
+const themeSystemInitialized = ref(false)
 
-// 加载主题索引
+// 加载主题索引（只加载一次，缓存结果）
 const loadThemeIndex = async () => {
   try {
+    // 如果已经加载过，直接返回缓存的结果
+    if (themeIndex.value) {
+      return themeIndex.value
+    }
+    
     const response = await fetch('/static/themes/index.json')
     const data = await response.json()
     themeIndex.value = data
@@ -53,27 +55,124 @@ const loadThemeConfig = async (themeId) => {
   }
 }
 
-// 获取所有可用主题
-const getAvailableThemes = async () => {
-  const index = await loadThemeIndex()
-  if (!index) return []
-  
-  const themes = []
-  for (const theme of index.themes) {
-    if (theme.enabled) {
-      const config = await loadThemeConfig(theme.id)
-      if (config) {
-        themes.push(config)
+// 统一的主题系统初始化函数（只运行一次）
+const initializeThemeSystem = async () => {
+  try {
+    // 如果已经初始化过，直接返回缓存的结果
+    if (themeSystemInitialized.value) {
+      const availableThemes = []
+      for (const [key, value] of Object.entries(themeConfigs.value)) {
+        if (value) {
+          availableThemes.push(value)
+        }
+      }
+      return {
+        themes: THEMES.value,
+        availableThemes,
+        index: themeIndex.value
       }
     }
+    
+    // 加载主题索引（只加载一次）
+    const index = await loadThemeIndex()
+    if (!index) {
+      throw new Error('Theme index not found')
+    }
+    
+    // 初始化主题常量和配置
+    const themes = {}
+    const availableThemes = []
+    
+    for (const theme of index.themes) {
+      if (theme.enabled) {
+        const config = await loadThemeConfig(theme.id)
+        if (config) {
+          // 将主题ID转换为常量名称格式
+          const constantName = theme.id.toUpperCase().replace(/-/g, '_')
+          const themeValue = theme.id.charAt(0).toUpperCase() + theme.id.slice(1)
+          themes[constantName] = themeValue
+          availableThemes.push(config)
+        }
+      }
+    }
+    
+    // 如果没有加载到任何主题，抛出错误
+    if (Object.keys(themes).length === 0) {
+      throw new Error('No enabled themes found in configuration')
+    }
+    
+    THEMES.value = themes
+    themeSystemInitialized.value = true
+    console.log('Initialized theme system:', THEMES.value)
+    
+    return {
+      themes: THEMES.value,
+      availableThemes,
+      index
+    }
+  } catch (error) {
+    console.error('Failed to initialize theme system:', error)
+    // 如果加载失败，使用默认主题
+    THEMES.value = {
+      LIGHT: 'Light',
+      DARK: 'Dark',
+      AUTO: 'Auto'
+    }
+    themeSystemInitialized.value = true
+    return {
+      themes: THEMES.value,
+      availableThemes: [],
+      index: null
+    }
   }
-  return themes
+}
+
+// 重新初始化主题系统（清除缓存）
+const reinitializeThemeSystem = async () => {
+  try {
+    // 清除缓存
+    themeSystemInitialized.value = false
+    themeIndex.value = null
+    themeConfigs.value = {}
+    THEMES.value = {}
+    
+    // 重新初始化
+    const result = await initializeThemeSystem()
+    console.log('Theme system reinitialized successfully')
+    return result
+  } catch (error) {
+    console.error('Failed to reinitialize theme system:', error)
+    throw error
+  }
+}
+
+// 获取所有可用主题（使用缓存的结果）
+const getAvailableThemes = async () => {
+  try {
+    // 如果还未初始化，先初始化
+    if (!themeSystemInitialized.value) {
+      const { availableThemes } = await initializeThemeSystem()
+      return availableThemes
+    }
+    
+    // 如果已经初始化，从缓存中获取
+    const themes = []
+    for (const [key, value] of Object.entries(themeConfigs.value)) {
+      if (value) {
+        themes.push(value)
+      }
+    }
+    return themes
+  } catch (error) {
+    console.error('Failed to get available themes:', error)
+    return []
+  }
 }
 
 export function useTheme() {
   // 计算当前激活的主题
   const activeTheme = computed(() => {
-    if (currentTheme.value === THEMES.AUTO) {
+    if (currentTheme.value === 'Auto') {
       return systemTheme.value
     }
     return currentTheme.value
@@ -81,10 +180,21 @@ export function useTheme() {
   
   // 计算当前主题变量
   const themeVars = computed(() => {
+    // 确保activeTheme.value存在
+    if (!activeTheme.value) {
+      console.warn('Active theme is undefined, returning empty theme vars')
+      return {}
+    }
+    
     const themeId = activeTheme.value.toLowerCase()
     
     // 如果是自动主题，使用对应的系统主题配置
-    if (activeTheme.value === THEMES.AUTO) {
+    if (activeTheme.value === 'Auto') {
+      if (!systemTheme.value) {
+        console.warn('System theme is undefined, returning empty theme vars')
+        return {}
+      }
+      
       const fallbackThemeId = systemTheme.value.toLowerCase()
       if (themeConfigs.value[fallbackThemeId] && themeConfigs.value[fallbackThemeId].colors) {
         return themeConfigs.value[fallbackThemeId].colors
@@ -116,15 +226,15 @@ export function useTheme() {
       
       // 检查系统主题设置
       if (systemInfo.theme) {
-        systemTheme.value = systemInfo.theme === 'dark' ? THEMES.DARK : THEMES.LIGHT
+        systemTheme.value = systemInfo.theme === 'dark' ? 'Dark' : 'Light'
       } else {
         // 如果无法检测，根据时间判断（简单的fallback）
         const hour = new Date().getHours()
-        systemTheme.value = (hour >= 18 || hour <= 6) ? THEMES.DARK : THEMES.LIGHT
+        systemTheme.value = (hour >= 18 || hour <= 6) ? 'Dark' : 'Light'
       }
     } catch (error) {
       console.warn('Failed to detect system theme:', error)
-      systemTheme.value = THEMES.DARK
+      systemTheme.value = 'Dark'
     }
   }
   
@@ -132,6 +242,12 @@ export function useTheme() {
   const applyTheme = () => {
     try {
       const vars = themeVars.value
+      
+      // 如果主题变量为空，跳过应用
+      if (!vars || Object.keys(vars).length === 0) {
+        console.warn('Theme vars is empty, skipping theme application')
+        return
+      }
       
       // 在H5环境中设置CSS自定义属性到document root
       if (typeof document !== 'undefined') {
@@ -205,7 +321,7 @@ export function useTheme() {
       // 设置导航栏颜色
       try {
         uni.setNavigationBarColor({
-          frontColor: activeTheme.value === THEMES.LIGHT ? '#000000' : '#ffffff',
+          frontColor: activeTheme.value === 'Light' ? '#000000' : '#ffffff',
           backgroundColor: vars.primaryBackground,
           animation: {
             duration: 300,
@@ -227,7 +343,15 @@ export function useTheme() {
   
   // 设置主题
   const setTheme = (theme) => {
-    if (!Object.values(THEMES).includes(theme)) {
+    // 确保THEMES已初始化
+    if (!THEMES.value || Object.keys(THEMES.value).length === 0) {
+      console.warn('THEMES not initialized yet, deferring theme setting')
+      // 延迟设置主题
+      setTimeout(() => setTheme(theme), 100)
+      return
+    }
+    
+    if (!Object.values(THEMES.value).includes(theme)) {
       console.warn('Invalid theme:', theme)
       return
     }
@@ -249,8 +373,18 @@ export function useTheme() {
   const loadTheme = () => {
     try {
       const savedTheme = uni.getStorageSync('app-theme')
-      if (savedTheme && Object.values(THEMES).includes(savedTheme)) {
-        currentTheme.value = savedTheme
+      if (savedTheme) {
+        // 确保THEMES已初始化
+        if (!THEMES.value || Object.keys(THEMES.value).length === 0) {
+          console.warn('THEMES not initialized yet, deferring theme loading')
+          // 延迟加载主题
+          setTimeout(() => loadTheme(), 100)
+          return
+        }
+        
+        if (Object.values(THEMES.value).includes(savedTheme)) {
+          currentTheme.value = savedTheme
+        }
       }
     } catch (error) {
       console.warn('Failed to load theme:', error)
@@ -258,13 +392,22 @@ export function useTheme() {
   }
   
   // 获取主题选项
-  const getThemeOptions = () => {
-    return Object.values(THEMES)
+  const getThemeOptions = async () => {
+    try {
+      const { themes } = await initializeThemeSystem()
+      return Object.values(themes)
+    } catch (error) {
+      console.error('Failed to get theme options:', error)
+      return Object.values(THEMES.value)
+    }
   }
   
   // 获取当前主题索引（用于picker组件）
   const getCurrentThemeIndex = () => {
-    return Object.values(THEMES).indexOf(currentTheme.value)
+    if (!THEMES.value || Object.keys(THEMES.value).length === 0) {
+      return 0
+    }
+    return Object.values(THEMES.value).indexOf(currentTheme.value)
   }
   
   // 监听系统主题变化
@@ -272,8 +415,8 @@ export function useTheme() {
     try {
       // 监听系统主题变化
       uni.onThemeChange && uni.onThemeChange((res) => {
-        systemTheme.value = res.theme === 'dark' ? THEMES.DARK : THEMES.LIGHT
-        if (currentTheme.value === THEMES.AUTO) {
+        systemTheme.value = res.theme === 'dark' ? 'Dark' : 'Light'
+        if (currentTheme.value === 'Auto') {
           applyTheme()
         }
       })
@@ -314,19 +457,8 @@ export function useTheme() {
   // 初始化主题配置
   const initializeThemes = async () => {
     try {
-      // 预加载默认主题
-      const index = await loadThemeIndex()
-      if (index) {
-        // 加载默认主题
-        await loadThemeConfig(index.defaultTheme)
-        
-        // 预加载其他主题
-        for (const theme of index.themes) {
-          if (theme.enabled && theme.id !== index.defaultTheme) {
-            await loadThemeConfig(theme.id)
-          }
-        }
-      }
+      // 使用统一的主题系统初始化函数
+      await initializeThemeSystem()
     } catch (error) {
       console.error('Failed to initialize themes:', error)
       throw error
@@ -380,6 +512,7 @@ export function useTheme() {
     loadThemeConfig,
     getAvailableThemes,
     initializeThemes,
+    reinitializeThemeSystem,
     
     // 常量
     THEMES

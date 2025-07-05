@@ -30,8 +30,7 @@ static/themes/
   "author": "作者",
   "preview": {
     "primaryColor": "主色调",
-    "backgroundColor": "背景色",
-    "thumbnail": "缩略图路径"
+    "backgroundColor": "背景色"
   },
   "metadata": {
     "category": "分类",

@@ -16,6 +16,16 @@
       "id": "auto",
       "file": "auto.json", 
       "enabled": true
+    },
+    {
+      "id": "minimal-white",
+      "file": "minimal-white.json",
+      "enabled": true
+    },
+    {
+      "id": "minimal-black",
+      "file": "minimal-black.json",
+      "enabled": true
     }
   ],
   "categories": [
@@ -24,6 +34,12 @@
       "name": "系统主题",
       "nameEn": "System Themes",
       "description": "内置系统主题"
+    },
+    {
+      "id": "custom",
+      "name": "自定义主题",
+      "nameEn": "Custom Themes",
+      "description": "用户自定义主题"
     }
   ]
 } 

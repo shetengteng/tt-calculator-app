@@ -128,7 +128,8 @@ const {
   setTheme, 
   getThemeOptions, 
   getCurrentThemeIndex,
-  themeConfigs
+  themeConfigs,
+  reinitializeThemeSystem
 } = useTheme()
 
 // 使用国际化系统
@@ -136,7 +137,7 @@ const { t } = useI18n()
 
 // 组件状态
 const isExpanded = ref(false)
-const themeOptions = getThemeOptions()
+const themeOptions = ref([])
 const themeIndex = ref(getCurrentThemeIndex())
 
 // 获取主题预览颜色
@@ -179,7 +180,7 @@ const getAutoThemePreviewBackground = computed(() => {
 
 // 详细主题选项
 const themeOptionsDetailed = computed(() => {
-  return themeOptions.map((theme, index) => {
+  return themeOptions.value.map((theme, index) => {
     const themeId = theme.toLowerCase()
     const config = themeConfigs.value[themeId]
     
@@ -196,7 +197,7 @@ const themeOptionsDetailed = computed(() => {
 
 // 当前主题名称
 const currentThemeName = computed(() => {
-  return themeOptionsDetailed.value[themeIndex.value]?.name || themeOptions[themeIndex.value]
+  return themeOptionsDetailed.value[themeIndex.value]?.name || themeOptions.value[themeIndex.value]
 })
 
 // 切换折叠状态
@@ -207,7 +208,7 @@ const toggleCollapse = () => {
 // 选择主题
 const selectTheme = (index) => {
   themeIndex.value = index
-  const selectedTheme = themeOptions[index]
+  const selectedTheme = themeOptions.value[index]
   setTheme(selectedTheme)
   
   // 触发变更事件
@@ -226,9 +227,25 @@ watch(currentTheme, () => {
   themeIndex.value = getCurrentThemeIndex()
 })
 
+// 初始化主题选项
+const initializeThemeOptions = async () => {
+  try {
+    // 先尝试重新初始化主题系统以获取最新配置
+    await reinitializeThemeSystem()
+    
+    const options = await getThemeOptions()
+    themeOptions.value = options
+    themeIndex.value = getCurrentThemeIndex()
+    
+    console.log('Theme options initialized:', options)
+  } catch (error) {
+    console.error('Failed to initialize theme options:', error)
+  }
+}
+
 // 初始化
-onMounted(() => {
-  themeIndex.value = getCurrentThemeIndex()
+onMounted(async () => {
+  await initializeThemeOptions()
 })
 </script>
 
