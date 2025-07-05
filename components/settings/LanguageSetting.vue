@@ -8,7 +8,7 @@
     <template #control>
       <picker @change="onLanguageChange" :value="languageIndex" :range="languageOptions">
         <view class="picker-display">
-          <text class="picker-text">{{ languageOptions[languageIndex] }}</text>
+          <text class="picker-text">{{ languageOptions[languageIndex] || '...' }}</text>
         </view>
       </picker>
     </template>
@@ -36,30 +36,51 @@ const {
   t, 
   setLanguage, 
   getLanguageOptions, 
-  getCurrentLanguageIndex
+  getCurrentLanguageIndex,
+  preloadLanguages
 } = useI18n()
 
 // 语言选项数据
-const languageOptions = getLanguageOptions().map(opt => opt.label)
-const languageIndex = ref(getCurrentLanguageIndex())
+const languageOptions = ref([])
+const languageIndex = ref(0)
+const languageOptionsData = ref([])
+
+// 初始化语言选项
+const initializeLanguageOptions = async () => {
+  try {
+    // 先预加载语言列表和文件
+    await preloadLanguages()
+    
+    const options = await getLanguageOptions()
+    languageOptionsData.value = options
+    languageOptions.value = options.map(opt => opt.label)
+    languageIndex.value = getCurrentLanguageIndex()
+  } catch (error) {
+    console.error('Failed to initialize language options:', error)
+    throw error // 直接抛出错误，不做降级处理
+  }
+}
 
 // 语言变更处理
 const onLanguageChange = (e) => {
   languageIndex.value = e.detail.value
-  const selectedLanguage = getLanguageOptions()[e.detail.value].value
-  setLanguage(selectedLanguage)
+  const selectedLanguage = languageOptionsData.value[e.detail.value]?.value
   
-  // 触发变更事件
-  emit('change', {
-    type: 'language',
-    value: selectedLanguage,
-    index: languageIndex.value
-  })
+  if (selectedLanguage) {
+    setLanguage(selectedLanguage)
+    
+    // 触发变更事件
+    emit('change', {
+      type: 'language',
+      value: selectedLanguage,
+      index: languageIndex.value
+    })
+  }
 }
 
 // 初始化
-onMounted(() => {
-  languageIndex.value = getCurrentLanguageIndex()
+onMounted(async () => {
+  await initializeLanguageOptions()
 })
 </script>
 
