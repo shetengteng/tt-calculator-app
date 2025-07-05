@@ -59,8 +59,8 @@
 
 // 按钮激活状态
 @mixin button-active {
-  background-color: $calculator-secondary-background !important;
-  color: $calculator-accent-blue !important;
+  background-color: var(--theme-secondary-background) !important;
+  color: var(--theme-accent-blue) !important;
 }
 
 // 按钮交互效果

@@ -54,15 +54,7 @@
   --settings-toggle-inactive: ;
 }
 
-// 兼容性：映射新变量到旧变量名
-$calculator-primary-background: var(--theme-primary-background);
-$calculator-secondary-background: var(--theme-secondary-background);
-$calculator-accent-blue: var(--theme-accent-blue);
-$calculator-light-gray: var(--theme-light-gray);
-$calculator-dark-gray: var(--theme-dark-gray);
-$calculator-text-primary: var(--theme-text-primary);
-$calculator-text-secondary: var(--theme-text-secondary);
-$calculator-text-muted: var(--theme-text-muted);
+// 兼容性变量已移除，现在直接使用 CSS 自定义属性
 
 // 按钮主题变量
 $button-theme-blue: var(--theme-button-blue);

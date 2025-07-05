@@ -89,13 +89,11 @@ export function useTheme() {
       if (themeConfigs.value[fallbackThemeId] && themeConfigs.value[fallbackThemeId].colors) {
         return themeConfigs.value[fallbackThemeId].colors
       }
-      // 如果系统主题配置还没有加载，返回一个最基本的配置避免应用崩溃
-      console.warn(`System theme configuration not yet loaded for ${fallbackThemeId}`)
-      return {
-        primaryBackground: fallbackThemeId === 'dark' ? '#2C2C2E' : '#FFFFFF',
-        textPrimary: fallbackThemeId === 'dark' ? '#FFFFFF' : '#000000',
-        buttonBlue: fallbackThemeId === 'dark' ? '#00A8E6' : '#007AFF'
-      }
+      // 如果系统主题配置还没有加载，等待配置加载完成
+      console.warn(`System theme configuration not yet loaded for ${fallbackThemeId}, waiting for initialization...`)
+      
+      // 返回空对象，等待配置加载完成后再应用主题
+      return {}
     }
     
     // 从配置文件中获取普通主题
@@ -103,13 +101,11 @@ export function useTheme() {
       return themeConfigs.value[themeId].colors
     }
     
-    // 如果配置文件还没有加载，返回一个最基本的配置避免应用崩溃
-    console.warn(`Theme configuration not yet loaded for ${themeId}`)
-    return {
-      primaryBackground: themeId === 'dark' ? '#2C2C2E' : '#FFFFFF',
-      textPrimary: themeId === 'dark' ? '#FFFFFF' : '#000000',
-      buttonBlue: themeId === 'dark' ? '#00A8E6' : '#007AFF'
-    }
+    // 如果配置文件还没有加载，等待配置加载完成
+    console.warn(`Theme configuration not yet loaded for ${themeId}, waiting for initialization...`)
+    
+    // 返回空对象，等待配置加载完成后再应用主题
+    return {}
   })
   
   // 检测系统主题
@@ -344,14 +340,23 @@ export function useTheme() {
       detectSystemTheme()
       loadTheme()
       
-      // 初始化主题配置
+      // 初始化主题配置 - 确保配置完全加载后再应用主题
       await initializeThemes()
       
-      // 应用主题
-      applyTheme()
+      // 等待所有主题配置加载完成后再应用主题
+      if (Object.keys(themeConfigs.value).length > 0) {
+        applyTheme()
+      } else {
+        console.warn('Theme configurations not loaded, retrying...')
+        // 重试加载
+        setTimeout(async () => {
+          await initializeThemes()
+          applyTheme()
+        }, 500)
+      }
     } catch (error) {
       console.error('Failed to initialize themes:', error)
-      // 主题初始化失败是严重错误，应该抛出异常
+      // 主题初始化失败时，使用基本的错误处理而不是硬编码默认值
       throw new Error('Theme system initialization failed. Please check theme configuration files.')
     }
   }

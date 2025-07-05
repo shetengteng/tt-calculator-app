@@ -4,7 +4,7 @@
 
 // 全局页面样式
 page {
-  background-color: $calculator-primary-background;
+  background-color: var(--theme-primary-background);
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, sans-serif;
   height: 100%;
   overflow: hidden;
@@ -126,16 +126,16 @@ uni-page-wrapper {
 .pr-xxl { padding-right: $spacing-xxl; }
 
 // 颜色工具类
-.text-primary { color: $calculator-text-primary; }
-.text-secondary { color: $calculator-text-secondary; }
-.text-muted { color: $calculator-text-muted; }
-.text-blue { color: $calculator-accent-blue; }
+.text-primary { color: var(--theme-text-primary); }
+.text-secondary { color: var(--theme-text-secondary); }
+.text-muted { color: var(--theme-text-muted); }
+.text-blue { color: var(--theme-accent-blue); }
 
-.bg-primary { background-color: $calculator-primary-background; }
-.bg-secondary { background-color: $calculator-secondary-background; }
-.bg-blue { background-color: $calculator-accent-blue; }
-.bg-light-gray { background-color: $calculator-light-gray; }
-.bg-dark-gray { background-color: $calculator-dark-gray; }
+.bg-primary { background-color: var(--theme-primary-background); }
+.bg-secondary { background-color: var(--theme-secondary-background); }
+.bg-blue { background-color: var(--theme-accent-blue); }
+.bg-light-gray { background-color: var(--theme-light-gray); }
+.bg-dark-gray { background-color: var(--theme-dark-gray); }
 
 // 圆角工具类
 .rounded-sm { border-radius: $border-radius-small; }

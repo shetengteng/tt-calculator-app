@@ -128,9 +128,7 @@ const {
   setTheme, 
   getThemeOptions, 
   getCurrentThemeIndex,
-  getAvailableThemes,
-  themeConfigs,
-  THEMES
+  themeConfigs
 } = useTheme()
 
 // 使用国际化系统
@@ -161,18 +159,9 @@ const getThemePreviewColors = (themeValue) => {
     }
   }
   
-  // 如果配置文件还没有加载，返回基本配置
-  console.warn(`Theme configuration not yet loaded for ${themeValue}`)
-  return {
-    primaryBackground: themeId === 'dark' ? '#2C2C2E' : '#FFFFFF',
-    secondaryBackground: themeId === 'dark' ? '#1C1C1E' : '#F2F2F7',
-    textPrimary: themeId === 'dark' ? '#FFFFFF' : '#000000',
-    buttonBlue: themeId === 'dark' ? '#00A8E6' : '#007AFF',
-    buttonDark: themeId === 'dark' ? '#505050' : '#E5E5EA',
-    buttonDarkText: themeId === 'dark' ? '#FFFFFF' : '#000000',
-    buttonBlueText: '#FFFFFF',
-    border: themeId === 'dark' ? '#505050' : '#C6C6C8'
-  }
+  // 如果配置文件还没有加载，返回空对象等待配置加载完成
+  console.warn(`Theme configuration not yet loaded for ${themeValue}, waiting for initialization...`)
+  return {}
 }
 
 // 获取Auto主题的预览背景
@@ -184,8 +173,8 @@ const getAutoThemePreviewBackground = computed(() => {
     return `linear-gradient(135deg, ${lightColors.primaryBackground} 0%, ${lightColors.primaryBackground} 50%, ${darkColors.primaryBackground} 50%, ${darkColors.primaryBackground} 100%)`
   }
   
-  // 如果配置还没有加载，使用硬编码的颜色
-  return 'linear-gradient(135deg, #FFFFFF 0%, #FFFFFF 50%, #2C2C2E 50%, #2C2C2E 100%)'
+  // 如果配置还没有加载，返回透明渐变等待配置加载完成
+  return 'linear-gradient(135deg, transparent 0%, transparent 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1) 100%)'
 })
 
 // 详细主题选项

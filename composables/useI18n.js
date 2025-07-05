@@ -85,38 +85,38 @@ const loadLanguageName = async (language) => {
 }
 
 // 加载语言文件
-const loadLanguageFile = async (language) => {
-  // 如果已经缓存，直接返回
-  if (translationsCache.value[language]) {
-    return translationsCache.value[language]
+const loadLanguageFile = async (language, forceRefresh = false) => {
+  // 如果强制刷新或没有缓存，重新加载
+  if (forceRefresh || !translationsCache.value[language]) {
+    try {
+      // 在 uni-app 中使用 uni.request 加载本地JSON文件
+      const response = await new Promise((resolve, reject) => {
+        uni.request({
+          url: `/static/locales/${language}.json?t=${Date.now()}`, // 添加时间戳防止缓存
+          method: 'GET',
+          success: (res) => {
+            if (res.statusCode === 200) {
+              resolve(res.data)
+            } else {
+              reject(new Error(`Failed to load language file: ${res.statusCode}`))
+            }
+          },
+          fail: (err) => {
+            reject(err)
+          }
+        })
+      })
+      
+      // 缓存翻译数据
+      translationsCache.value[language] = response
+      return response
+    } catch (error) {
+      console.error(`Failed to load language file for ${language}:`, error)
+      throw error
+    }
   }
   
-  try {
-    // 在 uni-app 中使用 uni.request 加载本地JSON文件
-    const response = await new Promise((resolve, reject) => {
-      uni.request({
-        url: `/static/locales/${language}.json`,
-        method: 'GET',
-        success: (res) => {
-          if (res.statusCode === 200) {
-            resolve(res.data)
-          } else {
-            reject(new Error(`Failed to load language file: ${res.statusCode}`))
-          }
-        },
-        fail: (err) => {
-          reject(err)
-        }
-      })
-    })
-    
-    // 缓存翻译数据
-    translationsCache.value[language] = response
-    return response
-  } catch (error) {
-    console.error(`Failed to load language file for ${language}:`, error)
-    throw error
-  }
+  return translationsCache.value[language]
 }
 
 // 获取嵌套对象的值
@@ -163,7 +163,7 @@ export function useI18n() {
   }
   
   // 设置语言
-  const setLanguage = async (language) => {
+  const setLanguage = async (language, forceRefresh = false) => {
     // 确保语言列表已经加载
     if (availableLanguages.value.length === 0) {
       await loadLanguageList()
@@ -176,7 +176,7 @@ export function useI18n() {
     
     try {
       // 加载语言文件
-      await loadLanguageFile(language)
+      await loadLanguageFile(language, forceRefresh)
       
       // 更新当前语言
       currentLanguage.value = language
@@ -195,6 +195,11 @@ export function useI18n() {
     } catch (error) {
       console.error('Failed to set language:', error)
     }
+  }
+  
+  // 强制刷新翻译
+  const refreshTranslations = async () => {
+    await setLanguage(currentLanguage.value, true)
   }
   
   // 从本地存储加载语言
@@ -316,6 +321,9 @@ export function useI18n() {
     loadLanguageList,
     
     // 常量
-    defaultLanguage: languageConfig.value.defaultLanguage
+    defaultLanguage: languageConfig.value.defaultLanguage,
+    
+    // 新方法
+    refreshTranslations
   }
 } 

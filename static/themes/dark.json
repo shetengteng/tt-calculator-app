@@ -44,13 +44,13 @@
     "drawerHeader": "#2C2C2E",
     "drawerItemBackground": "#3A3A3C",
     "drawerItemHover": "#48484A",
-    "settingsBackground": "#1C1C1E",
-    "settingsCardBackground": "#2C2C2E",
+    "settingsBackground": "#1A1A1C",
+    "settingsCardBackground": "#2A2A2C",
     "settingsTextPrimary": "#FFFFFF",
     "settingsTextSecondary": "#8E8E93",
     "settingsPrimaryColor": "#00A8E6",
     "settingsDangerColor": "#FF3B30",
-    "settingsSeparator": "#3A3A3C",
+    "settingsSeparator": "#3C3C3E",
     "settingsToggleActive": "#00A8E6",
     "settingsToggleInactive": "#3A3A3C"
   }
