@@ -1,4 +1,10 @@
 {
+  "_metadata": {
+    "code": "zh-CN",
+    "name": "简体中文",
+    "nativeName": "简体中文",
+    "sortKey": "zh-CN"
+  },
   "appTitle": "计算器",
   "buttons": {
     "clear": "清空",

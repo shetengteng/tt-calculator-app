@@ -1,4 +1,10 @@
 {
+  "_metadata": {
+    "code": "en-US",
+    "name": "English",
+    "nativeName": "English",
+    "sortKey": "en-US"
+  },
   "appTitle": "Calculator",
   "buttons": {
     "clear": "Clear",

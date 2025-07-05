@@ -1,4 +1,10 @@
 {
+  "_metadata": {
+    "code": "ja-JP",
+    "name": "日本語",
+    "nativeName": "日本語",
+    "sortKey": "ja-JP"
+  },
   "appTitle": "電卓",
   "buttons": {
     "clear": "クリア",
