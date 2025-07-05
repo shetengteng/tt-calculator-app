@@ -3,7 +3,9 @@
     "code": "en-US",
     "name": "English",
     "nativeName": "English",
-    "sortKey": "en-US"
+    "sortKey": "en-US",
+    "flag": "🇺🇸",
+    "region": "United States"
   },
   "appTitle": "Calculator",
   "buttons": {

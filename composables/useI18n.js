@@ -71,9 +71,13 @@ const loadLanguageName = async (language) => {
   
   try {
     const languageData = await loadLanguageFile(language)
-    const name = languageData._metadata?.name || language
-    languageNamesCache.value[language] = name
-    return name
+    const languageInfo = {
+      name: languageData._metadata?.name || language,
+      flag: languageData._metadata?.flag || '🌐',
+      region: languageData._metadata?.region || ''
+    }
+    languageNamesCache.value[language] = languageInfo
+    return languageInfo
   } catch (error) {
     console.error(`Failed to load language name for ${language}:`, error)
     throw error
@@ -254,10 +258,13 @@ export function useI18n() {
     const options = []
     
     for (const lang of availableLanguages.value) {
-      const name = await loadLanguageName(lang)
+      const languageInfo = await loadLanguageName(lang)
       options.push({
         value: lang,
-        label: name
+        label: languageInfo.name,
+        name: languageInfo.name,
+        flag: languageInfo.flag,
+        region: languageInfo.region
       })
     }
     

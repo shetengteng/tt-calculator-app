@@ -3,7 +3,9 @@
     "code": "zh-CN",
     "name": "简体中文",
     "nativeName": "简体中文",
-    "sortKey": "zh-CN"
+    "sortKey": "zh-CN",
+    "flag": "🇨🇳",
+    "region": "中国大陆"
   },
   "appTitle": "计算器",
   "buttons": {

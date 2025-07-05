@@ -3,7 +3,9 @@
     "code": "ko-KR",
     "name": "한국어",
     "nativeName": "한국어",
-    "sortKey": "ko-KR"
+    "sortKey": "ko-KR",
+    "flag": "🇰🇷",
+    "region": "대한민국"
   },
   "appTitle": "계산기",
   "buttons": {

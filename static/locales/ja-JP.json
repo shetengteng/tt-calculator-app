@@ -3,7 +3,9 @@
     "code": "ja-JP",
     "name": "日本語",
     "nativeName": "日本語",
-    "sortKey": "ja-JP"
+    "sortKey": "ja-JP",
+    "flag": "🇯🇵",
+    "region": "日本"
   },
   "appTitle": "電卓",
   "buttons": {
