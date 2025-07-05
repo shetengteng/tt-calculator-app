@@ -27,7 +27,7 @@
         >
           <view class="option-content">
             <view class="option-icon">
-              <SvgIcon :name="option.icon" size="48rpx" color="var(--settings-text-primary)" />
+              <SvgIcon :name="option.icon" size="32rpx" color="var(--settings-text-primary)" />
             </view>
             <view class="option-text">
               <text class="option-name">{{ option.name }}</text>
