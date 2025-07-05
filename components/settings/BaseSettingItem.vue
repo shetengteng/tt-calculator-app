@@ -1,7 +1,11 @@
 <template>
   <view class="setting-item" :class="{ 'clickable': clickable, 'danger': isDanger }" @click="handleClick">
     <view class="setting-icon" v-if="icon">
-      <text class="icon-text" :class="[icon, { 'danger-icon': isDanger }]"></text>
+      <SvgIcon 
+        :name="icon" 
+        :color="isDanger ? 'var(--settings-danger-color)' : 'var(--settings-text-secondary)'"
+        size="24rpx"
+      />
     </view>
     <view class="setting-info">
       <text class="setting-title" :class="{ 'danger-text': isDanger }">{{ title }}</text>
@@ -17,6 +21,8 @@
 </template>
 
 <script setup>
+import SvgIcon from '../SvgIcon.vue'
+
 // Props
 const props = defineProps({
   title: {
@@ -88,15 +94,7 @@ const handleClick = () => {
   justify-content: center;
 }
 
-.icon-text {
-  font-size: 24rpx;
-  color: var(--settings-text-secondary);
-  font-family: 'remixicon';
-  
-  &.danger-icon {
-    color: var(--settings-danger-color);
-  }
-}
+
 
 .setting-info {
   flex: 1;
