@@ -1,6 +1,7 @@
 import { ref, watch, nextTick } from 'vue'
 import { useSound } from './useSound.js'
 import { useSettings } from './useSettings.js'
+import { useCalculatorHistory } from './useCalculatorHistory.js'
 
 
 export function useCalculator() {
@@ -15,12 +16,14 @@ export function useCalculator() {
   const firstOperand = ref(null)
   const secondOperand = ref(null)
   const currentOperator = ref(null)
-  const history = ref([])
   const allClear = ref(true)
 
   // 音效系统
   const { playButtonSound, playResultSound } = useSound()
   const { settings } = useSettings()
+  
+  // 历史记录系统
+  const { history, loadHistory, addHistory, clearHistory } = useCalculatorHistory()
 
   // 监听器 - 当计算结果改变时自动更新显示
   watch(result, (newResult) => {
@@ -33,7 +36,7 @@ export function useCalculator() {
   watch(currentOperator, (newOperator, oldOperator) => {
     if (newOperator !== oldOperator) {
       nextTick(() => {
-        console.log(`操作符从 ${oldOperator} 切换到 ${newOperator}`)
+        // 可以在这里添加视觉反馈逻辑
       })
     }
   })
@@ -123,23 +126,9 @@ export function useCalculator() {
     }
     // 构造完整表达式
     const fullExpression = `${firstOperand.value} ${currentOperator.value} ${secondOperand.value || inputValue}`
-    // Save calculation to history
-    const historyItem = {
-      calculation: fullExpression + ' =',
-      result: formatNumber(calcResult),
-      timestamp: new Date()
-    }
-    history.value.unshift(historyItem)
-    
-    if (history.value.length > 100) {
-      history.value = history.value.slice(0, 100)
-    }
-    
-    // 保存到本地存储
-    try {
-      uni.setStorageSync('calculatorHistory', JSON.stringify(history.value))
-    } catch (error) {
-      console.error('保存历史记录失败:', error)
+    // Save calculation to history if auto-save is enabled
+    if (settings.autoSaveHistory) {
+      addHistory(fullExpression, formatNumber(calcResult))
     }
     
     // Update secondary calculation
@@ -263,24 +252,7 @@ export function useCalculator() {
     return parts.join('.')
   }
 
-  // 初始化历史记录
-  const initializeHistory = () => {
-    try {
-      const historyStr = uni.getStorageSync('calculatorHistory')
-      if (historyStr) {
-        const parsedHistory = JSON.parse(historyStr)
-        if (Array.isArray(parsedHistory)) {
-          history.value = parsedHistory.map((item) => ({
-            ...item,
-            timestamp: new Date(item.timestamp)
-          }))
-        }
-      }
-    } catch (error) {
-      console.error('Failed to load calculator history:', error)
-      uni.removeStorageSync('calculatorHistory')
-    }
-  }
+
 
   // 复制结果到剪贴板
   const copyResult = () => {
@@ -308,6 +280,8 @@ export function useCalculator() {
   }
 
 
+
+
   // 返回所有需要的状态和方法
   return {
     // 状态
@@ -330,7 +304,8 @@ export function useCalculator() {
     percentage,
     backspace,
     copyResult,
-    initializeHistory,
+    clearHistory,
+    loadHistory,
     formatNumber
   }
 } 

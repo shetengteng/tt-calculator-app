@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import SvgIcon from './SvgIcon.vue'
+import SvgIcon from '@/components/base/SvgIcon.vue'
 
 const emit = defineEmits(['click'])
 

@@ -44,8 +44,17 @@
     <!-- 历史记录抽屉组件 -->
     <HistoryDrawer
         :is-open="isHistoryOpen"
-        :calculator="calculator"
         @close="closeHistory"
+    />
+
+    <!-- 全局Toast组件 -->
+    <Toast
+        :visible="toastState.visible"
+        :message="toastState.message"
+        :type="toastState.type"
+        :show-icon="toastState.showIcon"
+        :duration="toastState.duration"
+        @hide="hideToast"
     />
   </view>
 </template>
@@ -57,9 +66,12 @@ import CalculatorDisplay from '@/components/CalculatorDisplay.vue'
 import CalculatorButtonGrid from '@/components/CalculatorButtonGrid.vue'
 import SettingsDrawer from '@/components/SettingsDrawer.vue'
 import HistoryDrawer from '@/components/HistoryDrawer.vue'
+import Toast from '@/components/base/Toast.vue'
 import { useCalculator } from '@/composables/useCalculator.js'
 import { useTheme } from '@/composables/useTheme.js'
 import { useI18n } from '@/composables/useI18n.js'
+import { useSettings } from '@/composables/useSettings.js'
+import { useToast } from '@/composables/useToast.js'
 
 // 使用计算器组合函数，获取完整的计算器实例
 const calculator = useCalculator()
@@ -69,6 +81,12 @@ const { themeVars, activeTheme, initializeThemeSystem, applyTheme } = useTheme()
 
 // 使用国际化系统
 const { loadLanguage, initializeLanguageSystem } = useI18n()
+
+// 使用设置系统
+const { loadSettings } = useSettings()
+
+// 使用Toast系统
+const { toastState, hideToast } = useToast()
 
 // 抽屉状态
 const isSettingsOpen = ref(false)
@@ -104,7 +122,8 @@ const closeHistory = () => {
 
 // 生命周期
 onMounted(() => {
-  calculator.initializeHistory()
+  loadSettings()
+  calculator.loadHistory()
   loadLanguage()
 })
 </script>

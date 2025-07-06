@@ -46,7 +46,7 @@
 <script setup>
 import { ref, watch, computed } from 'vue'
 import BaseSettingItem from './BaseSettingItem.vue'
-import SvgIcon from '../SvgIcon.vue'
+import SvgIcon from '@/components/base/SvgIcon.vue'
 import { useSettings } from '@/composables/useSettings.js'
 import { useI18n } from '@/composables/useI18n.js'
 

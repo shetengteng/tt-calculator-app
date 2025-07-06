@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import SvgIcon from './SvgIcon.vue'
+import SvgIcon from '@/components/base/SvgIcon.vue'
 
 // 定义事件
 const emit = defineEmits(['settings-click', 'history-click'])

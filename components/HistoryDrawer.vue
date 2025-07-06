@@ -38,13 +38,7 @@
                     </view>
                   </view>
                   <view class="history-control">
-                    <view class="copy-button" @click="copyResult(item.result)">
-                      <SvgIcon 
-                        name="ri-file-copy-line" 
-                        color="var(--settings-text-secondary)"
-                        size="28rpx"
-                      />
-                    </view>
+                    <CopyButton :text="item.result" />
                   </view>
                 </view>
               </view>
@@ -71,9 +65,11 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
-import CloseButton from './CloseButton.vue'
-import SvgIcon from './SvgIcon.vue'
+import CloseButton from '@/components/base/CloseButton.vue'
+import CopyButton from '@/components/base/CopyButton.vue'
+import SvgIcon from '@/components/base/SvgIcon.vue'
 import { useI18n } from '@/composables/useI18n.js'
+import { useCalculatorHistory } from '@/composables/useCalculatorHistory.js'
 import { formatTimestamp, getDateKey, getDateTitle } from '@/utils/dateUtils.js'
 
 // Props
@@ -81,10 +77,6 @@ const props = defineProps({
   isOpen: {
     type: Boolean,
     default: false
-  },
-  calculator: {
-    type: Object,
-    required: true
   }
 })
 
@@ -94,8 +86,8 @@ const emit = defineEmits(['close'])
 // 使用国际化系统
 const { t } = useI18n()
 
-// 历史记录数据
-const history = ref([])
+// 使用历史记录系统
+const { history, loadHistory } = useCalculatorHistory()
 
 // 触摸相关
 const touchStartX = ref(0)
@@ -106,21 +98,21 @@ const hasHistory = computed(() => {
   return history.value && history.value.length > 0
 })
 
-// 计算属性 - 格式化后的历史记录
-const formattedHistory = computed(() => {
-  return history.value.map((item, index) => ({
-    ...item,
-    formattedTimestamp: formatTimestamp(item.timestamp),
-    id: `history-${index}`
-  }))
-})
+// 格式化时间戳的辅助函数
+const formatHistoryTimestamp = (timestamp) => {
+  return formatTimestamp(timestamp)
+}
 
 // 计算属性 - 按时间分组的历史记录
 const groupedHistory = computed(() => {
+  if (!history.value || !Array.isArray(history.value)) {
+    return []
+  }
+  
   const groups = {}
   const now = new Date()
   
-  formattedHistory.value.forEach(item => {
+  history.value.forEach((item, index) => {
     const date = new Date(item.timestamp)
     const dateKey = getDateKey(date, now)
     
@@ -133,7 +125,11 @@ const groupedHistory = computed(() => {
       }
     }
     
-    groups[dateKey].items.push(item)
+    groups[dateKey].items.push({
+      ...item,
+      formattedTimestamp: formatHistoryTimestamp(item.timestamp),
+      id: `history-${index}`
+    })
   })
   
   // 按日期排序，最新的在前面
@@ -161,53 +157,6 @@ const closeDrawer = () => {
   emit('close')
 }
 
-// 复制结果到剪贴板
-const copyResult = (result) => {
-  uni.setClipboardData({
-    data: result,
-    success: () => {
-      uni.showToast({
-        title: 'Copied to clipboard',
-        icon: 'none',
-        duration: 1500
-      })
-    },
-    fail: () => {
-      uni.showToast({
-        title: 'Copy failed',
-        icon: 'none',
-        duration: 1500
-      })
-    }
-  })
-}
-
-// 从本地存储加载历史记录
-const loadHistory = () => {
-  try {
-    const historyStr = uni.getStorageSync('calculatorHistory')
-    if (historyStr) {
-      const parsedHistory = JSON.parse(historyStr)
-      // 验证历史数据的完整性
-      if (Array.isArray(parsedHistory)) {
-        history.value = parsedHistory.map(item => ({
-          ...item,
-          timestamp: new Date(item.timestamp)
-        }))
-      }
-    }
-  } catch (error) {
-    console.error('Failed to load calculator history:', error)
-    // 如果历史数据损坏，清除它
-    uni.removeStorageSync('calculatorHistory')
-    uni.showToast({
-      title: 'History data corrupted, cleared',
-      icon: 'none',
-      duration: 2000
-    })
-  }
-}
-
 // 触摸手势处理
 const handleDrawerTouchStart = (e) => {
   touchStartX.value = e.touches[0].clientX
@@ -227,14 +176,16 @@ const handleDrawerTouchEnd = (e) => {
   }
 }
 
-// 监听抽屉打开状态，加载历史记录
+// 监听抽屉打开状态，每次打开时加载历史记录
 watch(() => props.isOpen, (newVal) => {
   if (newVal) {
+    // 每次打开抽屉都加载历史记录，确保数据是最新的
     loadHistory()
   }
-}, { immediate: true })
+})
 
 onMounted(() => {
+  // 组件挂载时加载历史记录
   loadHistory()
 })
 </script>
@@ -389,22 +340,7 @@ onMounted(() => {
   gap: 8rpx;
 }
 
-.copy-button {
-  width: 56rpx;
-  height: 56rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12rpx;
-  background: transparent;
-  transition: all 0.2s ease;
-  margin-left: 8rpx;
-}
 
-.copy-button:active {
-  background: var(--settings-separator);
-  transform: scale(0.95);
-}
 
 
 

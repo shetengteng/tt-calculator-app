@@ -71,7 +71,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import CloseButton from './CloseButton.vue'
+import CloseButton from '@/components/base/CloseButton.vue'
 import LanguageSetting from './settings/LanguageSetting.vue'
 import ThemeSetting from './settings/ThemeSetting.vue'
 import DecimalPlacesSetting from './settings/DecimalPlacesSetting.vue'
@@ -123,11 +123,6 @@ const closeDrawer = () => {
   emit('close')
 }
 
-// 编辑配置文件
-const handleEditProfile = () => {
-  // 这里可以添加编辑配置文件的逻辑
-  console.log('Edit profile clicked')
-}
 
 // 触摸手势处理
 const handleDrawerTouchStart = (e) => {

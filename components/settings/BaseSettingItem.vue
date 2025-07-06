@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import SvgIcon from '../SvgIcon.vue'
+import SvgIcon from '@/components/base/SvgIcon.vue'
 
 // Props
 const props = defineProps({
