@@ -1,19 +1,5 @@
 <template>
   <view class="calculator-container">
-    <!-- 设置抽屉组件 -->
-    <SettingsDrawer 
-      :is-open="isSettingsOpen" 
-      :calculator="calculator"
-      @close="closeSettings"
-    />
-    
-    <!-- 历史记录抽屉组件 -->
-    <HistoryDrawer 
-      :is-open="isHistoryOpen" 
-      :calculator="calculator"
-      @close="closeHistory"
-    />
-    
     <!-- 主计算器内容 -->
     <view 
       class="calculator" 
@@ -47,6 +33,20 @@
         :calculator="calculator"
       />
     </view>
+
+    <!-- 设置抽屉组件 -->
+    <SettingsDrawer
+        :is-open="isSettingsOpen"
+        :calculator="calculator"
+        @close="closeSettings"
+    />
+
+    <!-- 历史记录抽屉组件 -->
+    <HistoryDrawer
+        :is-open="isHistoryOpen"
+        :calculator="calculator"
+        @close="closeHistory"
+    />
   </view>
 </template>
 

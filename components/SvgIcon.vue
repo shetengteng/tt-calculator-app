@@ -1,11 +1,9 @@
 <template>
-  <svg 
-    :class="['svg-icon', className]" 
+  <i 
+    :class="['svg-icon', className, name]" 
     :style="iconStyle"
     aria-hidden="true"
-  >
-    <use :xlink:href="`/static/icons/remixicon.svg#${name}`"></use>
-  </svg>
+  ></i>
 </template>
 
 <script setup>
@@ -19,7 +17,7 @@ const props = defineProps({
   },
   size: {
     type: [String, Number],
-    default: '1em'
+    default: '24rpx'
   },
   color: {
     type: String,
@@ -34,9 +32,7 @@ const props = defineProps({
 // 计算样式
 const iconStyle = computed(() => {
   return {
-    width: typeof props.size === 'number' ? `${props.size}px` : props.size,
-    height: typeof props.size === 'number' ? `${props.size}px` : props.size,
-    fill: props.color,
+    fontSize: typeof props.size === 'number' ? `${props.size}rpx` : props.size,
     color: props.color
   }
 })
@@ -47,5 +43,9 @@ const iconStyle = computed(() => {
   display: inline-block;
   vertical-align: middle;
   flex-shrink: 0;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
 }
 </style> 

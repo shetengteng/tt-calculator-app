@@ -5,7 +5,6 @@
       class="history-drawer" 
       :class="{ 'drawer-open': isOpen }"
       @touchstart="handleDrawerTouchStart"
-      @touchmove="handleDrawerTouchMove"
       @touchend="handleDrawerTouchEnd"
     >
       <view class="drawer-content">
@@ -13,7 +12,6 @@
         <view class="drawer-header">
           <text class="drawer-title">{{ t('history.title') }}</text>
           <view class="header-actions">
-            <text class="clear-button" @click="clearAllHistory" v-if="hasHistory">{{ t('history.clear') }}</text>
             <CloseButton @click="closeDrawer" />
           </view>
         </view>
@@ -28,16 +26,16 @@
               </view>
               <view class="group-items">
                 <view class="history-item" v-for="(item, index) in group.items" :key="item.id">
-                  <view class="history-icon">
-                    <SvgIcon 
-                      name="ri-time-line" 
-                      color="var(--settings-text-secondary)"
-                      size="24rpx"
-                    />
-                  </view>
                   <view class="history-info">
                     <text class="history-title">{{ item.calculation }} {{ item.result }}</text>
-                    <text class="history-description">{{ item.formattedTime }}</text>
+                    <view class="history-description-with-icon">
+                      <SvgIcon 
+                        name="ri-time-line" 
+                        color="var(--settings-text-secondary)"
+                        size="24rpx"
+                      />
+                      <text class="history-description">{{ item.formattedTimestamp }}</text>
+                    </view>
                   </view>
                   <view class="history-control">
                     <view class="copy-button" @click="copyResult(item.result)">
@@ -67,25 +65,7 @@
       @click="closeDrawer"
     ></view>
     
-    <!-- 自定义确认弹框 -->
-    <view class="modal-overlay" v-if="showConfirmModal" @click="hideConfirmModal">
-      <view class="modal-content" @click.stop>
-        <view class="modal-header">
-          <text class="modal-title">{{ t('history.clear') }}</text>
-        </view>
-        <view class="modal-body">
-          <text class="modal-text">{{ t('messages.historyClearConfirm') }}</text>
-        </view>
-        <view class="modal-footer">
-          <view class="modal-button cancel-button" @click="hideConfirmModal">
-            <text class="button-text">{{ t('common.cancel') }}</text>
-          </view>
-          <view class="modal-button confirm-button" @click="confirmClearHistory">
-            <text class="button-text">{{ t('common.confirm') }}</text>
-          </view>
-        </view>
-      </view>
-    </view>
+
   </view>
 </template>
 
@@ -94,6 +74,7 @@ import { ref, computed, watch, onMounted } from 'vue'
 import CloseButton from './CloseButton.vue'
 import SvgIcon from './SvgIcon.vue'
 import { useI18n } from '@/composables/useI18n.js'
+import { formatTimestamp, getDateKey, getDateTitle } from '@/utils/dateUtils.js'
 
 // Props
 const props = defineProps({
@@ -130,7 +111,6 @@ const formattedHistory = computed(() => {
   return history.value.map((item, index) => ({
     ...item,
     formattedTimestamp: formatTimestamp(item.timestamp),
-    formattedTime: formatTime(item.timestamp),
     id: `history-${index}`
   }))
 })
@@ -147,7 +127,7 @@ const groupedHistory = computed(() => {
     if (!groups[dateKey]) {
       groups[dateKey] = {
         date: dateKey,
-        title: getDateTitle(date, now),
+        title: getDateTitle(date, now, t),
         items: [],
         sortDate: date
       }
@@ -202,118 +182,6 @@ const copyResult = (result) => {
   })
 }
 
-// 格式化时间戳
-const formatTimestamp = (timestamp) => {
-  const now = new Date()
-  const date = new Date(timestamp)
-  
-  const diffInMinutes = Math.floor((now - date) / (1000 * 60))
-  
-  if (diffInMinutes < 1) {
-    return 'A few seconds ago'
-  } else if (diffInMinutes === 1) {
-    return 'A minute ago'
-  } else if (diffInMinutes < 60) {
-    return `${diffInMinutes} minutes ago`
-  } else if (diffInMinutes < 24 * 60) {
-    // Format as HH:MM
-    const hours = date.getHours().toString().padStart(2, '0')
-    const minutes = date.getMinutes().toString().padStart(2, '0')
-    return `${hours}:${minutes}`
-  } else {
-    // Format as MM/DD HH:MM
-    const month = (date.getMonth() + 1).toString().padStart(2, '0')
-    const day = date.getDate().toString().padStart(2, '0')
-    const hours = date.getHours().toString().padStart(2, '0')
-    const minutes = date.getMinutes().toString().padStart(2, '0')
-    return `${month}/${day} ${hours}:${minutes}`
-  }
-}
-
-// 格式化时间（仅显示时分）
-const formatTime = (timestamp) => {
-  const date = new Date(timestamp)
-  const hours = date.getHours().toString().padStart(2, '0')
-  const minutes = date.getMinutes().toString().padStart(2, '0')
-  return `${hours}:${minutes}`
-}
-
-// 获取日期键值
-const getDateKey = (date, now) => {
-  const dateStr = date.toDateString()
-  const nowStr = now.toDateString()
-  
-  if (dateStr === nowStr) {
-    return 'today'
-  }
-  
-  const yesterday = new Date(now)
-  yesterday.setDate(now.getDate() - 1)
-  const yesterdayStr = yesterday.toDateString()
-  
-  if (dateStr === yesterdayStr) {
-    return 'yesterday'
-  }
-  
-  // 返回日期字符串作为键
-  return date.toDateString()
-}
-
-// 获取日期标题
-const getDateTitle = (date, now) => {
-  const dateStr = date.toDateString()
-  const nowStr = now.toDateString()
-  
-  if (dateStr === nowStr) {
-    return t('history.today') || '今天'
-  }
-  
-  const yesterday = new Date(now)
-  yesterday.setDate(now.getDate() - 1)
-  const yesterdayStr = yesterday.toDateString()
-  
-  if (dateStr === yesterdayStr) {
-    return t('history.yesterday') || '昨天'
-  }
-  
-  // 显示具体日期
-  const month = (date.getMonth() + 1).toString().padStart(2, '0')
-  const day = date.getDate().toString().padStart(2, '0')
-  return `${month}/${day}`
-}
-
-// 清除所有历史记录
-const clearAllHistory = () => {
-  showConfirmModal.value = true
-}
-
-// 弹框状态
-const showConfirmModal = ref(false)
-
-// 隐藏确认弹框
-const hideConfirmModal = () => {
-  showConfirmModal.value = false
-}
-
-// 确认清除历史记录
-const confirmClearHistory = () => {
-  history.value = []
-  uni.removeStorageSync('calculatorHistory')
-  
-  // 同时清除计算器实例中的历史记录
-  if (props.calculator && typeof props.calculator.clearHistory === 'function') {
-    props.calculator.clearHistory()
-  }
-  
-  uni.showToast({
-    title: t('history.cleared'),
-    icon: 'success',
-    duration: 1500
-  })
-  
-  hideConfirmModal()
-}
-
 // 从本地存储加载历史记录
 const loadHistory = () => {
   try {
@@ -346,10 +214,6 @@ const handleDrawerTouchStart = (e) => {
   touchStartY.value = e.touches[0].clientY
 }
 
-const handleDrawerTouchMove = (e) => {
-  // 可以在这里添加手势拖拽逻辑
-}
-
 const handleDrawerTouchEnd = (e) => {
   const touchEndX = e.changedTouches[0].clientX
   const touchEndY = e.changedTouches[0].clientY
@@ -369,11 +233,6 @@ watch(() => props.isOpen, (newVal) => {
     loadHistory()
   }
 }, { immediate: true })
-
-// 监听历史记录变化
-watch(history, (newHistory) => {
-  console.log(`历史记录更新，当前有 ${newHistory.length} 条记录`)
-}, { deep: true })
 
 onMounted(() => {
   loadHistory()
@@ -497,15 +356,6 @@ onMounted(() => {
   border-bottom: none;
 }
 
-.history-icon {
-  width: 32rpx;
-  height: 32rpx;
-  margin-right: 16rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .history-info {
   flex: 1;
   display: flex;
@@ -518,6 +368,12 @@ onMounted(() => {
   font-weight: 400;
   color: var(--settings-text-primary);
   line-height: 1.4;
+}
+
+.history-description-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
 }
 
 .history-description {
@@ -540,13 +396,13 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   border-radius: 12rpx;
-  background: var(--settings-separator);
+  background: transparent;
   transition: all 0.2s ease;
   margin-left: 8rpx;
 }
 
 .copy-button:active {
-  background: var(--settings-text-secondary);
+  background: var(--settings-separator);
   transform: scale(0.95);
 }
 
@@ -611,100 +467,5 @@ onMounted(() => {
   }
 }
 
-/* 自定义弹框样式 */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1001; /* 确保在抽屉之上 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: fadeIn 0.3s ease;
-}
 
-.modal-content {
-  background: var(--theme-drawer-item-background);
-  border-radius: 24rpx;
-  width: 560rpx;
-  max-width: 90%;
-  overflow: hidden;
-  box-shadow: 0 20rpx 40rpx rgba(0, 0, 0, 0.2);
-  animation: slideIn 0.3s ease;
-}
-
-.modal-header {
-  padding: 40rpx 40rpx 20rpx;
-  text-align: center;
-}
-
-.modal-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: var(--theme-text-primary);
-}
-
-.modal-body {
-  padding: 0 40rpx 40rpx;
-  text-align: center;
-}
-
-.modal-text {
-  font-size: 28rpx;
-  color: var(--theme-text-muted);
-  line-height: 1.5;
-}
-
-.modal-footer {
-  display: flex;
-  border-top: 1px solid var(--theme-separator);
-}
-
-.modal-button {
-  flex: 1;
-  padding: 32rpx;
-  text-align: center;
-  transition: background-color 0.2s ease;
-}
-
-.modal-button:active {
-  background: var(--theme-overlay);
-}
-
-.cancel-button {
-  border-right: 1px solid var(--theme-separator);
-}
-
-.confirm-button .button-text {
-  color: #FF3B30;
-  font-weight: 500;
-}
-
-.button-text {
-  font-size: 30rpx;
-  color: var(--theme-text-primary);
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideIn {
-  from {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
 </style> 
