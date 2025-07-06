@@ -21,13 +21,35 @@
         <!-- 历史记录列表 -->
         <scroll-view class="drawer-scroll" scroll-y="true">
           <view class="history-list">
-            <view class="history-item" v-for="(item, index) in formattedHistory" :key="item.id" @click="copyResult(item.result)">
-              <view class="history-content">
-                <text class="timestamp">{{ item.formattedTimestamp }}</text>
-                <text class="result">{{ item.result }}</text>
-                <text class="calculation">{{ item.calculation }}</text>
+            <!-- 按时间分组显示 -->
+            <view v-for="group in groupedHistory" :key="group.date" class="history-group">
+              <view class="group-header">
+                <text class="group-title">{{ group.title }}</text>
               </view>
-              <view class="separator" v-if="index !== formattedHistory.length - 1"></view>
+              <view class="group-items">
+                <view class="history-item" v-for="(item, index) in group.items" :key="item.id">
+                  <view class="history-icon">
+                    <SvgIcon 
+                      name="ri-time-line" 
+                      color="var(--settings-text-secondary)"
+                      size="24rpx"
+                    />
+                  </view>
+                  <view class="history-info">
+                    <text class="history-title">{{ item.calculation }} {{ item.result }}</text>
+                    <text class="history-description">{{ item.formattedTime }}</text>
+                  </view>
+                  <view class="history-control">
+                    <view class="copy-button" @click="copyResult(item.result)">
+                      <SvgIcon 
+                        name="ri-file-copy-line" 
+                        color="var(--settings-text-secondary)"
+                        size="28rpx"
+                      />
+                    </view>
+                  </view>
+                </view>
+              </view>
             </view>
             
             <view class="empty-history" v-if="!hasHistory">
@@ -70,6 +92,7 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
 import CloseButton from './CloseButton.vue'
+import SvgIcon from './SvgIcon.vue'
 import { useI18n } from '@/composables/useI18n.js'
 
 // Props
@@ -107,8 +130,50 @@ const formattedHistory = computed(() => {
   return history.value.map((item, index) => ({
     ...item,
     formattedTimestamp: formatTimestamp(item.timestamp),
+    formattedTime: formatTime(item.timestamp),
     id: `history-${index}`
   }))
+})
+
+// 计算属性 - 按时间分组的历史记录
+const groupedHistory = computed(() => {
+  const groups = {}
+  const now = new Date()
+  
+  formattedHistory.value.forEach(item => {
+    const date = new Date(item.timestamp)
+    const dateKey = getDateKey(date, now)
+    
+    if (!groups[dateKey]) {
+      groups[dateKey] = {
+        date: dateKey,
+        title: getDateTitle(date, now),
+        items: [],
+        sortDate: date
+      }
+    }
+    
+    groups[dateKey].items.push(item)
+  })
+  
+  // 按日期排序，最新的在前面
+  const sortedGroups = Object.values(groups).sort((a, b) => {
+    // 今天和昨天的特殊处理
+    if (a.date === 'today') return -1
+    if (b.date === 'today') return 1
+    if (a.date === 'yesterday') return -1
+    if (b.date === 'yesterday') return 1
+    
+    // 其他日期按时间排序
+    return new Date(b.sortDate) - new Date(a.sortDate)
+  })
+  
+  // 对每个分组内的项目按时间排序（最新的在前面）
+  sortedGroups.forEach(group => {
+    group.items.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+  })
+  
+  return sortedGroups
 })
 
 // 关闭抽屉
@@ -163,6 +228,58 @@ const formatTimestamp = (timestamp) => {
     const minutes = date.getMinutes().toString().padStart(2, '0')
     return `${month}/${day} ${hours}:${minutes}`
   }
+}
+
+// 格式化时间（仅显示时分）
+const formatTime = (timestamp) => {
+  const date = new Date(timestamp)
+  const hours = date.getHours().toString().padStart(2, '0')
+  const minutes = date.getMinutes().toString().padStart(2, '0')
+  return `${hours}:${minutes}`
+}
+
+// 获取日期键值
+const getDateKey = (date, now) => {
+  const dateStr = date.toDateString()
+  const nowStr = now.toDateString()
+  
+  if (dateStr === nowStr) {
+    return 'today'
+  }
+  
+  const yesterday = new Date(now)
+  yesterday.setDate(now.getDate() - 1)
+  const yesterdayStr = yesterday.toDateString()
+  
+  if (dateStr === yesterdayStr) {
+    return 'yesterday'
+  }
+  
+  // 返回日期字符串作为键
+  return date.toDateString()
+}
+
+// 获取日期标题
+const getDateTitle = (date, now) => {
+  const dateStr = date.toDateString()
+  const nowStr = now.toDateString()
+  
+  if (dateStr === nowStr) {
+    return t('history.today') || '今天'
+  }
+  
+  const yesterday = new Date(now)
+  yesterday.setDate(now.getDate() - 1)
+  const yesterdayStr = yesterday.toDateString()
+  
+  if (dateStr === yesterdayStr) {
+    return t('history.yesterday') || '昨天'
+  }
+  
+  // 显示具体日期
+  const month = (date.getMonth() + 1).toString().padStart(2, '0')
+  const day = date.getDate().toString().padStart(2, '0')
+  return `${month}/${day}`
 }
 
 // 清除所有历史记录
@@ -298,14 +415,16 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20rpx 40rpx;
-  padding-top: calc(20rpx + var(--status-bar-height));
-  background: var(--theme-drawer-header);
-  border-bottom: 1px solid var(--theme-separator);
+  padding: 12rpx 40rpx 12rpx 40rpx;
+  padding-top: calc(12rpx + var(--status-bar-height));
+  background: var(--settings-card-background);
+  border-bottom: 1px solid var(--settings-separator);
+  height: 100rpx;
+  box-sizing: border-box;
 }
 
 .drawer-title {
-  font-size: 36rpx;
+  font-size: 32rpx;
   font-weight: 600;
   color: var(--theme-text-primary);
 }
@@ -341,45 +460,97 @@ onMounted(() => {
   padding: 20rpx 0;
 }
 
-.history-item {
-  padding: 30rpx 40rpx;
+/* 分组样式 */
+.history-group {
+  margin-bottom: 32rpx;
+}
+
+.group-header {
+  padding: 16rpx 40rpx;
+  background: var(--theme-drawer-background);
+}
+
+.group-title {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: var(--settings-text-secondary);
+}
+
+.group-items {
   background: var(--theme-drawer-item-background);
-  border-bottom: 1px solid var(--theme-separator);
+  border-radius: 12rpx;
+  margin: 0 20rpx;
+  overflow: hidden;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 20rpx;
+  background: var(--settings-card-background);
+  border-bottom: 1px solid var(--settings-separator);
+  min-height: 60rpx;
   transition: background-color 0.2s ease;
 }
 
-.history-item:active {
-  background: var(--theme-drawer-item-hover);
+.history-item:last-child {
+  border-bottom: none;
 }
 
-.history-content {
+.history-icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.history-info {
+  flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 2rpx;
 }
 
-.timestamp {
-  color: var(--theme-light-gray);
+.history-title {
   font-size: 28rpx;
-  margin-bottom: 10rpx;
-}
-
-.result {
-  color: var(--theme-text-primary);
-  font-size: 44rpx;
   font-weight: 400;
-  margin-bottom: 4rpx;
+  color: var(--settings-text-primary);
+  line-height: 1.4;
 }
 
-.calculation {
-  color: var(--theme-light-gray);
-  font-size: 28rpx;
+.history-description {
+  font-size: 24rpx;
+  color: var(--settings-text-secondary);
+  line-height: 1.3;
+  font-weight: 400;
 }
 
-.separator {
-  height: 1rpx;
-  background: var(--theme-separator);
-  margin: 30rpx 40rpx 0 40rpx;
+.history-control {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
 }
+
+.copy-button {
+  width: 56rpx;
+  height: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12rpx;
+  background: var(--settings-separator);
+  transition: all 0.2s ease;
+  margin-left: 8rpx;
+}
+
+.copy-button:active {
+  background: var(--settings-text-secondary);
+  transform: scale(0.95);
+}
+
+
 
 .empty-history {
   padding: 80rpx 40rpx;

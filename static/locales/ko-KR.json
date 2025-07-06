@@ -44,7 +44,10 @@
     "clear": "기록 지우기",
     "empty": "계산 기록이 없습니다",
     "copied": "클립보드에 복사됨",
-    "copyFailed": "복사 실패"
+    "copyFailed": "복사 실패",
+    "today": "오늘",
+    "yesterday": "어제",
+    "cleared": "기록이 지워졌습니다"
   },
   "settings": {
     "title": "설정",

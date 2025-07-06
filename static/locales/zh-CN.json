@@ -44,7 +44,10 @@
     "clear": "清空历史",
     "empty": "暂无历史记录",
     "copied": "已复制到剪贴板",
-    "copyFailed": "复制失败"
+    "copyFailed": "复制失败",
+    "today": "今天",
+    "yesterday": "昨天",
+    "cleared": "历史记录已清空"
   },
   "settings": {
     "title": "设置",

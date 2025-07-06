@@ -44,7 +44,10 @@
     "clear": "Clear History",
     "empty": "No calculation history",
     "copied": "Copied to clipboard",
-    "copyFailed": "Copy failed"
+    "copyFailed": "Copy failed",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "cleared": "History cleared"
   },
   "settings": {
     "title": "Settings",

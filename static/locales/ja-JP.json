@@ -44,7 +44,10 @@
     "clear": "履歴をクリア",
     "empty": "計算履歴がありません",
     "copied": "クリップボードにコピーしました",
-    "copyFailed": "コピーに失敗しました"
+    "copyFailed": "コピーに失敗しました",
+    "today": "今日",
+    "yesterday": "昨日",
+    "cleared": "履歴がクリアされました"
   },
   "settings": {
     "title": "設定",
