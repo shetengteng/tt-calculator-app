@@ -19,7 +19,7 @@ export function useCalculatorHistory() {
   // 加载历史记录
   const loadHistory = () => {
     try {
-      const historyStr = uni.getStorageSync('calculatorHistory')
+      const historyStr = uni.getStorageSync('calculator-history')
       
       if (historyStr) {
         const parsedHistory = JSON.parse(historyStr)
@@ -36,7 +36,7 @@ export function useCalculatorHistory() {
           
           // 如果过滤后的数据和原数据不同，更新存储
           if (filteredHistory.length !== historyWithDates.length) {
-            uni.setStorageSync('calculatorHistory', JSON.stringify(filteredHistory))
+            uni.setStorageSync('calculator-history', JSON.stringify(filteredHistory))
           }
         }
       } else {
@@ -45,7 +45,7 @@ export function useCalculatorHistory() {
       }
     } catch (error) {
       console.error('Failed to load calculator history:', error)
-      uni.removeStorageSync('calculatorHistory')
+      uni.removeStorageSync('calculator-history')
       globalHistory.value = []
     }
   }
@@ -69,7 +69,7 @@ export function useCalculatorHistory() {
     
     // 保存到本地存储
     try {
-      uni.setStorageSync('calculatorHistory', JSON.stringify(globalHistory.value))
+      uni.setStorageSync('calculator-history', JSON.stringify(globalHistory.value))
     } catch (error) {
       console.error('保存历史记录失败:', error)
     }
