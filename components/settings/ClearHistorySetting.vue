@@ -30,14 +30,10 @@ import BaseSettingItem from './BaseSettingItem.vue'
 import ConfirmDialog from '@/components/base/ConfirmDialog.vue'
 import { useI18n } from '@/composables/useI18n.js'
 import { useToast } from '@/composables/useToast.js'
+import { useCalculatorHistory } from '@/composables/useCalculatorHistory.js'
 
-// Props
-const props = defineProps({
-  calculator: {
-    type: Object,
-    required: true
-  }
-})
+// 使用历史记录系统
+const { clearHistory } = useCalculatorHistory()
 
 // 使用国际化
 const { t } = useI18n()
@@ -60,10 +56,8 @@ const hideConfirmModal = () => {
 
 // 确认清除历史记录
 const confirmClearHistory = () => {
-  // 直接调用计算器实例的清除历史方法
-  if (props.calculator && typeof props.calculator.clearHistory === 'function') {
-    props.calculator.clearHistory()
-  }
+  // 直接调用历史记录清除方法
+  clearHistory()
   
   // 隐藏弹框
   hideConfirmModal()

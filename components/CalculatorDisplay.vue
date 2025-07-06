@@ -2,15 +2,15 @@
   <view class="display-section">
     <view class="display-container">
       <!-- Secondary calculation (previous operation) -->
-      <view class="secondary-display" v-if="secondaryCalculation && secondaryResult && secondaryCalculation !== '' && secondaryResult !== ''">
-        <text class="secondary-calculation">{{ secondaryCalculation }}</text>
-        <text class="secondary-result">{{ secondaryResult }}</text>
+      <view class="secondary-display" v-if="secondaryCalculation && secondaryResult && secondaryCalculation !== '' && secondaryResult !== '' && secondaryCalculation !== 'null' && secondaryResult !== 'null'">
+        <text class="secondary-calculation">{{ secondaryCalculation || '' }}</text>
+        <text class="secondary-result">{{ secondaryResult || '0' }}</text>
       </view>
       
       <!-- Current calculation -->
       <view class="current-display">
-        <text class="calculation" v-if="calculation && calculation !== ''">{{ calculation }}</text>
-        <text class="result">{{ displayResult }}</text>
+        <text class="calculation" v-if="calculation && calculation !== '' && calculation !== 'null'">{{ calculation || '' }}</text>
+        <text class="result">{{ displayResult || '0' }}</text>
       </view>
     </view>
   </view>
@@ -24,7 +24,7 @@ const props = defineProps({
   // 当前计算表达式
   calculation: {
     type: String,
-    default: ''
+    default: '0'
   },
   // 计算结果
   result: {
@@ -34,22 +34,24 @@ const props = defineProps({
   // 历史计算表达式
   secondaryCalculation: {
     type: String,
-    default: ''
+    default: null
   },
   // 历史计算结果
   secondaryResult: {
     type: String,
-    default: ''
+    default: null
   }
 })
 
 // 格式化显示结果
 const displayResult = computed(() => {
-  return formatNumber(props.result)
+  return formatNumber(props.result || '0')
 })
 
 // 数字格式化函数
 const formatNumber = (value) => {
+  // 处理特殊情况
+  if (value === null || value === undefined || value === '') return '0'
   if (value === 'Error') return value
   
   const num = parseFloat(String(value))

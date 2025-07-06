@@ -48,23 +48,17 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 import BaseSettingItem from './BaseSettingItem.vue'
 import SvgIcon from '@/components/base/SvgIcon.vue'
 import { useSettings } from '@/composables/useSettings.js'
 import { useI18n } from '@/composables/useI18n.js'
 import { useSound } from '@/composables/useSound.js'
 
-// Props
-const props = defineProps({
-  calculator: {
-    type: Object,
-    default: null
-  }
-})
+// Props - 不再需要 calculator 实例
 
 // 使用设置管理和国际化
-const { settings, updateSetting, applySettingsToCalculator } = useSettings()
+const { settings, updateSetting } = useSettings()
 const { t } = useI18n()
 const { playSound, initializeSound, preloadSounds } = useSound()
 
@@ -120,11 +114,7 @@ const toggleCollapse = () => {
 // 选择音效类型
 const selectSoundType = async (type) => {
   updateSetting('soundType', type)
-  
-  // 应用到计算器实例
-  if (props.calculator) {
-    applySettingsToCalculator(props.calculator)
-  }
+  // 设置会自动通过事件通知系统应用
   
   // 如果选择了音效类型（非"关闭"），播放测试音效
   if (type !== 'none') {
@@ -166,12 +156,7 @@ const playTestSound = async () => {
   }
 }
 
-// 监听计算器实例变化，应用设置
-watch(() => props.calculator, (newCalculator) => {
-  if (newCalculator) {
-    applySettingsToCalculator(newCalculator)
-  }
-}, { immediate: true })
+// 设置变更会自动通过事件通知系统应用
 </script>
 
 <style scoped lang="scss">

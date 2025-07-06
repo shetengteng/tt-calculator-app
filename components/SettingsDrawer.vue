@@ -23,10 +23,10 @@
           <view class="settings-section">
             <view class="section-title">{{ t('settings.general') || '偏好设置' }}</view>
             <view class="settings-group">
-              <LanguageSetting :calculator="calculator" />
-              <ThemeSetting :calculator="calculator" />
-              <DecimalPlacesSetting :calculator="calculator" />
-              <ThousandSeparatorSetting :calculator="calculator" />
+              <LanguageSetting />
+              <ThemeSetting />
+              <DecimalPlacesSetting />
+              <ThousandSeparatorSetting />
             </view>
           </view>
           
@@ -34,9 +34,9 @@
           <view class="settings-section">
             <view class="section-title">{{ t('settings.calculation') || '计算设置' }}</view>
             <view class="settings-group">
-              <HapticFeedbackSetting :calculator="calculator" />
-              <SoundEffectsSetting :calculator="calculator" />
-              <AutoCopyResultSetting :calculator="calculator" />
+              <HapticFeedbackSetting />
+              <SoundEffectsSetting />
+              <AutoCopyResultSetting />
             </view>
           </view>
           
@@ -44,8 +44,8 @@
           <view class="settings-section">
             <view class="section-title">{{ t('settings.history') || '历史记录' }}</view>
             <view class="settings-group">
-              <AutoSaveHistorySetting :calculator="calculator" />
-              <ClearHistorySetting :calculator="calculator" />
+              <AutoSaveHistorySetting />
+              <ClearHistorySetting />
             </view>
           </view>
           
@@ -89,10 +89,6 @@ const props = defineProps({
   isOpen: {
     type: Boolean,
     default: false
-  },
-  calculator: {
-    type: Object,
-    required: true
   }
 })
 

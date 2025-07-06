@@ -83,14 +83,15 @@ export function useSettings() {
     if (settings.hasOwnProperty(key)) {
       settings[key] = value
       saveSettings()
+      // 通知设置变更
+      notifySettingsChanged(key, value)
     }
   }
 
-  // 应用设置到计算器实例
-  const applySettingsToCalculator = (calculator) => {
-    if (calculator && typeof calculator.updateSettings === 'function') {
-      calculator.updateSettings({ ...settings })
-    }
+  // 设置变更通知
+  const notifySettingsChanged = (key, value) => {
+    // 发送自定义事件通知设置变更
+    uni.$emit('settingsChanged', { key, value, settings: { ...settings } })
   }
 
   // 重置设置为默认值
@@ -116,7 +117,7 @@ export function useSettings() {
     loadSettings,
     saveSettings,
     updateSetting,
-    applySettingsToCalculator,
+    notifySettingsChanged,
     resetSettings,
     getSetting,
     isInitialized

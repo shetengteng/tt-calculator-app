@@ -23,7 +23,7 @@ export function useCalculator() {
   const { settings } = useSettings()
   
   // 历史记录系统
-  const { history, loadHistory, addHistory, clearHistory } = useCalculatorHistory()
+  const { addHistory } = useCalculatorHistory()
 
   // 监听器 - 当计算结果改变时自动更新显示
   watch(result, (newResult) => {
@@ -48,11 +48,14 @@ export function useCalculator() {
       playButtonSound(settings.soundType)
     }
     
-    if (waitingForOperand.value || displayValue.value === '0') {
-      displayValue.value = number
+    // 确保number是字符串
+    const numStr = String(number || '0')
+    
+    if (waitingForOperand.value || displayValue.value === '0' || displayValue.value === 'Error') {
+      displayValue.value = numStr
       waitingForOperand.value = false
     } else {
-      displayValue.value += number
+      displayValue.value = (displayValue.value || '0') + numStr
     }
     
     result.value = displayValue.value
@@ -66,11 +69,11 @@ export function useCalculator() {
       playButtonSound(settings.soundType)
     }
     
-    if (waitingForOperand.value) {
+    if (waitingForOperand.value || displayValue.value === 'Error') {
       displayValue.value = '0.'
       waitingForOperand.value = false
-    } else if (displayValue.value.indexOf('.') === -1) {
-      displayValue.value += '.'
+    } else if ((displayValue.value || '0').indexOf('.') === -1) {
+      displayValue.value = (displayValue.value || '0') + '.'
     }
     
     result.value = displayValue.value
@@ -125,7 +128,7 @@ export function useCalculator() {
       return
     }
     // 构造完整表达式
-    const fullExpression = `${firstOperand.value} ${currentOperator.value} ${secondOperand.value || inputValue}`
+    const fullExpression = `${firstOperand.value || 0} ${currentOperator.value || ''} ${secondOperand.value || inputValue || 0}`
     // Save calculation to history if auto-save is enabled
     if (settings.autoSaveHistory) {
       addHistory(fullExpression, formatNumber(calcResult))
@@ -193,10 +196,11 @@ export function useCalculator() {
       playButtonSound(settings.soundType)
     }
     
-    const value = parseFloat(displayValue.value)
-    if (!isNaN(value)) {
+    const value = parseFloat(displayValue.value || '0')
+    if (!isNaN(value) && displayValue.value !== 'Error') {
       displayValue.value = String(-value)
       result.value = displayValue.value
+      updateCalculation()
     }
   }
 
@@ -206,8 +210,8 @@ export function useCalculator() {
       playButtonSound(settings.soundType)
     }
     
-    const value = parseFloat(displayValue.value)
-    if (!isNaN(value)) {
+    const value = parseFloat(displayValue.value || '0')
+    if (!isNaN(value) && displayValue.value !== 'Error') {
       const percentageValue = value / 100
       displayValue.value = String(percentageValue)
       result.value = displayValue.value
@@ -221,65 +225,43 @@ export function useCalculator() {
       playButtonSound(settings.soundType)
     }
     
-    if (displayValue.value.length > 1 && displayValue.value !== 'Error') {
-      displayValue.value = displayValue.value.slice(0, -1)
+    const currentValue = displayValue.value || '0'
+    if (currentValue.length > 1 && currentValue !== 'Error') {
+      displayValue.value = currentValue.slice(0, -1)
     } else {
       displayValue.value = '0'
     }
     result.value = displayValue.value
+    updateCalculation()
   }
 
   const updateCalculation = () => {
-    if (currentOperator.value && firstOperand.value !== null) {
+    if (currentOperator.value && firstOperand.value !== null && displayValue.value) {
       calculation.value = `${firstOperand.value} ${currentOperator.value} ${displayValue.value}`
     } else {
-      calculation.value = displayValue.value
+      calculation.value = displayValue.value || '0'
     }
   }
 
   const formatNumber = (value) => {
+    // 处理特殊情况
+    if (value === null || value === undefined) return '0'
     if (value === 'Error') return value
+    if (value === '') return '0'
     
     const num = parseFloat(String(value))
     if (isNaN(num)) return '0'
     
+    // 处理超大或超小数字
     if (Math.abs(num) >= 1e10 || (Math.abs(num) < 0.0001 && Math.abs(num) > 0)) {
       return num.toExponential(5)
     }
     
+    // 格式化数字，添加千位分隔符
     const parts = num.toString().split('.')
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     return parts.join('.')
   }
-
-
-
-  // 复制结果到剪贴板
-  const copyResult = () => {
-    return new Promise((resolve, reject) => {
-      uni.setClipboardData({
-        data: result.value,
-        success: () => {
-          uni.showToast({
-            title: 'Copied to clipboard',
-            icon: 'none',
-            duration: 1500
-          })
-          resolve(result.value)
-        },
-        fail: (error) => {
-          uni.showToast({
-            title: 'Copy failed',
-            icon: 'none',
-            duration: 1500
-          })
-          reject(error)
-        }
-      })
-    })
-  }
-
-
 
 
   // 返回所有需要的状态和方法
@@ -292,7 +274,6 @@ export function useCalculator() {
     secondaryResult,
     currentOperator,
     allClear,
-    history,
     
     // 方法
     appendNumber,
@@ -303,9 +284,6 @@ export function useCalculator() {
     toggleSign,
     percentage,
     backspace,
-    copyResult,
-    clearHistory,
-    loadHistory,
     formatNumber
   }
 } 

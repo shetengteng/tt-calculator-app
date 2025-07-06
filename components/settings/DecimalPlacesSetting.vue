@@ -50,19 +50,13 @@ import SvgIcon from '@/components/base/SvgIcon.vue'
 import { useSettings } from '@/composables/useSettings.js'
 import { useI18n } from '@/composables/useI18n.js'
 
-// Props
-const props = defineProps({
-  calculator: {
-    type: Object,
-    default: null
-  }
-})
+// Props - 不再需要 calculator 实例
 
 // Emits
 const emit = defineEmits(['change'])
 
 // 使用设置管理和国际化
-const { settings, updateSetting, applySettingsToCalculator } = useSettings()
+const { settings, updateSetting } = useSettings()
 const { t } = useI18n()
 
 // 组件状态
@@ -124,13 +118,8 @@ const toggleCollapse = () => {
 
 // 选择小数位数
 const selectDecimalPlaces = (decimalPlaces) => {
-  // 更新设置
+  // 更新设置（会自动通过事件通知系统）
   updateSetting('decimalPlaces', decimalPlaces)
-  
-  // 应用到计算器实例
-  if (props.calculator) {
-    applySettingsToCalculator(props.calculator)
-  }
   
   // 触发变更事件
   emit('change', {
@@ -142,12 +131,7 @@ const selectDecimalPlaces = (decimalPlaces) => {
   isExpanded.value = false
 }
 
-// 监听计算器实例变化，应用设置
-watch(() => props.calculator, (newCalculator) => {
-  if (newCalculator) {
-    applySettingsToCalculator(newCalculator)
-  }
-}, { immediate: true })
+// 无需监听计算器实例变化，设置通过事件系统自动应用
 </script>
 
 <style scoped lang="scss">

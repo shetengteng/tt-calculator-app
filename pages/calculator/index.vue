@@ -37,7 +37,6 @@
     <!-- 设置抽屉组件 -->
     <SettingsDrawer
         :is-open="isSettingsOpen"
-        :calculator="calculator"
         @close="closeSettings"
     />
 
@@ -60,7 +59,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import CalculatorHeader from '@/components/CalculatorHeader.vue'
 import CalculatorDisplay from '@/components/CalculatorDisplay.vue'
 import CalculatorButtonGrid from '@/components/CalculatorButtonGrid.vue'
@@ -68,6 +67,7 @@ import SettingsDrawer from '@/components/SettingsDrawer.vue'
 import HistoryDrawer from '@/components/HistoryDrawer.vue'
 import Toast from '@/components/base/Toast.vue'
 import { useCalculator } from '@/composables/useCalculator.js'
+import { useCalculatorHistory } from '@/composables/useCalculatorHistory.js'
 import { useTheme } from '@/composables/useTheme.js'
 import { useI18n } from '@/composables/useI18n.js'
 import { useSettings } from '@/composables/useSettings.js'
@@ -75,6 +75,9 @@ import { useToast } from '@/composables/useToast.js'
 
 // 使用计算器组合函数，获取完整的计算器实例
 const calculator = useCalculator()
+
+// 使用历史记录系统
+const { loadHistory } = useCalculatorHistory()
 
 // 使用主题系统
 const { themeVars, activeTheme, initializeThemeSystem, applyTheme } = useTheme()
@@ -123,8 +126,26 @@ const closeHistory = () => {
 // 生命周期
 onMounted(() => {
   loadSettings()
-  calculator.loadHistory()
+  loadHistory()
   loadLanguage()
+  
+  // 监听设置变更事件
+  uni.$on('settingsChanged', handleSettingsChanged)
+})
+
+// 处理设置变更
+const handleSettingsChanged = (data) => {
+  console.log('Settings changed:', data.key, data.value)
+  // 这里可以根据需要处理特定的设置变更
+  // 例如，如果主题变更，可以重新应用主题
+  if (data.key === 'theme') {
+    applyTheme()
+  }
+}
+
+// 清理事件监听器
+onUnmounted(() => {
+  uni.$off('settingsChanged', handleSettingsChanged)
 })
 </script>
 
