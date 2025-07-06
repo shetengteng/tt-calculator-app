@@ -129,7 +129,7 @@ const {
   getThemeOptions, 
   getCurrentThemeIndex,
   themeConfigs,
-  reinitializeThemeSystem
+  initializeThemeSystem
 } = useTheme()
 
 // 使用国际化系统
@@ -233,8 +233,8 @@ watch(currentTheme, () => {
 
 // 监听语言变化，重新计算主题选项
 watch(currentLanguage, async () => {
-  // 语言变化时，强制刷新翻译缓存
-  await setLanguage(currentLanguage.value, true)
+  // 语言变化时，刷新翻译缓存
+  await setLanguage(currentLanguage.value)
   console.log('Language changed, theme options updated with fresh translations')
 })
 
@@ -242,7 +242,7 @@ watch(currentLanguage, async () => {
 const initializeThemeOptions = async () => {
   try {
     // 先尝试重新初始化主题系统以获取最新配置
-    await reinitializeThemeSystem()
+    await initializeThemeSystem()
     
     const options = await getThemeOptions()
     themeOptions.value = options

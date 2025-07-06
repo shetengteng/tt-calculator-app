@@ -1,16 +1,40 @@
-<script setup>
-// 在uni-app中，App级别的生命周期钩子直接使用，无需导入
-onLaunch(() => {
-	console.log('App Launch')
-})
+<script>
+import { useI18n } from '@/composables/useI18n.js'
+import { useTheme } from '@/composables/useTheme.js'
+import { useSound } from '@/composables/useSound.js'
 
-onShow(() => {
-	console.log('App Show')
-})
-
-onHide(() => {
-	console.log('App Hide')
-})
+export default {
+	async onLaunch() {
+		console.log('App Launch')
+	},
+	async onShow() {
+		console.log('App Show - Refreshing all caches')
+		
+		try {
+			// 使用组合函数获取刷新方法
+			const { initializeLanguageSystem } = useI18n()
+			const { initializeThemeSystem, applyTheme } = useTheme()
+			const { initializeSound } = useSound()
+			
+			// 并行刷新所有缓存（语言系统初始化已包含预加载）
+			await Promise.all([
+				initializeLanguageSystem(), // 现在已经包含了预加载所有语言文件
+				initializeThemeSystem(),
+				initializeSound()
+			])
+			
+			// 重新应用主题
+			applyTheme()
+			
+			console.log('All caches refreshed and languages preloaded successfully')
+		} catch (error) {
+			console.error('Failed to refresh caches on app show:', error)
+		}
+	},
+	onHide() {
+		console.log('App Hide')
+	}
+}
 </script>
 
 <style lang="scss">

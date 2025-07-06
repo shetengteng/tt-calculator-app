@@ -63,8 +63,6 @@ const {
   t, 
   setLanguage, 
   getLanguageOptions, 
-  getCurrentLanguageIndex,
-  preloadLanguages,
   currentLanguage
 } = useI18n()
 
@@ -107,48 +105,10 @@ const updateCurrentLanguageInfo = async () => {
 // 初始化语言选项
 const initializeLanguageOptions = async () => {
   try {
-    // 先预加载语言列表和文件
-    await preloadLanguages()
-    
+    // 获取完整的语言信息（应用启动时已经预加载了所有语言文件）
     const options = await getLanguageOptions()
     
-    // 获取完整的语言信息（包括国旗）
-    const enhancedOptions = []
-    for (const option of options) {
-      try {
-        const response = await new Promise((resolve, reject) => {
-          uni.request({
-            url: `/static/locales/${option.value}.json`,
-            method: 'GET',
-            success: (res) => {
-              if (res.statusCode === 200) {
-                resolve(res.data)
-              } else {
-                reject(new Error(`Failed to load language file: ${res.statusCode}`))
-              }
-            },
-            fail: (err) => {
-              reject(err)
-            }
-          })
-        })
-        
-        enhancedOptions.push({
-          ...option,
-          flag: response._metadata?.flag || '🌐',
-          region: response._metadata?.region || ''
-        })
-      } catch (error) {
-        console.error(`Failed to load metadata for ${option.value}:`, error)
-        enhancedOptions.push({
-          ...option,
-          flag: '🌐',
-          region: ''
-        })
-      }
-    }
-    
-    languageOptions.value = enhancedOptions
+    languageOptions.value = options
     await updateCurrentLanguageInfo()
   } catch (error) {
     console.error('Failed to initialize language options:', error)

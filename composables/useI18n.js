@@ -1,14 +1,20 @@
 import { ref, computed } from 'vue'
+import { fetchLocalJson, fetchLocalJsonWithCache, safeStorageOperation } from '../utils/request.js'
+
+// 常量定义
+const DEFAULT_LANGUAGE = 'zh-CN'
+const DEFAULT_FLAG = '🌐'
+const LANGUAGE_STORAGE_KEY = 'app-language'
 
 // 语言配置缓存
 const languageConfig = ref({
   languages: [],
   systemLanguageMapping: {},
-  defaultLanguage: 'zh-CN'
+  defaultLanguage: DEFAULT_LANGUAGE
 })
 
 // 当前语言状态
-const currentLanguage = ref('zh-CN')
+const currentLanguage = ref(DEFAULT_LANGUAGE)
 
 // 翻译数据缓存
 const translationsCache = ref({})
@@ -19,40 +25,42 @@ const languageNamesCache = ref({})
 // 支持的语言列表（动态加载）
 const availableLanguages = ref([])
 
-// 初始化状态
-const isInitialized = ref(false)
+// 参数替换正则表达式缓存
+const paramRegexCache = new Map()
+
+// 获取或创建参数替换正则表达式（缓存优化）
+const getParamRegex = (param) => {
+  if (!paramRegexCache.has(param)) {
+    paramRegexCache.set(param, new RegExp(`{${param}}`, 'g'))
+  }
+  return paramRegexCache.get(param)
+}
 
 // 加载语言列表
 const loadLanguageList = async () => {
   try {
-    const response = await new Promise((resolve, reject) => {
-      uni.request({
-        url: '/static/locales/languages.json',
-        method: 'GET',
-        success: (res) => {
-          if (res.statusCode === 200) {
-            resolve(res.data)
-          } else {
-            reject(new Error(`Failed to load languages.json: ${res.statusCode}`))
-          }
-        },
-        fail: (err) => {
-          reject(err)
-        }
-      })
-    })
+    // 清空相关缓存
+    languageConfig.value = {
+      languages: [],
+      systemLanguageMapping: {},
+      defaultLanguage: DEFAULT_LANGUAGE
+    }
+    availableLanguages.value = []
+    console.log('Language list cache cleared, reloading...')
+    
+    const response = await fetchLocalJson('/static/locales/languages.json')
     
     // 更新语言配置
     languageConfig.value = {
-      languages: response.languages || ['zh-CN'],
+      languages: response.languages || [DEFAULT_LANGUAGE],
       systemLanguageMapping: response.systemLanguageMapping || {},
-      defaultLanguage: response.defaultLanguage || 'zh-CN'
+      defaultLanguage: response.defaultLanguage || DEFAULT_LANGUAGE
     }
     
     availableLanguages.value = languageConfig.value.languages
     
     // 更新当前语言的初始值
-    if (currentLanguage.value === 'zh-CN') {
+    if (currentLanguage.value === DEFAULT_LANGUAGE) {
       currentLanguage.value = languageConfig.value.defaultLanguage
     }
     
@@ -73,7 +81,7 @@ const loadLanguageName = async (language) => {
     const languageData = await loadLanguageFile(language)
     const languageInfo = {
       name: languageData._metadata?.name || language,
-      flag: languageData._metadata?.flag || '🌐',
+      flag: languageData._metadata?.flag || DEFAULT_FLAG,
       region: languageData._metadata?.region || ''
     }
     languageNamesCache.value[language] = languageInfo
@@ -85,38 +93,23 @@ const loadLanguageName = async (language) => {
 }
 
 // 加载语言文件
-const loadLanguageFile = async (language, forceRefresh = false) => {
-  // 如果强制刷新或没有缓存，重新加载
-  if (forceRefresh || !translationsCache.value[language]) {
-    try {
-      // 在 uni-app 中使用 uni.request 加载本地JSON文件
-      const response = await new Promise((resolve, reject) => {
-        uni.request({
-          url: `/static/locales/${language}.json?t=${Date.now()}`, // 添加时间戳防止缓存
-          method: 'GET',
-          success: (res) => {
-            if (res.statusCode === 200) {
-              resolve(res.data)
-            } else {
-              reject(new Error(`Failed to load language file: ${res.statusCode}`))
-            }
-          },
-          fail: (err) => {
-            reject(err)
-          }
-        })
-      })
-      
-      // 缓存翻译数据
-      translationsCache.value[language] = response
-      return response
-    } catch (error) {
-      console.error(`Failed to load language file for ${language}:`, error)
-      throw error
-    }
+const loadLanguageFile = async (language) => {
+  // 如果已经缓存，直接返回
+  if (translationsCache.value[language]) {
+    return translationsCache.value[language]
   }
   
-  return translationsCache.value[language]
+  try {
+    // 使用带缓存破坏的请求工具函数
+    const response = await fetchLocalJsonWithCache(`/static/locales/${language}.json`)
+    
+    // 缓存翻译数据
+    translationsCache.value[language] = response
+    return response
+  } catch (error) {
+    console.error(`Failed to load language file for ${language}:`, error)
+    throw error
+  }
 }
 
 // 获取嵌套对象的值
@@ -124,6 +117,32 @@ const getNestedValue = (obj, path) => {
   return path.split('.').reduce((current, key) => {
     return current && current[key] !== undefined ? current[key] : null
   }, obj)
+}
+
+// 完整的语言系统初始化（清空缓存重新加载并预加载所有语言）
+const initializeLanguageSystem = async () => {
+  try {
+    // 清空所有缓存
+    translationsCache.value = {}
+    languageNamesCache.value = {}
+    paramRegexCache.clear()
+    console.log('Language cache cleared, reinitializing...')
+    
+    // 重新加载语言配置
+    await loadLanguageList()
+    
+    // 重新加载当前语言
+    await loadLanguage()
+    
+    // 预加载所有语言文件（避免重复调用 loadLanguageList）
+    const loadPromises = availableLanguages.value.map(lang => loadLanguageFile(lang))
+    await Promise.all(loadPromises)
+    
+    console.log('Language system initialized and all languages preloaded successfully')
+  } catch (error) {
+    console.error('Failed to refresh language cache:', error)
+    throw error
+  }
 }
 
 export function useI18n() {
@@ -145,17 +164,18 @@ export function useI18n() {
     
     // 如果仍然没有找到，返回键名
     if (!text) {
-      // 只有在语言系统已经初始化完成的情况下才输出警告
-      if (isInitialized.value) {
-        console.warn(`Translation missing for key: ${key}`)
-      }
+      console.warn(`Translation missing for key: ${key}`)
       return key
     }
     
-    // 支持参数替换
+    // 支持参数替换功能（优化：使用缓存的正则表达式）
+    // 检查翻译文本是否为字符串类型，并且传入的参数对象不为空
     if (typeof text === 'string' && Object.keys(params).length > 0) {
+      // 遍历参数对象的每个键值对
       Object.keys(params).forEach(param => {
-        text = text.replace(new RegExp(`{${param}}`, 'g'), params[param])
+        // 使用缓存的正则表达式进行替换，提升性能
+        // 例如：将 "{count}分钟前" 中的 {count} 替换为实际数值
+        text = text.replace(getParamRegex(param), params[param])
       })
     }
     
@@ -163,7 +183,7 @@ export function useI18n() {
   }
   
   // 设置语言
-  const setLanguage = async (language, forceRefresh = false) => {
+  const setLanguage = async (language) => {
     // 确保语言列表已经加载
     if (availableLanguages.value.length === 0) {
       await loadLanguageList()
@@ -174,32 +194,13 @@ export function useI18n() {
       return
     }
     
-    try {
-      // 加载语言文件
-      await loadLanguageFile(language, forceRefresh)
-      
-      // 更新当前语言
-      currentLanguage.value = language
-      
-      // 标记为已初始化
-      isInitialized.value = true
-      
-      // 保存到本地存储
-      try {
-        uni.setStorageSync('app-language', language)
-      } catch (error) {
-        console.warn('Failed to save language:', error)
-      }
-      
-      console.log(`Language changed to: ${language}`)
-    } catch (error) {
-      console.error('Failed to set language:', error)
-    }
-  }
-  
-  // 强制刷新翻译
-  const refreshTranslations = async () => {
-    await setLanguage(currentLanguage.value, true)
+    // 更新当前语言
+    currentLanguage.value = language
+    
+    // 保存到本地存储（使用安全的存储操作）
+    safeStorageOperation('set', LANGUAGE_STORAGE_KEY, language)
+    
+    console.log(`Language changed to: ${language}`)
   }
   
   // 从本地存储加载语言
@@ -210,46 +211,21 @@ export function useI18n() {
         await loadLanguageList()
       }
       
-      const savedLanguage = uni.getStorageSync('app-language')
-      if (savedLanguage && availableLanguages.value.includes(savedLanguage)) {
-        await setLanguage(savedLanguage)
-      } else {
-        // 检测系统语言
-        await detectSystemLanguage()
-      }
+      // 获取要使用的语言
+      const savedLanguage = safeStorageOperation('get', LANGUAGE_STORAGE_KEY)
+      const targetLanguage = (savedLanguage && availableLanguages.value.includes(savedLanguage)) 
+                            ? savedLanguage 
+                            : languageConfig.value.defaultLanguage
+      
+      // 设置并加载语言
+      await setLanguage(targetLanguage)
+      await loadLanguageFile(targetLanguage)
     } catch (error) {
       console.warn('Failed to load language:', error)
-      await detectSystemLanguage()
-    }
-  }
-  
-  // 检测系统语言
-  const detectSystemLanguage = async () => {
-    try {
-      // 确保语言列表已经加载
-      if (availableLanguages.value.length === 0) {
-        await loadLanguageList()
-      }
-      
-      const systemInfo = uni.getSystemInfoSync()
-      const systemLanguage = systemInfo.language || 'zh-CN'
-      
-      // 使用配置文件中的系统语言映射
-      const languageMap = languageConfig.value.systemLanguageMapping
-      
-      const detectedLanguage = languageMap[systemLanguage] || 
-                              languageMap[systemLanguage.split('-')[0]] || 
-                              languageConfig.value.defaultLanguage
-      
-      // 确保检测到的语言在可用语言列表中
-      const finalLanguage = availableLanguages.value.includes(detectedLanguage) 
-                           ? detectedLanguage 
-                           : (availableLanguages.value[0] || languageConfig.value.defaultLanguage)
-      
-      await setLanguage(finalLanguage)
-    } catch (error) {
-      console.warn('Failed to detect system language:', error)
-      await setLanguage(languageConfig.value.defaultLanguage)
+      // 使用默认语言作为后备
+      const defaultLang = languageConfig.value.defaultLanguage
+      await setLanguage(defaultLang)
+      await loadLanguageFile(defaultLang)
     }
   }
   
@@ -291,19 +267,7 @@ export function useI18n() {
     return await loadLanguageName(currentLanguage.value)
   }
   
-  // 预加载所有语言文件
-  const preloadLanguages = async () => {
-    await loadLanguageList()
-    const loadPromises = availableLanguages.value.map(lang => loadLanguageFile(lang))
-    try {
-      await Promise.all(loadPromises)
-      isInitialized.value = true
-      console.log('All language files preloaded')
-    } catch (error) {
-      console.warn('Failed to preload some language files:', error)
-    }
-  }
-  
+
   return {
     // 状态
     currentLanguage,
@@ -313,17 +277,13 @@ export function useI18n() {
     t,
     setLanguage,
     loadLanguage,
-    detectSystemLanguage,
     getLanguageOptions,
     getCurrentLanguageIndex,
     getCurrentLanguageName,
-    preloadLanguages,
     loadLanguageList,
+    initializeLanguageSystem,
     
     // 常量
-    defaultLanguage: languageConfig.value.defaultLanguage,
-    
-    // 新方法
-    refreshTranslations
+    defaultLanguage: languageConfig.value.defaultLanguage
   }
 } 

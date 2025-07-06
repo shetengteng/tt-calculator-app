@@ -65,10 +65,10 @@ import { useI18n } from '@/composables/useI18n.js'
 const calculator = useCalculator()
 
 // 使用主题系统
-const { themeVars, activeTheme } = useTheme()
+const { themeVars, activeTheme, initializeThemeSystem, applyTheme } = useTheme()
 
 // 使用国际化系统
-const { loadLanguage } = useI18n()
+const { loadLanguage, initializeLanguageSystem } = useI18n()
 
 // 抽屉状态
 const isSettingsOpen = ref(false)
@@ -107,6 +107,33 @@ onMounted(() => {
   calculator.initializeHistory()
   loadLanguage()
 })
+</script>
+
+<script>
+export default {
+  async onShow() {
+    console.log('Calculator page show - Refreshing caches')
+    
+    try {
+      // 使用组合函数获取刷新方法
+      const { initializeLanguageSystem } = useI18n()
+      const { initializeThemeSystem, applyTheme } = useTheme()
+      
+      // 并行刷新语言和主题缓存
+      await Promise.all([
+        initializeLanguageSystem(),
+        initializeThemeSystem()
+      ])
+      
+      // 重新应用主题
+      applyTheme()
+      
+      console.log('Calculator page caches refreshed successfully')
+    } catch (error) {
+      console.error('Failed to refresh caches on calculator page show:', error)
+    }
+  }
+}
 </script>
 
 <style lang="scss">

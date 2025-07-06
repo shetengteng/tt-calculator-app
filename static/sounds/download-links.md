@@ -5,7 +5,7 @@
 ### 经典音效 (Classic)
 
 #### 按键音效 (button-press.mp3)
-- **Freesound**: https://freesound.org/people/LittleRobotSoundFactory/sounds/270324/
+- **Freesound**: 按自动铅笔的声音.wav
 - **Zapsplat**: https://zapsplat.com/music/button-click-ui-menu-sounds/
 - **备选**: https://freesound.org/people/kwahmah_02/sounds/256116/
 

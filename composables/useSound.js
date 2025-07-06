@@ -1,24 +1,22 @@
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 
 // 音效配置
 let soundConfig = null
 const audioContext = ref(null)
-const audioBuffers = reactive({})
-const isLoading = ref(false)
-const isInitialized = ref(false)
+const audioBuffers = {}
 
 // 音效实例缓存
-const audioInstances = reactive({})
+const audioInstances = {}
 
 export function useSound() {
   
   // 初始化音效系统
   const initializeSound = async () => {
-    if (isInitialized.value) return
+    // 清理现有资源
+    cleanupSounds()
+    console.log('Sound cache cleared, reinitializing...')
     
     try {
-      isLoading.value = true
-      
       // 加载音效配置
       await loadSoundConfig()
       
@@ -28,11 +26,9 @@ export function useSound() {
         audioContext.value = new AudioContextClass()
       }
       
-      isInitialized.value = true
+      console.log('Sound system initialized successfully')
     } catch (error) {
-      console.error('Failed to initialize sound system:', error)
-    } finally {
-      isLoading.value = false
+      console.error('Failed to refresh sound cache:', error)
     }
   }
   
@@ -40,48 +36,15 @@ export function useSound() {
   const loadSoundConfig = async () => {
     try {
       const response = await fetch('/static/sounds/index.json')
-      soundConfig = await response.json()
-    } catch (error) {
-      console.error('Failed to load sound config:', error)
-      // 使用默认配置
-      soundConfig = getDefaultSoundConfig()
-    }
-  }
-  
-  // 获取默认音效配置
-  const getDefaultSoundConfig = () => {
-    return {
-      version: "1.0.0",
-      soundTypes: {
-        classic: {
-          files: {
-            buttonPress: "classic/button-press.wav",
-            result: "classic/result.wav"
-          }
-        },
-        modern: {
-          files: {
-            buttonPress: "modern/button-press.wav",
-            result: "modern/result.wav"
-          }
-        },
-        natural: {
-          files: {
-            buttonPress: "natural/button-press.wav",
-            result: "natural/result.wav"
-          }
-        },
-        tech: {
-          files: {
-            buttonPress: "tech/button-press.wav",
-            result: "tech/result.wav"
-          }
-        }
-      },
-      recommendedVolume: {
-        buttonPress: 0.6,
-        result: 0.9
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
       }
+      soundConfig = await response.json()
+      console.log('Sound config loaded successfully from index.json')
+    } catch (error) {
+      console.error('Failed to load sound config from index.json:', error)
+      // 配置文件是必需的，不提供后备方案
+      throw new Error('Sound configuration file is required but not found')
     }
   }
   
@@ -138,9 +101,8 @@ export function useSound() {
   
   // 播放音效
   const playSound = async (soundType, scenario, volume = 1.0) => {
-    if (!isInitialized.value) {
-      await initializeSound()
-    }
+    // 每次播放前都重新初始化
+    await initializeSound()
     
     if (soundType === 'none' || !soundConfig) return
     
@@ -232,8 +194,6 @@ export function useSound() {
     Object.keys(audioInstances).forEach(key => {
       delete audioInstances[key]
     })
-    
-    isInitialized.value = false
   }
   
   // 获取音效配置
@@ -248,10 +208,6 @@ export function useSound() {
   }
   
   return {
-    // 状态
-    isLoading,
-    isInitialized,
-    
     // 方法
     initializeSound,
     preloadSounds,

@@ -10,7 +10,6 @@ const systemTheme = ref('Dark')
 // 主题配置缓存
 const themeConfigs = ref({})
 const themeIndex = ref(null)
-const themeSystemInitialized = ref(false)
 
 // 加载主题索引（只加载一次，缓存结果）
 const loadThemeIndex = async () => {
@@ -55,25 +54,16 @@ const loadThemeConfig = async (themeId) => {
   }
 }
 
-// 统一的主题系统初始化函数（只运行一次）
+// 统一的主题系统初始化函数（每次都清空缓存重新加载）
 const initializeThemeSystem = async () => {
   try {
-    // 如果已经初始化过，直接返回缓存的结果
-    if (themeSystemInitialized.value) {
-      const availableThemes = []
-      for (const [key, value] of Object.entries(themeConfigs.value)) {
-        if (value) {
-          availableThemes.push(value)
-        }
-      }
-      return {
-        themes: THEMES.value,
-        availableThemes,
-        index: themeIndex.value
-      }
-    }
+    // 清除缓存
+    themeConfigs.value = {}
+    themeIndex.value = null
+    THEMES.value = {}
+    console.log('Theme cache cleared, reinitializing...')
     
-    // 加载主题索引（只加载一次）
+    // 加载主题索引
     const index = await loadThemeIndex()
     if (!index) {
       throw new Error('Theme index not found')
@@ -102,8 +92,7 @@ const initializeThemeSystem = async () => {
     }
     
     THEMES.value = themes
-    themeSystemInitialized.value = true
-    console.log('Initialized theme system:', THEMES.value)
+    console.log('Theme system initialized:', THEMES.value)
     
     return {
       themes: THEMES.value,
@@ -111,14 +100,13 @@ const initializeThemeSystem = async () => {
       index
     }
   } catch (error) {
-    console.error('Failed to initialize theme system:', error)
+    console.error('Failed to refresh theme cache:', error)
     // 如果加载失败，使用默认主题
     THEMES.value = {
       LIGHT: 'Light',
       DARK: 'Dark',
       AUTO: 'Auto'
     }
-    themeSystemInitialized.value = true
     return {
       themes: THEMES.value,
       availableThemes: [],
@@ -127,42 +115,11 @@ const initializeThemeSystem = async () => {
   }
 }
 
-// 重新初始化主题系统（清除缓存）
-const reinitializeThemeSystem = async () => {
-  try {
-    // 清除缓存
-    themeSystemInitialized.value = false
-    themeIndex.value = null
-    themeConfigs.value = {}
-    THEMES.value = {}
-    
-    // 重新初始化
-    const result = await initializeThemeSystem()
-    console.log('Theme system reinitialized successfully')
-    return result
-  } catch (error) {
-    console.error('Failed to reinitialize theme system:', error)
-    throw error
-  }
-}
-
-// 获取所有可用主题（使用缓存的结果）
+// 获取所有可用主题
 const getAvailableThemes = async () => {
   try {
-    // 如果还未初始化，先初始化
-    if (!themeSystemInitialized.value) {
-      const { availableThemes } = await initializeThemeSystem()
-      return availableThemes
-    }
-    
-    // 如果已经初始化，从缓存中获取
-    const themes = []
-    for (const [key, value] of Object.entries(themeConfigs.value)) {
-      if (value) {
-        themes.push(value)
-      }
-    }
-    return themes
+    const { availableThemes } = await initializeThemeSystem()
+    return availableThemes
   } catch (error) {
     console.error('Failed to get available themes:', error)
     return []
@@ -443,7 +400,7 @@ export function useTheme() {
     watchSystemTheme()
     
     // 初始化主题配置
-    await initializeThemes()
+    await initializeThemeSystem()
     
     // 立即应用主题
     applyTheme()
@@ -454,48 +411,6 @@ export function useTheme() {
     }, 100)
   })
   
-  // 初始化主题配置
-  const initializeThemes = async () => {
-    try {
-      // 使用统一的主题系统初始化函数
-      await initializeThemeSystem()
-    } catch (error) {
-      console.error('Failed to initialize themes:', error)
-      throw error
-    }
-  }
-
-  // 立即初始化主题（在模块加载时就开始）
-  const immediateInit = async () => {
-    try {
-      // 先检测系统主题和加载保存的主题
-      detectSystemTheme()
-      loadTheme()
-      
-      // 初始化主题配置 - 确保配置完全加载后再应用主题
-      await initializeThemes()
-      
-      // 等待所有主题配置加载完成后再应用主题
-      if (Object.keys(themeConfigs.value).length > 0) {
-        applyTheme()
-      } else {
-        console.warn('Theme configurations not loaded, retrying...')
-        // 重试加载
-        setTimeout(async () => {
-          await initializeThemes()
-          applyTheme()
-        }, 500)
-      }
-    } catch (error) {
-      console.error('Failed to initialize themes:', error)
-      // 主题初始化失败时，使用基本的错误处理而不是硬编码默认值
-      throw new Error('Theme system initialization failed. Please check theme configuration files.')
-    }
-  }
-  
-  // 立即执行初始化
-  immediateInit()
-
   return {
     // 状态
     currentTheme: computed(() => currentTheme.value),
@@ -511,8 +426,7 @@ export function useTheme() {
     applyTheme,
     loadThemeConfig,
     getAvailableThemes,
-    initializeThemes,
-    reinitializeThemeSystem,
+    initializeThemeSystem,
     
     // 常量
     THEMES
