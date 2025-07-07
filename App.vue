@@ -60,7 +60,7 @@ export default {
 					])
 					
 					// 重新应用主题
-					applyTheme()
+					await applyTheme()
 					
 					isInitialized = true
 					console.log('Forced initialization completed')
@@ -75,7 +75,7 @@ export default {
 			const { applyTheme } = useTheme()
 			
 			// 重新应用主题（可能系统主题已更改）
-			applyTheme()
+			await applyTheme()
 			
 			console.log('App Show - Theme refreshed')
 		} catch (error) {

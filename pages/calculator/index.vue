@@ -125,6 +125,7 @@ const closeHistory = () => {
 
 // 生命周期
 onMounted(() => {
+  console.log('----------33333333333----------')
   loadSettings()
   loadHistory()
   loadLanguage()
