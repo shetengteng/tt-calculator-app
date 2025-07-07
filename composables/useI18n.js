@@ -1,5 +1,5 @@
 import { ref, computed } from 'vue'
-import { fetchLocalJson, fetchLocalJsonWithCache, safeStorageOperation } from '../utils/request.js'
+import { safeStorageOperation, loadLocaleConfig } from '../utils/request.js'
 
 // 常量定义
 const DEFAULT_LANGUAGE = 'zh-CN'
@@ -52,23 +52,24 @@ const loadLanguageList = async () => {
     availableLanguages.value = []
     console.log('Language list cache cleared, reloading...')
     
-    const response = await fetchLocalJson('/static/locales/languages.json')
-    
-    // 更新语言配置
-    languageConfig.value = {
-      languages: response.languages || [DEFAULT_LANGUAGE],
-      systemLanguageMapping: response.systemLanguageMapping || {},
-      defaultLanguage: response.defaultLanguage || DEFAULT_LANGUAGE
+    // 从新的配置系统加载
+    const configModule = await loadLocaleConfig()
+    const response = {
+      languages: configModule.languages || [DEFAULT_LANGUAGE],
+      systemLanguageMapping: configModule.systemLanguageMapping || {},
+      defaultLanguage: configModule.defaultLanguage || DEFAULT_LANGUAGE
     }
     
-    availableLanguages.value = languageConfig.value.languages
+    // 更新语言配置
+    languageConfig.value = response
+    availableLanguages.value = response.languages
     
     // 更新当前语言的初始值
     if (currentLanguage.value === DEFAULT_LANGUAGE) {
-      currentLanguage.value = languageConfig.value.defaultLanguage
+      currentLanguage.value = response.defaultLanguage
     }
     
-    console.log('Language list loaded:', availableLanguages.value)
+    console.log('Language list loaded from config system:', availableLanguages.value)
   } catch (error) {
     console.error('Failed to load language list:', error)
     throw error
@@ -104,11 +105,13 @@ const loadLanguageFile = async (language) => {
   }
   
   try {
-    // 使用带缓存破坏的请求工具函数
-    const response = await fetchLocalJsonWithCache(`/static/locales/${language}.json`)
+    // 从新的配置系统加载
+    const configModule = await loadLocaleConfig(language)
+    const response = configModule.locale || configModule.default || configModule
     
     // 缓存翻译数据
     translationsCache.value[language] = response
+    console.log(`Language file loaded from config system: ${language}`)
     return response
   } catch (error) {
     console.error(`Failed to load language file for ${language}:`, error)

@@ -1,4 +1,7 @@
-{
+/**
+ * English (US) Language Configuration
+ */
+export const locale = {
   "_metadata": {
     "code": "en-US",
     "name": "English",
@@ -158,4 +161,6 @@
     "today": "Today",
     "yesterday": "Yesterday"
   }
-} 
+};
+
+export default locale; 

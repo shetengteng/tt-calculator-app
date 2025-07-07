@@ -1,4 +1,7 @@
-{
+/**
+ * 中文（简体）语言配置
+ */
+export const locale = {
   "_metadata": {
     "code": "zh-CN",
     "name": "简体中文",
@@ -158,4 +161,6 @@
     "today": "今天",
     "yesterday": "昨天"
   }
-} 
+};
+
+export default locale; 

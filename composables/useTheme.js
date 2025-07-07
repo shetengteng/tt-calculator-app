@@ -1,5 +1,5 @@
 import { ref, computed, watch, onMounted } from 'vue'
-import { fetchLocalJson } from '@/utils/request.js'
+import { loadThemeConfig } from '@/utils/request.js'
 import { PlatformAdapter } from '@/compatibility/index.js'
 
 // 动态主题类型（将从配置文件加载）
@@ -25,8 +25,11 @@ const loadThemeIndex = async () => {
       return themeIndex.value
     }
     
-    const data = await fetchLocalJson('/static/themes/index.json')
+    // 从新的配置系统加载
+    const configModule = await loadThemeConfig()
+    const data = configModule.themeConfig || configModule.default || configModule
     themeIndex.value = data
+    console.log('Theme index loaded from config system')
     return data
   } catch (error) {
     console.error('Failed to load theme index:', error)
@@ -35,14 +38,16 @@ const loadThemeIndex = async () => {
 }
 
 // 加载单个主题配置
-const loadThemeConfig = async (themeId) => {
+const loadSingleThemeConfig = async (themeId) => {
   try {
     // 如果已缓存，直接返回
     if (themeConfigs.value[themeId]) {
       return themeConfigs.value[themeId]
     }
     
-    const config = await fetchLocalJson(`/static/themes/${themeId}.json`)
+    // 从新的配置系统加载
+    const configModule = await loadThemeConfig(themeId)
+    const config = configModule.theme || configModule.default || configModule
     
     // 验证配置文件格式（auto主题的colors可以为null）
     if (!config.colors && themeId !== 'auto') {
@@ -51,6 +56,7 @@ const loadThemeConfig = async (themeId) => {
     
     // 缓存配置
     themeConfigs.value[themeId] = config
+    console.log(`Theme config loaded from config system: ${themeId}`)
     return config
   } catch (error) {
     console.error(`Failed to load theme config for ${themeId}:`, error)
@@ -83,7 +89,7 @@ const initializeThemeSystem = async () => {
     
     for (const theme of index.themes) {
       if (theme.enabled) {
-        const config = await loadThemeConfig(theme.id)
+        const config = await loadSingleThemeConfig(theme.id)
         if (config) {
           // 将主题ID转换为常量名称格式
           const constantName = theme.id.toUpperCase().replace(/-/g, '_')

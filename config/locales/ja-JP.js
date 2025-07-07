@@ -1,4 +1,7 @@
-{
+/**
+ * Japanese Language Configuration
+ */
+export const locale = {
   "_metadata": {
     "code": "ja-JP",
     "name": "日本語",
@@ -158,4 +161,6 @@
     "today": "今日",
     "yesterday": "昨日"
   }
-} 
+};
+
+export default locale; 

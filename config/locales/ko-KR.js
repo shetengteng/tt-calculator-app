@@ -1,4 +1,7 @@
-{
+/**
+ * Korean Language Configuration
+ */
+export const locale = {
   "_metadata": {
     "code": "ko-KR",
     "name": "한국어",
@@ -158,4 +161,6 @@
     "today": "오늘",
     "yesterday": "어제"
   }
-} 
+};
+
+export default locale; 

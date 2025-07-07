@@ -63,9 +63,87 @@ export const safeStorageOperation = (operation, key, value = null) => {
   }
 }
 
+/**
+ * 加载配置文件（支持 JS 和 JSON 格式）
+ * @param {string} configType - 配置类型 ('locales', 'themes', 'sounds')
+ * @param {string} configName - 配置名称（可选，如果不提供则加载索引配置）
+ * @returns {Promise<any>} 返回配置数据
+ */
+export const loadConfig = async (configType, configName = null) => {
+  try {
+    // 动态导入配置文件
+    let configModule;
+    
+    if (configName) {
+      // 加载特定配置文件
+      configModule = await import(`../config/${configType}/${configName}.js`);
+    } else {
+      // 加载索引配置文件
+      configModule = await import(`../config/${configType}/index.js`);
+    }
+    
+    // 返回默认导出或者具体的配置对象
+    return configModule.default || configModule;
+  } catch (error) {
+    console.warn(`Failed to load config ${configType}/${configName || 'index'}:`, error);
+    throw error;
+  }
+}
+
+/**
+ * 加载语言配置
+ * @param {string} langCode - 语言代码（如 'zh-CN'）
+ * @returns {Promise<any>} 返回语言配置数据
+ */
+export const loadLocaleConfig = async (langCode = null) => {
+  if (langCode) {
+    return await loadConfig('locales', langCode);
+  }
+  return await loadConfig('locales');
+}
+
+/**
+ * 加载主题配置
+ * @param {string} themeId - 主题ID（如 'dark'）
+ * @returns {Promise<any>} 返回主题配置数据
+ */
+export const loadThemeConfig = async (themeId = null) => {
+  if (themeId) {
+    return await loadConfig('themes', themeId);
+  }
+  return await loadConfig('themes');
+}
+
+/**
+ * 加载声音配置
+ * @returns {Promise<any>} 返回声音配置数据
+ */
+export const loadSoundConfig = async () => {
+  return await loadConfig('sounds');
+}
+
+/**
+ * 加载所有配置
+ * @returns {Promise<any>} 返回所有配置数据
+ */
+export const loadAllConfigs = async () => {
+  try {
+    const configModule = await import('../config/index.js');
+    return configModule.default || configModule;
+  } catch (error) {
+    console.warn('Failed to load all configs:', error);
+    throw error;
+  }
+}
+
 export default {
   fetchLocalJson,
   fetchLocalJsonWithCache,
   fetchMultipleLocalJson,
-  safeStorageOperation
+  safeStorageOperation,
+  loadConfig,
+  loadLocaleConfig,
+  loadThemeConfig,
+  loadSoundConfig,
+  loadAllConfigs
 } 

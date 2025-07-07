@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { fetchLocalJson } from '../utils/request.js'
+import { loadSoundConfig } from '../utils/request.js'
 
 // 音效配置
 let soundConfig = null
@@ -19,7 +19,7 @@ export function useSound() {
     
     try {
       // 加载音效配置
-      await loadSoundConfig()
+      await loadSoundConfigData()
       
       // #ifdef H5
       // 初始化音频上下文（如果支持）
@@ -36,12 +36,14 @@ export function useSound() {
   }
   
   // 加载音效配置
-  const loadSoundConfig = async () => {
+  const loadSoundConfigData = async () => {
     try {
-      soundConfig = await fetchLocalJson('/static/sounds/index.json')
-      console.log('Sound config loaded successfully from index.json')
+      // 从新的配置系统加载
+      const configModule = await loadSoundConfig()
+      soundConfig = configModule.soundConfig || configModule.default || configModule
+      console.log('Sound config loaded successfully from config system')
     } catch (error) {
-      console.error('Failed to load sound config from index.json:', error)
+      console.error('Failed to load sound config:', error)
       // 配置文件是必需的，不提供后备方案
       throw new Error('Sound configuration file is required but not found')
     }
