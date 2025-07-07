@@ -4,51 +4,11 @@
  */
 
 /**
- * 检测当前运行环境是否为微信小程序
- * @returns {boolean} 是否为微信小程序环境
- */
-const isWeChatMiniProgram = () => {
-  // #ifdef MP-WEIXIN
-  return true
-  // #endif
-  // #ifndef MP-WEIXIN
-  return false
-  // #endif
-}
-
-/**
  * 获取本地JSON文件
  * @param {string} url - 请求的URL
  * @returns {Promise<any>} 返回JSON数据
  */
 export const fetchLocalJson = async (url) => {
-  // 微信小程序环境使用文件系统管理器
-  if (isWeChatMiniProgram()) {
-    return new Promise((resolve, reject) => {
-      const fs = uni.getFileSystemManager()
-      
-      // 移除开头的斜杠，因为小程序中静态文件路径不需要开头斜杠
-      const filePath = url.startsWith('/') ? url.substring(1) : url
-      
-      fs.readFile({
-        filePath: filePath,
-        encoding: 'utf8',
-        success: (res) => {
-          try {
-            const data = JSON.parse(res.data)
-            resolve(data)
-          } catch (error) {
-            reject(new Error(`Failed to parse JSON from ${filePath}: ${error.message}`))
-          }
-        },
-        fail: (err) => {
-          reject(err)
-        }
-      })
-    })
-  }
-  
-  // 其他环境使用 uni.request
   return new Promise((resolve, reject) => {
     uni.request({
       url,
@@ -73,12 +33,6 @@ export const fetchLocalJson = async (url) => {
  * @returns {Promise<any>} 返回JSON数据
  */
 export const fetchLocalJsonWithCache = async (url) => {
-  // 微信小程序环境不需要缓存破坏，直接读取文件
-  if (isWeChatMiniProgram()) {
-    return fetchLocalJson(url)
-  }
-  
-  // 其他环境添加时间戳
   const urlWithTimestamp = `${url}?t=${Date.now()}`
   return fetchLocalJson(urlWithTimestamp)
 }
