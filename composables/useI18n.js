@@ -3,15 +3,13 @@ import { safeStorageOperation } from '../utils/request.js'
 import localeConfig from '../config/locales/index.js'
 
 // 常量定义
-const DEFAULT_LANGUAGE = 'zh-CN'
-const DEFAULT_FLAG = '🌐'
 const LANGUAGE_STORAGE_KEY = 'app-language'
 
 // 语言配置缓存
 const languageConfig = ref({
-  languages: localeConfig.languages || [DEFAULT_LANGUAGE],
-  systemLanguageMapping: localeConfig.systemLanguageMapping || {},
-  defaultLanguage: localeConfig.defaultLanguage || DEFAULT_LANGUAGE
+  languages: localeConfig.languages,
+  systemLanguageMapping: localeConfig.systemLanguageMapping,
+  defaultLanguage: localeConfig.defaultLanguage
 })
 
 // 当前语言状态
@@ -19,9 +17,6 @@ const currentLanguage = ref(languageConfig.value.defaultLanguage)
 
 // 翻译数据缓存
 const translationsCache = ref({})
-
-// 语言名称缓存
-const languageNamesCache = ref({})
 
 // 支持的语言列表（从配置中获取）
 const availableLanguages = ref(languageConfig.value.languages)
@@ -42,41 +37,20 @@ const loadLanguageList = async () => {
   try {
     // 直接从配置中获取数据
     languageConfig.value = {
-      languages: localeConfig.languages || [DEFAULT_LANGUAGE],
-      systemLanguageMapping: localeConfig.systemLanguageMapping || {},
-      defaultLanguage: localeConfig.defaultLanguage || DEFAULT_LANGUAGE
+      languages: localeConfig.languages,
+      systemLanguageMapping: localeConfig.systemLanguageMapping,
+      defaultLanguage: localeConfig.defaultLanguage
     }
     availableLanguages.value = languageConfig.value.languages
     
     // 更新当前语言的初始值
-    if (currentLanguage.value === DEFAULT_LANGUAGE) {
+    if (currentLanguage.value === localeConfig.DEFAULT_LANGUAGE) {
       currentLanguage.value = languageConfig.value.defaultLanguage
     }
     
     console.log('Language list loaded from config:', availableLanguages.value)
   } catch (error) {
     console.error('Failed to load language list:', error)
-    throw error
-  }
-}
-
-// 加载语言名称
-const loadLanguageName = async (language) => {
-  if (languageNamesCache.value[language]) {
-    return languageNamesCache.value[language]
-  }
-  
-  try {
-    const languageData = await loadLanguageFile(language)
-    const languageInfo = {
-      name: languageData._metadata?.name || language,
-      flag: languageData._metadata?.flag || DEFAULT_FLAG,
-      region: languageData._metadata?.region || ''
-    }
-    languageNamesCache.value[language] = languageInfo
-    return languageInfo
-  } catch (error) {
-    console.error(`Failed to load language name for ${language}:`, error)
     throw error
   }
 }
@@ -114,7 +88,6 @@ const initializeLanguageSystem = async () => {
   try {
     // 清空所有缓存
     translationsCache.value = {}
-    languageNamesCache.value = {}
     paramRegexCache.clear()
     console.log('Language cache cleared, reinitializing...')
     
@@ -123,7 +96,7 @@ const initializeLanguageSystem = async () => {
     
     // 重新加载当前语言
     const savedLanguage = safeStorageOperation('get', LANGUAGE_STORAGE_KEY)
-    const targetLanguage = (savedLanguage && availableLanguages.value.includes(savedLanguage)) 
+    const targetLanguage = localeConfig.isLanguageSupported(savedLanguage) 
                           ? savedLanguage 
                           : languageConfig.value.defaultLanguage
     
@@ -185,7 +158,7 @@ export function useI18n() {
       await loadLanguageList()
     }
     
-    if (!availableLanguages.value.includes(language)) {
+    if (!localeConfig.isLanguageSupported(language)) {
       console.warn('Invalid language:', language)
       return
     }
@@ -209,7 +182,7 @@ export function useI18n() {
       
       // 获取要使用的语言
       const savedLanguage = safeStorageOperation('get', LANGUAGE_STORAGE_KEY)
-      const targetLanguage = (savedLanguage && availableLanguages.value.includes(savedLanguage)) 
+      const targetLanguage = localeConfig.isLanguageSupported(savedLanguage) 
                             ? savedLanguage 
                             : languageConfig.value.defaultLanguage
       
@@ -232,20 +205,16 @@ export function useI18n() {
       await loadLanguageList()
     }
     
-    const options = []
+    // 使用优化后的 getAvailableLanguages 方法
+    const availableLanguagesInfo = localeConfig.getAvailableLanguages()
     
-    for (const lang of availableLanguages.value) {
-      const languageInfo = await loadLanguageName(lang)
-      options.push({
-        value: lang,
-        label: languageInfo.name,
-        name: languageInfo.name,
-        flag: languageInfo.flag,
-        region: languageInfo.region
-      })
-    }
-    
-    return options
+    return availableLanguagesInfo.map(langInfo => ({
+      value: langInfo.code,
+      label: langInfo.name,
+      name: langInfo.name,
+      flag: langInfo.flag,
+      region: langInfo.region
+    }))
   }
   
   // 获取当前语言索引（用于picker组件）
@@ -260,7 +229,7 @@ export function useI18n() {
   
   // 获取当前语言名称
   const getCurrentLanguageName = async () => {
-    return await loadLanguageName(currentLanguage.value)
+    return localeConfig.getLanguageName(currentLanguage.value)
   }
   
 
