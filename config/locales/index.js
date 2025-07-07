@@ -2,11 +2,32 @@
  * 语言配置索引文件
  * 统一导入和管理所有语言配置
  */
-import { languages, systemLanguageMapping, defaultLanguage } from './languages.js';
 import zhCN from './zh-CN.js';
 import enUS from './en-US.js';
 import jaJP from './ja-JP.js';
 import koKR from './ko-KR.js';
+
+// 语言配置
+export const languages = [
+  "zh-CN",
+  "en-US", 
+  "ja-JP",
+  "ko-KR"
+];
+
+export const systemLanguageMapping = {
+  "zh": "zh-CN",
+  "zh-CN": "zh-CN",
+  "zh-Hans": "zh-CN",
+  "en": "en-US",
+  "en-US": "en-US",
+  "ja": "ja-JP",
+  "ja-JP": "ja-JP",
+  "ko": "ko-KR",
+  "ko-KR": "ko-KR"
+};
+
+export const defaultLanguage = "zh-CN";
 
 // 语言配置映射
 export const localeMap = {
@@ -16,12 +37,7 @@ export const localeMap = {
   'ko-KR': koKR
 };
 
-// 导出配置
-export {
-  languages,
-  systemLanguageMapping,
-  defaultLanguage
-};
+
 
 /**
  * 获取语言配置
