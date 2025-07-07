@@ -26,10 +26,9 @@ const loadThemeIndex = async () => {
     }
     
     // 从新的配置系统加载
-    const configModule = await loadThemeConfig()
-    const data = configModule.themeConfig || configModule.default || configModule
+    const data = await loadThemeConfig()
     themeIndex.value = data
-    console.log('Theme index loaded from config system')
+    console.log('Theme index loaded from config system:', data)
     return data
   } catch (error) {
     console.error('Failed to load theme index:', error)
@@ -83,11 +82,18 @@ const initializeThemeSystem = async () => {
       throw new Error('Theme index not found')
     }
     
+    // 确保获取正确的主题列表
+    const themeList = index.themes || []
+    if (!Array.isArray(themeList)) {
+      console.error('Invalid theme configuration structure:', index)
+      throw new Error('Invalid theme configuration: themes should be an array')
+    }
+    
     // 初始化主题常量和配置
     const themes = {}
     const availableThemes = []
     
-    for (const theme of index.themes) {
+    for (const theme of themeList) {
       if (theme.enabled) {
         const config = await loadSingleThemeConfig(theme.id)
         if (config) {

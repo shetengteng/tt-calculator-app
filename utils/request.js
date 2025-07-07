@@ -82,10 +82,12 @@ export const loadConfig = async (configType, configName = null) => {
       configModule = await import(`../config/${configType}/index.js`);
     }
     
-    // 返回默认导出或者具体的配置对象
-    return configModule.default || configModule;
+    // 优先返回默认导出，如果没有则返回整个模块
+    const result = configModule.default || configModule;
+    console.log(`Loaded config ${configType}/${configName || 'index'}:`, result);
+    return result;
   } catch (error) {
-    console.warn(`Failed to load config ${configType}/${configName || 'index'}:`, error);
+    console.error(`Failed to load config ${configType}/${configName || 'index'}:`, error);
     throw error;
   }
 }

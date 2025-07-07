@@ -93,10 +93,5 @@ export const getThemesByCategory = (category) => {
   return getAvailableThemes().filter(theme => theme.metadata?.category === category);
 };
 
-export default {
-  themeConfig,
-  themeMap,
-  getTheme,
-  getAvailableThemes,
-  getThemesByCategory
-}; 
+// 为了兼容性，将 themeConfig 作为主要导出
+export default themeConfig; 
