@@ -22,10 +22,10 @@
       
       <!-- 2. Display Section -->
       <CalculatorDisplay 
-        :calculation="calculator.calculation"
-        :result="calculator.result"
-        :secondary-calculation="calculator.secondaryCalculation"
-        :secondary-result="calculator.secondaryResult"
+        :calculation="calculator.calculation.value"
+        :result="calculator.result.value"
+        :secondary-calculation="calculator.secondaryCalculation.value"
+        :secondary-result="calculator.secondaryResult.value"
       />
       
       <!-- 3. Button Group Section -->
@@ -80,10 +80,10 @@ const calculator = useCalculator()
 const { loadHistory } = useCalculatorHistory()
 
 // 使用主题系统
-const { themeVars, activeTheme, initializeThemeSystem, applyTheme } = useTheme()
+const { themeVars, activeTheme, applyTheme } = useTheme()
 
 // 使用国际化系统
-const { loadLanguage, initializeLanguageSystem } = useI18n()
+const { loadLanguage } = useI18n()
 
 // 使用设置系统
 const { loadSettings } = useSettings()

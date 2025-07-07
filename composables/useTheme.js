@@ -1,4 +1,5 @@
 import { ref, computed, watch, onMounted } from 'vue'
+import { fetchLocalJson } from '../utils/request.js'
 
 // 动态主题类型（将从配置文件加载）
 export const THEMES = ref({})
@@ -19,8 +20,7 @@ const loadThemeIndex = async () => {
       return themeIndex.value
     }
     
-    const response = await fetch('/static/themes/index.json')
-    const data = await response.json()
+    const data = await fetchLocalJson('/static/themes/index.json')
     themeIndex.value = data
     return data
   } catch (error) {
@@ -37,8 +37,7 @@ const loadThemeConfig = async (themeId) => {
       return themeConfigs.value[themeId]
     }
     
-    const response = await fetch(`/static/themes/${themeId}.json`)
-    const config = await response.json()
+    const config = await fetchLocalJson(`/static/themes/${themeId}.json`)
     
     // 验证配置文件格式（auto主题的colors可以为null）
     if (!config.colors && themeId !== 'auto') {

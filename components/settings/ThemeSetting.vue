@@ -111,13 +111,7 @@ import BaseSettingItem from './BaseSettingItem.vue'
 import { useTheme } from '@/composables/useTheme.js'
 import { useI18n } from '@/composables/useI18n.js'
 
-// Props
-const props = defineProps({
-  calculator: {
-    type: Object,
-    required: true
-  }
-})
+// Props - 不再需要 calculator 实例
 
 // Emits
 const emit = defineEmits(['change'])

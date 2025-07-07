@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { fetchLocalJson } from '../utils/request.js'
 
 // 音效配置
 let soundConfig = null
@@ -35,11 +36,7 @@ export function useSound() {
   // 加载音效配置
   const loadSoundConfig = async () => {
     try {
-      const response = await fetch('/static/sounds/index.json')
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-      soundConfig = await response.json()
+      soundConfig = await fetchLocalJson('/static/sounds/index.json')
       console.log('Sound config loaded successfully from index.json')
     } catch (error) {
       console.error('Failed to load sound config from index.json:', error)
@@ -88,10 +85,9 @@ export function useSound() {
       
       // 对于支持AudioContext的环境
       if (audioContext.value) {
-        const response = await fetch(fullPath)
-        const arrayBuffer = await response.arrayBuffer()
-        const audioBuffer = await audioContext.value.decodeAudioData(arrayBuffer)
-        audioBuffers[cacheKey] = audioBuffer
+        // 在小程序环境中，AudioContext 的音频文件加载会由框架自动处理
+        // 这里我们跳过手动加载，让小程序内置的音频系统处理
+        console.log('AudioContext in mini-program environment, skipping manual buffer loading')
       }
       
     } catch (error) {
