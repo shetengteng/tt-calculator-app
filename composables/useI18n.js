@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
-import { safeStorageOperation, loadLocaleConfig } from '../utils/request.js'
+import { safeStorageOperation } from '../utils/request.js'
+import localeConfig from '../config/locales/index.js'
 
 // 常量定义
 const DEFAULT_LANGUAGE = 'zh-CN'
@@ -8,13 +9,13 @@ const LANGUAGE_STORAGE_KEY = 'app-language'
 
 // 语言配置缓存
 const languageConfig = ref({
-  languages: [],
-  systemLanguageMapping: {},
-  defaultLanguage: DEFAULT_LANGUAGE
+  languages: localeConfig.languages || [DEFAULT_LANGUAGE],
+  systemLanguageMapping: localeConfig.systemLanguageMapping || {},
+  defaultLanguage: localeConfig.defaultLanguage || DEFAULT_LANGUAGE
 })
 
 // 当前语言状态
-const currentLanguage = ref(DEFAULT_LANGUAGE)
+const currentLanguage = ref(languageConfig.value.defaultLanguage)
 
 // 翻译数据缓存
 const translationsCache = ref({})
@@ -22,15 +23,11 @@ const translationsCache = ref({})
 // 语言名称缓存
 const languageNamesCache = ref({})
 
-// 支持的语言列表（动态加载）
-const availableLanguages = ref([])
+// 支持的语言列表（从配置中获取）
+const availableLanguages = ref(languageConfig.value.languages)
 
 // 参数替换正则表达式缓存
 const paramRegexCache = new Map()
-
-// 初始化状态标记
-const isInitialized = ref(false)
-const isInitializing = ref(false)
 
 // 获取或创建参数替换正则表达式（缓存优化）
 const getParamRegex = (param) => {
@@ -43,33 +40,20 @@ const getParamRegex = (param) => {
 // 加载语言列表
 const loadLanguageList = async () => {
   try {
-    // 清空相关缓存
+    // 直接从配置中获取数据
     languageConfig.value = {
-      languages: [],
-      systemLanguageMapping: {},
-      defaultLanguage: DEFAULT_LANGUAGE
+      languages: localeConfig.languages || [DEFAULT_LANGUAGE],
+      systemLanguageMapping: localeConfig.systemLanguageMapping || {},
+      defaultLanguage: localeConfig.defaultLanguage || DEFAULT_LANGUAGE
     }
-    availableLanguages.value = []
-    console.log('Language list cache cleared, reloading...')
-    
-    // 从新的配置系统加载
-    const configModule = await loadLocaleConfig()
-    const response = {
-      languages: configModule.languages || [DEFAULT_LANGUAGE],
-      systemLanguageMapping: configModule.systemLanguageMapping || {},
-      defaultLanguage: configModule.defaultLanguage || DEFAULT_LANGUAGE
-    }
-    
-    // 更新语言配置
-    languageConfig.value = response
-    availableLanguages.value = response.languages
+    availableLanguages.value = languageConfig.value.languages
     
     // 更新当前语言的初始值
     if (currentLanguage.value === DEFAULT_LANGUAGE) {
-      currentLanguage.value = response.defaultLanguage
+      currentLanguage.value = languageConfig.value.defaultLanguage
     }
     
-    console.log('Language list loaded from config system:', availableLanguages.value)
+    console.log('Language list loaded from config:', availableLanguages.value)
   } catch (error) {
     console.error('Failed to load language list:', error)
     throw error
@@ -105,14 +89,13 @@ const loadLanguageFile = async (language) => {
   }
   
   try {
-    // 从新的配置系统加载
-    const configModule = await loadLocaleConfig(language)
-    const response = configModule.locale || configModule.default || configModule
+    // 直接从配置中获取语言数据
+    const languageData = localeConfig.getLocale(language)
     
     // 缓存翻译数据
-    translationsCache.value[language] = response
-    console.log(`Language file loaded from config system: ${language}`)
-    return response
+    translationsCache.value[language] = languageData
+    console.log(`Language file loaded from config: ${language}`)
+    return languageData
   } catch (error) {
     console.error(`Failed to load language file for ${language}:`, error)
     throw error
@@ -129,10 +112,6 @@ const getNestedValue = (obj, path) => {
 // 完整的语言系统初始化（清空缓存重新加载并预加载所有语言）
 const initializeLanguageSystem = async () => {
   try {
-    // 标记开始初始化
-    isInitializing.value = true
-    isInitialized.value = false
-    
     // 清空所有缓存
     translationsCache.value = {}
     languageNamesCache.value = {}
@@ -151,18 +130,13 @@ const initializeLanguageSystem = async () => {
     // 更新当前语言
     currentLanguage.value = targetLanguage
     
-    // 预加载所有语言文件（避免重复调用 loadLanguageList）
+    // 预加载所有语言文件
     const loadPromises = availableLanguages.value.map(lang => loadLanguageFile(lang))
     await Promise.all(loadPromises)
-    
-    // 标记初始化完成
-    isInitialized.value = true
-    isInitializing.value = false
     
     console.log('Language system initialized and all languages preloaded successfully')
   } catch (error) {
     console.error('Failed to refresh language cache:', error)
-    isInitializing.value = false
     throw error
   }
 }
@@ -186,10 +160,7 @@ export function useI18n() {
     
     // 如果仍然没有找到，返回键名
     if (!text) {
-      // 只在完全初始化后才显示警告，避免启动时的误报
-      if (isInitialized.value && !isInitializing.value) {
-        console.warn(`Translation missing for key: ${key}`)
-      }
+      console.warn(`Translation missing for key: ${key}`)
       return key
     }
     
@@ -245,22 +216,12 @@ export function useI18n() {
       // 设置并加载语言
       await setLanguage(targetLanguage)
       await loadLanguageFile(targetLanguage)
-      
-      // 如果是单独加载（不是在初始化过程中），标记为已初始化
-      if (!isInitializing.value) {
-        isInitialized.value = true
-      }
     } catch (error) {
       console.warn('Failed to load language:', error)
       // 使用默认语言作为后备
       const defaultLang = languageConfig.value.defaultLanguage
       await setLanguage(defaultLang)
       await loadLanguageFile(defaultLang)
-      
-      // 如果是单独加载（不是在初始化过程中），标记为已初始化
-      if (!isInitializing.value) {
-        isInitialized.value = true
-      }
     }
   }
   
