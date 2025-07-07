@@ -1,5 +1,5 @@
 import { ref, computed, watch, onMounted } from 'vue'
-import { fetchLocalJson } from '../utils/request.js'
+import { fetchLocalJson } from '@/utils/request.js'
 
 // 动态主题类型（将从配置文件加载）
 export const THEMES = ref({})
@@ -205,6 +205,7 @@ export function useTheme() {
         return
       }
       
+      // #ifdef H5
       // 在H5环境中设置CSS自定义属性到document root
       if (typeof document !== 'undefined') {
         const root = document.documentElement
@@ -237,7 +238,9 @@ export function useTheme() {
           document.body.style.color = vars.textPrimary
         }
       }
+      // #endif
       
+      // #ifdef MP
       // 在小程序环境中设置页面样式
       try {
         const pages = getCurrentPages()
@@ -271,8 +274,9 @@ export function useTheme() {
           }
         }
       } catch (pageError) {
-        console.warn('Failed to set page styles:', pageError)
+        console.warn('Failed to set page styles in mini-program:', pageError)
       }
+      // #endif
       
       // 设置导航栏颜色
       try {

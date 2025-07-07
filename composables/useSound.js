@@ -21,11 +21,13 @@ export function useSound() {
       // 加载音效配置
       await loadSoundConfig()
       
+      // #ifdef H5
       // 初始化音频上下文（如果支持）
       if (typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined') {
         const AudioContextClass = AudioContext || webkitAudioContext
         audioContext.value = new AudioContextClass()
       }
+      // #endif
       
       console.log('Sound system initialized successfully')
     } catch (error) {
@@ -75,6 +77,7 @@ export function useSound() {
         return
       }
       
+      // #ifdef H5
       // 对于H5环境，使用HTML5 Audio
       if (typeof Audio !== 'undefined') {
         const audio = new Audio(fullPath)
@@ -82,6 +85,7 @@ export function useSound() {
         audioInstances[cacheKey] = audio
         return
       }
+      // #endif
       
       // 对于支持AudioContext的环境
       if (audioContext.value) {

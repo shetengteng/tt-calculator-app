@@ -125,12 +125,16 @@ onUnmounted(() => {
   cursor: pointer;
 }
 
+/* 通用的触摸反馈样式 */
 .copy-button:active {
   background: var(--settings-separator);
   transform: scale(0.95);
 }
 
+/* #ifdef H5 */
+/* H5环境下的hover效果 */
 .copy-button:hover {
   background: var(--settings-separator);
 }
+/* #endif */
 </style> 
