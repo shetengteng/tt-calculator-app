@@ -319,23 +319,6 @@ if (!PlatformAdapter.storage.isStorageAvailable()) {
 2. 实现适配器类
 3. 在 `index.js` 中导出
 
-```javascript
-// compatibility/network/index.js
-class NetworkAdapter {
-  async request(options) {
-    // #ifdef H5
-    return fetch(options.url, options)
-    // #endif
-    
-    // #ifdef MP
-    return uni.request(options)
-    // #endif
-  }
-}
-
-export const networkAdapter = new NetworkAdapter()
-```
-
 ### 添加新的平台支持
 
 在各适配器中添加新的条件编译块：
