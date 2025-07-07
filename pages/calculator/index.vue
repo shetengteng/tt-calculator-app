@@ -152,25 +152,18 @@ onUnmounted(() => {
 <script>
 export default {
   async onShow() {
-    console.log('Calculator page show - Refreshing caches')
+    console.log('Calculator page show')
     
     try {
-      // 使用组合函数获取刷新方法
-      const { initializeLanguageSystem } = useI18n()
-      const { initializeThemeSystem, applyTheme } = useTheme()
+      // 页面显示时只进行必要的更新，不重新初始化缓存
+      const { applyTheme } = useTheme()
       
-      // 并行刷新语言和主题缓存
-      await Promise.all([
-        initializeLanguageSystem(),
-        initializeThemeSystem()
-      ])
-      
-      // 重新应用主题
+      // 重新应用主题（可能系统主题已更改）
       applyTheme()
       
-      console.log('Calculator page caches refreshed successfully')
+      console.log('Calculator page theme refreshed')
     } catch (error) {
-      console.error('Failed to refresh caches on calculator page show:', error)
+      console.error('Failed to refresh theme on calculator page show:', error)
     }
   }
 }

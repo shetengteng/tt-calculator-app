@@ -28,6 +28,10 @@ const availableLanguages = ref([])
 // 参数替换正则表达式缓存
 const paramRegexCache = new Map()
 
+// 初始化状态标记
+const isInitialized = ref(false)
+const isInitializing = ref(false)
+
 // 获取或创建参数替换正则表达式（缓存优化）
 const getParamRegex = (param) => {
   if (!paramRegexCache.has(param)) {
@@ -122,6 +126,10 @@ const getNestedValue = (obj, path) => {
 // 完整的语言系统初始化（清空缓存重新加载并预加载所有语言）
 const initializeLanguageSystem = async () => {
   try {
+    // 标记开始初始化
+    isInitializing.value = true
+    isInitialized.value = false
+    
     // 清空所有缓存
     translationsCache.value = {}
     languageNamesCache.value = {}
@@ -132,15 +140,26 @@ const initializeLanguageSystem = async () => {
     await loadLanguageList()
     
     // 重新加载当前语言
-    await loadLanguage()
+    const savedLanguage = safeStorageOperation('get', LANGUAGE_STORAGE_KEY)
+    const targetLanguage = (savedLanguage && availableLanguages.value.includes(savedLanguage)) 
+                          ? savedLanguage 
+                          : languageConfig.value.defaultLanguage
+    
+    // 更新当前语言
+    currentLanguage.value = targetLanguage
     
     // 预加载所有语言文件（避免重复调用 loadLanguageList）
     const loadPromises = availableLanguages.value.map(lang => loadLanguageFile(lang))
     await Promise.all(loadPromises)
     
+    // 标记初始化完成
+    isInitialized.value = true
+    isInitializing.value = false
+    
     console.log('Language system initialized and all languages preloaded successfully')
   } catch (error) {
     console.error('Failed to refresh language cache:', error)
+    isInitializing.value = false
     throw error
   }
 }
@@ -164,7 +183,10 @@ export function useI18n() {
     
     // 如果仍然没有找到，返回键名
     if (!text) {
-      console.warn(`Translation missing for key: ${key}`)
+      // 只在完全初始化后才显示警告，避免启动时的误报
+      if (isInitialized.value && !isInitializing.value) {
+        console.warn(`Translation missing for key: ${key}`)
+      }
       return key
     }
     
@@ -220,12 +242,22 @@ export function useI18n() {
       // 设置并加载语言
       await setLanguage(targetLanguage)
       await loadLanguageFile(targetLanguage)
+      
+      // 如果是单独加载（不是在初始化过程中），标记为已初始化
+      if (!isInitializing.value) {
+        isInitialized.value = true
+      }
     } catch (error) {
       console.warn('Failed to load language:', error)
       // 使用默认语言作为后备
       const defaultLang = languageConfig.value.defaultLanguage
       await setLanguage(defaultLang)
       await loadLanguageFile(defaultLang)
+      
+      // 如果是单独加载（不是在初始化过程中），标记为已初始化
+      if (!isInitializing.value) {
+        isInitialized.value = true
+      }
     }
   }
   
