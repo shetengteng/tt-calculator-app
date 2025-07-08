@@ -25,14 +25,14 @@
                 <text class="group-title">{{ group.title }}</text>
               </view>
               <view class="group-items">
-                <view class="history-item" v-for="(item, index) in group.items" :key="item.id">
+                <view class="history-item" v-for="(item) in group.items" :key="item.id">
                   <view class="history-info">
                     <text class="history-title">{{ item.calculation }} {{ item.result }}</text>
                     <view class="history-description-with-icon">
                       <SvgIcon 
                         name="ri-time-line" 
                         color="var(--settings-text-secondary)"
-                        size="24rpx"
+                        size="24"
                       />
                       <text class="history-description">{{ item.formattedTimestamp }}</text>
                     </view>
@@ -53,12 +53,11 @@
     </view>
     
     <!-- 遮罩层 -->
-    <view 
-      class="drawer-overlay" 
+    <view
+      class="drawer-overlay"
       :class="{ 'overlay-visible': isOpen }"
       @click="closeDrawer"
-    ></view>
-    
+    />
 
   </view>
 </template>
@@ -325,6 +324,12 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 8rpx;
+  line-height: 1.3;
+}
+
+.history-description-with-icon svg {
+  height: 1em;
+  width: auto;
 }
 
 .history-description {
@@ -339,10 +344,6 @@ onMounted(() => {
   align-items: center;
   gap: 8rpx;
 }
-
-
-
-
 
 .empty-history {
   padding: 80rpx 40rpx;
@@ -404,4 +405,4 @@ onMounted(() => {
 }
 
 
-</style> 
+</style>

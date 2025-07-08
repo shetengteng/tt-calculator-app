@@ -3,7 +3,7 @@
     <SvgIcon 
       :name="currentIcon" 
       color="var(--settings-text-secondary)"
-      size="28rpx"
+      size="28"
     />
   </view>
 </template>
