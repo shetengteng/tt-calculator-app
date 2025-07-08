@@ -1,7 +1,7 @@
 <template>
   <view class="close-button" @click="handleClick">
     <view class="icon-svg">
-      <SvgIcon name="ri-close-line" size="48rpx" color="currentColor" />
+      <SvgIcon name="ri-close-line" size="48" color="currentColor" />
     </view>
   </view>
 </template>

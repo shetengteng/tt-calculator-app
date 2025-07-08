@@ -3,14 +3,14 @@
     <view class="header-left">
       <view class="setting-button" @click="handleSettings">
         <view class="icon-svg">
-          <SvgIcon name="ri-settings-line" size="48rpx" color="currentColor" />
+          <SvgIcon name="ri-settings-line" size="48" color="currentColor" />
         </view>
       </view>
     </view>
     <view class="header-right">
       <view class="history-button" @click="handleHistory">
         <view class="icon-svg">
-          <SvgIcon name="ri-time-line" size="48rpx" color="currentColor" />
+          <SvgIcon name="ri-time-line" size="48" color="currentColor" />
         </view>
       </view>
     </view>
@@ -40,7 +40,7 @@ const handleSettings = () => {
   justify-content: space-between;
   align-items: center;
   padding: 30rpx 40rpx;
-  padding-top: calc(30rpx + var(--status-bar-height));
+  //padding-top: calc(30rpx + var(--status-bar-height));
   color: var(--theme-text-primary);
   background-color: var(--theme-primary-background);
   flex-shrink: 0;
