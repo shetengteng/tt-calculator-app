@@ -39,8 +39,7 @@ const handleSettings = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 30rpx 40rpx;
-  //padding-top: calc(30rpx + var(--status-bar-height));
+  padding: 0 40rpx;
   color: var(--theme-text-primary);
   background-color: var(--theme-primary-background);
   flex-shrink: 0;
@@ -64,8 +63,6 @@ const handleSettings = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20rpx;
-  border-radius: 50%;
   transition: background-color 0.2s ease;
   cursor: pointer;
   width: 80rpx;
@@ -78,8 +75,6 @@ const handleSettings = () => {
 }
 
 .icon-svg {
-  width: 48rpx;
-  height: 48rpx;
   color: var(--theme-text-primary);
 }
 
@@ -91,8 +86,7 @@ const handleSettings = () => {
 /* 低高度屏幕适配 */
 @include low-height-screen {
   .header-section {
-    padding: 10rpx 40rpx;
-    padding-top: calc(10rpx + var(--status-bar-height));
+    padding: 0 40rpx;
     min-height: 100rpx;
   }
   
@@ -112,8 +106,7 @@ const handleSettings = () => {
 /* iPhone 4/4S 专门优化 - 最小化header高度 */
 @include iphone4-optimization {
   .header-section {
-    padding: 6rpx 30rpx !important;
-    padding-top: calc(6rpx + var(--status-bar-height)) !important;
+    padding: 0 30rpx !important;
     min-height: 80rpx !important;
   }
   
@@ -133,8 +126,7 @@ const handleSettings = () => {
 /* 超小高度屏幕 */
 @include extra-low-height-screen {
   .header-section {
-    padding: 4rpx 30rpx !important;
-    padding-top: calc(4rpx + var(--status-bar-height)) !important;
+    padding: 0 30rpx !important;
     min-height: 70rpx !important;
   }
   
