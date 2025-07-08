@@ -7,18 +7,18 @@
 .theme-dark {
   /* CSS 变量定义 */
   --settings-background: #1a1a1a;
-  --settings-card-background: #1a1a1a;
+  --settings-card-background: #333333;
   --settings-text-primary: #ffffff;
   --settings-text-secondary: #cccccc;
-  --settings-separator: #333333;
+  --settings-separator: #444444;
   --settings-primary-color: #ff9500;
   --settings-danger-color: #ff3b30;
   --settings-toggle-active: #ff9500;
-  --settings-toggle-inactive: #333333;
+  --settings-toggle-inactive: #555555;
   
   /* 主题变量定义 */
   --theme-drawer-background: #1a1a1a;
-  --theme-drawer-item-background: #1a1a1a;
+  --theme-drawer-item-background: #333333;
   --theme-text-primary: #ffffff;
   --theme-text-secondary: #cccccc;
   --theme-shadow-color: rgba(0, 0, 0, 0.3);
@@ -140,12 +140,12 @@
   }
   
   .settings-item {
-    background: #2a2a2a;
+    background: #333333;
     color: #ffffff;
     border-bottom: none;
     
     &:hover {
-      background: #3a3a3a;
+      background: #404040;
     }
     
     .settings-label {
@@ -169,7 +169,7 @@
   }
   
   .settings-group {
-    background: #2a2a2a;
+    background: #333333;
     border: none;
   }
   
@@ -226,9 +226,9 @@
   
   /* 历史记录 */
   .history-item {
-    background: #1a1a1a;
+    background: #333333;
     color: #ffffff;
-    border-bottom: 1px solid #333333;
+    border-bottom: 1px solid #444444;
     
     .history-calculation {
       color: #cccccc;
@@ -258,7 +258,7 @@
     }
     
     .group-items {
-      background: #1a1a1a;
+      background: #333333;
     }
   }
   

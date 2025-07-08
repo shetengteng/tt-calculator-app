@@ -134,42 +134,73 @@ const isExpanded = ref(false)
 const themeOptions = ref([])
 const themeIndex = ref(getCurrentThemeIndex())
 
-// 获取主题预览颜色
+// 获取主题预览颜色 - 使用硬编码的预览颜色
 const getThemePreviewColors = (themeValue) => {
   const themeId = themeValue.toLowerCase()
   
-  // 直接从主题配置中获取颜色
-  if (themeConfigs.value[themeId] && themeConfigs.value[themeId].colors) {
-    return themeConfigs.value[themeId].colors
-  }
-  
-  // 如果是自动主题，使用对应的主题配置
-  if (themeValue === 'Auto') {
-    const systemInfo = uni.getSystemInfoSync()
-    const isDark = systemInfo.theme === 'dark' || (new Date().getHours() >= 18 || new Date().getHours() <= 6)
-    const fallbackThemeId = isDark ? 'dark' : 'light'
-    
-    if (themeConfigs.value[fallbackThemeId] && themeConfigs.value[fallbackThemeId].colors) {
-      return themeConfigs.value[fallbackThemeId].colors
+  // 硬编码的预览颜色，仅用于主题选择界面
+  const previewColors = {
+    light: {
+      primaryBackground: "#FFFFFF",
+      secondaryBackground: "#F2F2F7",
+      textPrimary: "#000000",
+      buttonDark: "#E5E5EA", 
+      buttonDarkText: "#000000",
+      buttonBlue: "#007AFF",
+      buttonBlueText: "#FFFFFF",
+      border: "#C6C6C8"
+    },
+    dark: {
+      primaryBackground: "#1a1a1a",
+      secondaryBackground: "#1a1a1a",
+      textPrimary: "#ffffff",
+      buttonDark: "#505050", 
+      buttonDarkText: "#ffffff",
+      buttonBlue: "#ff9500",
+      buttonBlueText: "#ffffff",
+      border: "#444444"
+    },
+    'minimal-black': {
+      primaryBackground: "#000000",
+      secondaryBackground: "#000000",
+      textPrimary: "#ffffff",
+      buttonDark: "#000000", 
+      buttonDarkText: "#ffffff",
+      buttonBlue: "#007AFF",
+      buttonBlueText: "#ffffff",
+      border: "#0F0F0F"
+    },
+    'minimal-white': {
+      primaryBackground: "#ffffff",
+      secondaryBackground: "#ffffff",
+      textPrimary: "#000000",
+      buttonDark: "#ffffff", 
+      buttonDarkText: "#000000",
+      buttonBlue: "#007AFF",
+      buttonBlueText: "#000000",
+      border: "#F0F0F0"
+    },
+    auto: {
+      primaryBackground: "#FFFFFF",
+      secondaryBackground: "#F2F2F7",
+      textPrimary: "#000000",
+      buttonDark: "#E5E5EA", 
+      buttonDarkText: "#000000",
+      buttonBlue: "#007AFF",
+      buttonBlueText: "#FFFFFF",
+      border: "#C6C6C8"
     }
   }
   
-  // 如果配置文件还没有加载，返回空对象等待配置加载完成
-  console.warn(`Theme configuration not yet loaded for ${themeValue}, waiting for initialization...`)
-  return {}
+  return previewColors[themeId] || previewColors.light
 }
 
-// 获取Auto主题的预览背景
+// 获取Auto主题的预览背景 - 使用硬编码颜色
 const getAutoThemePreviewBackground = computed(() => {
-  const lightColors = themeConfigs.value.light?.colors
-  const darkColors = themeConfigs.value.dark?.colors
+  const lightBackground = "#FFFFFF"
+  const darkBackground = "#1a1a1a"
   
-  if (lightColors && darkColors) {
-    return `linear-gradient(135deg, ${lightColors.primaryBackground} 0%, ${lightColors.primaryBackground} 50%, ${darkColors.primaryBackground} 50%, ${darkColors.primaryBackground} 100%)`
-  }
-  
-  // 如果配置还没有加载，返回透明渐变等待配置加载完成
-  return 'linear-gradient(135deg, transparent 0%, transparent 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1) 100%)'
+  return `linear-gradient(135deg, ${lightBackground} 0%, ${lightBackground} 50%, ${darkBackground} 50%, ${darkBackground} 100%)`
 })
 
 // 详细主题选项
@@ -182,13 +213,13 @@ const themeOptionsDetailed = computed(() => {
     const themeName = t(`themes.${themeId}`) || theme
     const themeDescription = t(`themes.${themeId}Desc`) || ''
     
-    // 使用配置文件中的数据
+    // 使用硬编码的预览颜色
     return {
       value: theme,
       name: themeName,
       description: themeDescription,
-      colors: config?.colors || getThemePreviewColors(theme),
-      metadata: config?.metadata || {}
+      colors: getThemePreviewColors(theme),
+      scss: config?.scss || `theme-${themeId}`
     }
   })
 })

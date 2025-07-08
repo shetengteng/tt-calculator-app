@@ -40,9 +40,9 @@ const loadSingleThemeConfig = (themeId) => {
     throw new Error(`Theme config not found for ${themeId}`)
   }
   
-  // 验证配置文件格式（auto主题的colors可以为null）
-  if (!config.colors && themeId !== 'auto') {
-    throw new Error(`Invalid theme config: missing colors for ${themeId}`)
+  // 主题配置验证（现在不需要colors，由themes.scss负责）
+  if (!config.id) {
+    throw new Error(`Invalid theme config: missing id for ${themeId}`)
   }
   
   // 缓存配置
@@ -99,44 +99,25 @@ export function useTheme() {
     return currentTheme.value
   })
   
-  // 计算当前主题变量
+  // 计算当前主题变量（现在主要用于主题类名）
   const themeVars = computed(() => {
     // 确保activeTheme.value存在
     if (!activeTheme.value) {
-      console.warn('Active theme is undefined, returning empty theme vars')
+      console.warn('Active theme is undefined')
       return {}
     }
     
     const themeId = activeTheme.value.toLowerCase()
     
-    // 如果是自动主题，使用对应的系统主题配置
-    if (activeTheme.value === 'Auto') {
-      if (!systemTheme.value) {
-        console.warn('System theme is undefined, returning empty theme vars')
-        return {}
-      }
+          // 从主题配置中获取scss类名
+      const themeConfig = themeConfigs.value[themeId]
+      const themeClass = themeConfig?.scss || `theme-${themeId}`
       
-      const fallbackThemeId = systemTheme.value.toLowerCase()
-      if (themeConfigs.value[fallbackThemeId] && themeConfigs.value[fallbackThemeId].colors) {
-        return themeConfigs.value[fallbackThemeId].colors
+      // 现在主要返回主题类名，实际样式由themes.scss负责
+      return {
+        themeClass: themeClass,
+        themeId: themeId
       }
-      // 如果系统主题配置还没有加载，等待配置加载完成
-      console.warn(`System theme configuration not yet loaded for ${fallbackThemeId}, waiting for initialization...`)
-      
-      // 返回空对象，等待配置加载完成后再应用主题
-      return {}
-    }
-    
-    // 从配置文件中获取普通主题
-    if (themeConfigs.value[themeId] && themeConfigs.value[themeId].colors) {
-      return themeConfigs.value[themeId].colors
-    }
-    
-    // 如果配置文件还没有加载，等待配置加载完成
-    console.warn(`Theme configuration not yet loaded for ${themeId}, waiting for initialization...`)
-    
-    // 返回空对象，等待配置加载完成后再应用主题
-    return {}
   })
   
   // 检测系统主题
@@ -156,7 +137,7 @@ export function useTheme() {
       const vars = themeVars.value
       
       // 如果主题变量为空，跳过应用
-      if (!vars || Object.keys(vars).length === 0) {
+      if (!vars || !vars.themeClass) {
         console.warn('Theme vars is empty, skipping theme application')
         return
       }
@@ -172,23 +153,43 @@ export function useTheme() {
           })
           
           // 添加当前主题类
-          const themeClass = `theme-${activeTheme.value.toLowerCase().replace(/\s+/g, '-')}`
-          PlatformAdapter.dom.addClass(rootElement, themeClass)
+          PlatformAdapter.dom.addClass(rootElement, vars.themeClass)
           
           // 设置主题数据属性
-          PlatformAdapter.dom.setAttribute(rootElement, 'data-theme', activeTheme.value.toLowerCase())
+          PlatformAdapter.dom.setAttribute(rootElement, 'data-theme', vars.themeId)
           
-          console.log('Applied theme class:', themeClass)
+          console.log('Applied theme class:', vars.themeClass)
         }
         
-        // 设置页面背景色
-        PlatformAdapter.dom.setPageBackground(vars.primaryBackground, vars.textPrimary)
+        // 设置页面背景色 - 使用硬编码的默认颜色
+        const backgroundColors = {
+          light: '#ffffff',
+          dark: '#1a1a1a',
+          'minimal-black': '#000000',
+          'minimal-white': '#ffffff',
+          auto: activeTheme.value === 'Light' ? '#ffffff' : '#1a1a1a'
+        }
+        const textColors = {
+          light: '#000000',
+          dark: '#ffffff',
+          'minimal-black': '#ffffff',
+          'minimal-white': '#000000',
+          auto: activeTheme.value === 'Light' ? '#000000' : '#ffffff'
+        }
+        
+        PlatformAdapter.dom.setPageBackground(
+          backgroundColors[vars.themeId] || backgroundColors.light,
+          textColors[vars.themeId] || textColors.light
+        )
       }
       
       // 设置导航栏颜色
+      const isDarkTheme = ['dark', 'minimal-black'].includes(vars.themeId) || 
+                          (vars.themeId === 'auto' && activeTheme.value !== 'Light')
+      
       await PlatformAdapter.system.setNavigationBarColor({
-        frontColor: activeTheme.value === 'Light' ? '#000000' : '#ffffff',
-        backgroundColor: vars.primaryBackground,
+        frontColor: isDarkTheme ? '#ffffff' : '#000000',
+        backgroundColor: isDarkTheme ? '#1a1a1a' : '#ffffff',
         animation: {
           duration: 300,
           timingFunc: 'easeInOut'
