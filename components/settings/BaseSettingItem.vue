@@ -2,9 +2,9 @@
   <view class="setting-item" :class="{ 'clickable': clickable, 'danger': isDanger }" @click="handleClick">
     <view class="setting-icon" v-if="icon">
       <SvgIcon 
+        size="30"
         :name="icon" 
         :color="isDanger ? 'var(--settings-danger-color)' : 'var(--settings-text-secondary)'"
-        size="24rpx"
       />
     </view>
     <view class="setting-info">

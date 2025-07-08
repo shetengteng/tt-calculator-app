@@ -29,7 +29,7 @@
         >
           <view class="option-content">
             <view class="option-icon">
-              <SvgIcon :name="option.icon" size="32rpx" color="var(--settings-text-secondary)" />
+              <SvgIcon :name="option.icon" size="32" color="var(--settings-text-secondary)" />
             </view>
             <view class="option-text">
               <text class="option-name">{{ option.name }}</text>
@@ -41,8 +41,6 @@
           </view>
         </view>
       </view>
-
-      
     </view>
   </view>
 </template>
@@ -256,4 +254,4 @@ const playTestSound = async () => {
     }
   }
 }
-</style> 
+</style>

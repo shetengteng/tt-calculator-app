@@ -43,13 +43,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import BaseSettingItem from './BaseSettingItem.vue'
 import { useI18n } from '@/composables/useI18n.js'
 
-// Props - 不再需要 calculator 实例
-
-// Emits
 const emit = defineEmits(['change'])
 
 // 使用国际化系统
