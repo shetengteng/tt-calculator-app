@@ -1,5 +1,6 @@
 /**
  * 极简黑色主题配置
+ * 注意：具体的颜色样式现在定义在 themes.scss 中的 .theme-minimal-black 类
  */
 export const theme = {
   id: "minimal-black",
@@ -7,7 +8,7 @@ export const theme = {
   nameEn: "Minimal Black",
   description: "极简纯黑主题，优雅深邃",
   descriptionEn: "Minimalist pure black theme, elegant and deep",
-  version: "1.0.0",
+  version: "2.0.0",
   author: "Calculator Team",
   preview: {
     primaryColor: "#FFFFFF",
@@ -20,41 +21,15 @@ export const theme = {
     accessibility: {
       highContrast: true,
       colorBlindFriendly: true
-    }
+    },
+    themeClass: "theme-minimal-black"
   },
+  // 颜色样式现在由 themes.scss 中的 .theme-minimal-black 类定义
+  // 这里保留一些关键颜色信息用于预览和兼容性
   colors: {
     primaryBackground: "#000000",
-    secondaryBackground: "#000000",
-    tertiaryBackground: "#000000",
     textPrimary: "#FFFFFF",
-    textSecondary: "#000000",
-    textMuted: "#999999",
-    buttonBlue: "#000000",
-    buttonDark: "#000000",
-    buttonLight: "#000000",
-    buttonBlueText: "#007AFF",
-    buttonDarkText: "#FFFFFF",
-    buttonLightText: "#FFFFFF",
-    accentBlue: "#FFFFFF",
-    lightGray: "#666666",
-    darkGray: "#1F1F1F",
-    border: "#0F0F0F",
-    separator: "#0A0A0A",
-    overlay: "rgba(255, 255, 255, 0.1)",
-    shadowColor: "rgba(255, 255, 255, 0.02)",
-    drawerBackground: "#000000",
-    drawerHeader: "#000000",
-    drawerItemBackground: "#000000",
-    drawerItemHover: "#0A0A0A",
-    settingsBackground: "#000000",
-    settingsCardBackground: "#000000",
-    settingsTextPrimary: "#FFFFFF",
-    settingsTextSecondary: "#999999",
-    settingsPrimaryColor: "#FFFFFF",
-    settingsDangerColor: "#FF453A",
-    settingsSeparator: "#0F0F0F",
-    settingsToggleActive: "#007AFF",
-    settingsToggleInactive: "#1F1F1F"
+    accentColor: "#FFFFFF"
   }
 };
 

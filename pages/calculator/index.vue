@@ -8,11 +8,6 @@
         'calculator-shifted-right': isHistoryOpen,
         [`theme-${activeTheme.toLowerCase()}`]: true
       }"
-      :style="{ 
-        background: themeVars.primaryBackground,
-        '--theme-primary-background': themeVars.primaryBackground,
-        '--theme-text-primary': themeVars.textPrimary
-      }"
     >
       <!-- 1. Header Section -->
       <CalculatorHeader 
@@ -187,19 +182,8 @@ export default {
   overflow: hidden;
   position: relative;
   transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  background-color: var(--theme-primary-background);
-  color: var(--theme-text-primary);
-}
-
-/* 主题样式 */
-.calculator.theme-light {
-  background-color: #FFFFFF;
-  color: #000000;
-}
-
-.calculator.theme-dark {
-  background-color: #2C2C2E;
-  color: #FFFFFF;
+  
+  /* 主题样式现在通过themes.scss中的主题类定义 */
 }
 
 /* 设置抽屉打开时向右滑动 */

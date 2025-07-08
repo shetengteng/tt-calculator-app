@@ -227,7 +227,7 @@ onMounted(() => {
   padding: 12rpx 40rpx 12rpx 40rpx;
   padding-top: calc(12rpx + var(--status-bar-height));
   background: var(--settings-card-background);
-  border-bottom: 1px solid var(--settings-separator);
+  border-bottom: none;
   height: 100rpx;
   box-sizing: border-box;
 }
@@ -297,13 +297,9 @@ onMounted(() => {
   align-items: center;
   padding: 16rpx 20rpx;
   background: var(--settings-card-background);
-  border-bottom: 1px solid var(--settings-separator);
+  border-bottom: none;
   min-height: 60rpx;
   transition: background-color 0.2s ease;
-}
-
-.history-item:last-child {
-  border-bottom: none;
 }
 
 .history-info {

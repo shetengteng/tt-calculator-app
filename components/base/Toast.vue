@@ -161,7 +161,7 @@ onUnmounted(() => {
   box-shadow: 0 20rpx 40rpx rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(20rpx);
   pointer-events: auto;
-  border: 2rpx solid var(--settings-separator);
+  border: none;
 }
 
 .toast-icon {

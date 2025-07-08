@@ -322,7 +322,7 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2rpx solid var(--settings-separator);
+  border: none;
   overflow: hidden;
 }
 

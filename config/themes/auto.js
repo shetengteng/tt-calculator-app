@@ -1,5 +1,6 @@
 /**
  * 自动主题配置
+ * 注意：自动主题会根据系统设置自动切换到对应的主题类
  */
 export const theme = {
   id: "auto",
@@ -7,7 +8,7 @@ export const theme = {
   nameEn: "Auto",
   description: "跟随系统设置自动切换主题",
   descriptionEn: "Automatically switch theme based on system settings",
-  version: "1.0.0",
+  version: "2.0.0",
   author: "Calculator Team",
   preview: {
     primaryColor: "#007AFF",
@@ -20,7 +21,8 @@ export const theme = {
     accessibility: {
       highContrast: false,
       colorBlindFriendly: true
-    }
+    },
+    themeClass: "theme-auto"
   },
   colors: null,
   fallbackThemes: {

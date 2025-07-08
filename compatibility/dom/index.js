@@ -156,6 +156,102 @@ class DomAdapter {
   }
   
   /**
+   * 添加CSS类名
+   * @param {Element|string} element - 目标元素或选择器
+   * @param {string} className - 类名
+   * @returns {boolean} 是否成功
+   */
+  addClass(element, className) {
+    if (typeof element === 'string') {
+      element = this.querySelector(element)
+    }
+    
+    if (!element) return false
+    
+    // #ifdef H5
+    if (element.classList) {
+      element.classList.add(className)
+      return true
+    }
+    // #endif
+    
+    // #ifdef MP
+    // 小程序环境：通过操作className属性
+    try {
+      const currentClass = element.className || ''
+      const classes = currentClass.split(' ').filter(Boolean)
+      if (!classes.includes(className)) {
+        classes.push(className)
+        element.className = classes.join(' ')
+      }
+      return true
+    } catch (error) {
+      console.warn('Failed to add class in mini-program:', error)
+      return false
+    }
+    // #endif
+    
+    return false
+  }
+  
+  /**
+   * 移除CSS类名
+   * @param {Element|string} element - 目标元素或选择器
+   * @param {string} className - 类名
+   * @returns {boolean} 是否成功
+   */
+  removeClass(element, className) {
+    if (typeof element === 'string') {
+      element = this.querySelector(element)
+    }
+    
+    if (!element) return false
+    
+    // #ifdef H5
+    if (element.classList) {
+      element.classList.remove(className)
+      return true
+    }
+    // #endif
+    
+    // #ifdef MP
+    // 小程序环境：通过操作className属性
+    try {
+      const currentClass = element.className || ''
+      const classes = currentClass.split(' ').filter(Boolean)
+      const index = classes.indexOf(className)
+      if (index > -1) {
+        classes.splice(index, 1)
+        element.className = classes.join(' ')
+      }
+      return true
+    } catch (error) {
+      console.warn('Failed to remove class in mini-program:', error)
+      return false
+    }
+    // #endif
+    
+    return false
+  }
+  
+  /**
+   * 查询元素
+   * @param {string} selector - 选择器
+   * @returns {Element|null} 元素
+   */
+  querySelector(selector) {
+    // #ifdef H5
+    return document.querySelector(selector)
+    // #endif
+    
+    // #ifdef MP
+    // 小程序环境暂不支持复杂选择器，返回null
+    console.warn('querySelector not fully supported in mini-program environment')
+    return null
+    // #endif
+  }
+  
+  /**
    * 检查DOM是否可用
    * @returns {boolean} DOM是否可用
    */

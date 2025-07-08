@@ -182,7 +182,7 @@ const handleDrawerTouchEnd = (e) => {
   padding: 12rpx 40rpx 12rpx 40rpx;
   padding-top: calc(12rpx + var(--status-bar-height));
   background: var(--settings-card-background);
-  border-bottom: 1px solid var(--settings-separator);
+  border-bottom: none;
   height: 100rpx;
   box-sizing: border-box;
 }

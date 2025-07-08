@@ -1,5 +1,6 @@
 /**
  * 极简白色主题配置
+ * 注意：具体的颜色样式现在定义在 themes.scss 中的 .theme-minimal-white 类
  */
 export const theme = {
   id: "minimal-white",
@@ -7,7 +8,7 @@ export const theme = {
   nameEn: "Minimal White",
   description: "极简纯白主题，清爽简洁",
   descriptionEn: "Minimalist pure white theme, clean and simple",
-  version: "1.0.0",
+  version: "2.0.0",
   author: "Calculator Team",
   preview: {
     primaryColor: "#000000",
@@ -20,41 +21,15 @@ export const theme = {
     accessibility: {
       highContrast: true,
       colorBlindFriendly: true
-    }
+    },
+    themeClass: "theme-minimal-white"
   },
+  // 颜色样式现在由 themes.scss 中的 .theme-minimal-white 类定义
+  // 这里保留一些关键颜色信息用于预览和兼容性
   colors: {
     primaryBackground: "#FFFFFF",
-    secondaryBackground: "#FFFFFF",
-    tertiaryBackground: "#FFFFFF",
     textPrimary: "#000000",
-    textSecondary: "#FFFFFF",
-    textMuted: "#666666",
-    buttonBlue: "#FFFFFF",
-    buttonDark: "#FFFFFF",
-    buttonLight: "#FFFFFF",
-    buttonBlueText: "#007AFF",
-    buttonDarkText: "#000000",
-    buttonLightText: "#000000",
-    accentBlue: "#000000",
-    lightGray: "#999999",
-    darkGray: "#E0E0E0",
-    border: "#F0F0F0",
-    separator: "#F5F5F5",
-    overlay: "rgba(0, 0, 0, 0.1)",
-    shadowColor: "rgba(0, 0, 0, 0.02)",
-    drawerBackground: "#FFFFFF",
-    drawerHeader: "#FFFFFF",
-    drawerItemBackground: "#FFFFFF",
-    drawerItemHover: "#F5F5F5",
-    settingsBackground: "#FFFFFF",
-    settingsCardBackground: "#FFFFFF",
-    settingsTextPrimary: "#000000",
-    settingsTextSecondary: "#666666",
-    settingsPrimaryColor: "#000000",
-    settingsDangerColor: "#FF3B30",
-    settingsSeparator: "#F0F0F0",
-    settingsToggleActive: "#000000",
-    settingsToggleInactive: "#E0E0E0"
+    accentColor: "#000000"
   }
 };
 

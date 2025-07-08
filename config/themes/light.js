@@ -1,5 +1,6 @@
 /**
  * 浅色主题配置
+ * 注意：具体的颜色样式现在定义在 themes.scss 中的 .theme-light 类
  */
 export const theme = {
   id: "light",
@@ -7,7 +8,7 @@ export const theme = {
   nameEn: "Light",
   description: "经典浅色主题，适合日间使用",
   descriptionEn: "Classic light theme for daytime use",
-  version: "1.0.0",
+  version: "2.0.0",
   author: "Calculator Team",
   preview: {
     primaryColor: "#007AFF",
@@ -20,41 +21,15 @@ export const theme = {
     accessibility: {
       highContrast: false,
       colorBlindFriendly: true
-    }
+    },
+    themeClass: "theme-light"
   },
+  // 颜色样式现在由 themes.scss 中的 .theme-light 类定义
+  // 这里保留一些关键颜色信息用于预览和兼容性
   colors: {
     primaryBackground: "#FFFFFF",
-    secondaryBackground: "#F2F2F7",
-    tertiaryBackground: "#FFFFFF",
     textPrimary: "#000000",
-    textSecondary: "#FFFFFF",
-    textMuted: "#8E8E93",
-    buttonBlue: "#007AFF",
-    buttonDark: "#E5E5EA",
-    buttonLight: "#F2F2F7",
-    buttonBlueText: "#FFFFFF",
-    buttonDarkText: "#000000",
-    buttonLightText: "#000000",
-    accentBlue: "#007AFF",
-    lightGray: "#8E8E93",
-    darkGray: "#C7C7CC",
-    border: "#C6C6C8",
-    separator: "#C6C6C8",
-    overlay: "rgba(0, 0, 0, 0.3)",
-    shadowColor: "rgba(0, 0, 0, 0.05)",
-    drawerBackground: "#f8f9fa",
-    drawerHeader: "#f8f9fa",
-    drawerItemBackground: "#FFFFFF",
-    drawerItemHover: "#E5E5EA",
-    settingsBackground: "#f8f9fa",
-    settingsCardBackground: "#ffffff",
-    settingsTextPrimary: "#1a1a1a",
-    settingsTextSecondary: "#666666",
-    settingsPrimaryColor: "#007AFF",
-    settingsDangerColor: "#FF3B30",
-    settingsSeparator: "#E5E5E5",
-    settingsToggleActive: "#007AFF",
-    settingsToggleInactive: "#E5E5E5"
+    accentColor: "#007AFF"
   }
 };
 

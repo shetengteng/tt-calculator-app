@@ -1,5 +1,6 @@
 /**
  * 深色主题配置
+ * 注意：具体的颜色样式现在定义在 themes.scss 中的 .theme-dark 类
  */
 export const theme = {
   id: "dark",
@@ -7,11 +8,11 @@ export const theme = {
   nameEn: "Dark",
   description: "护眼深色主题，适合夜间使用",
   descriptionEn: "Eye-friendly dark theme for nighttime use",
-  version: "1.0.0",
+  version: "2.0.0",
   author: "Calculator Team",
   preview: {
-    primaryColor: "#00A8E6",
-    backgroundColor: "#2C2C2E"
+    primaryColor: "#ff9500",
+    backgroundColor: "#1a1a1a"
   },
   metadata: {
     category: "system",
@@ -20,41 +21,15 @@ export const theme = {
     accessibility: {
       highContrast: false,
       colorBlindFriendly: true
-    }
+    },
+    themeClass: "theme-dark"
   },
+  // 颜色样式现在由 themes.scss 中的 .theme-dark 类定义
+  // 这里保留一些关键颜色信息用于预览和兼容性
   colors: {
-    primaryBackground: "#2C2C2E",
-    secondaryBackground: "#1C1C1E",
-    tertiaryBackground: "#2C2C2E",
-    textPrimary: "#FFFFFF",
-    textSecondary: "#000000",
-    textMuted: "#8E8E93",
-    buttonBlue: "#00A8E6",
-    buttonDark: "#505050",
-    buttonLight: "#A6A6A6",
-    buttonBlueText: "#FFFFFF",
-    buttonDarkText: "#FFFFFF",
-    buttonLightText: "#000000",
-    accentBlue: "#00A8E6",
-    lightGray: "#A6A6A6",
-    darkGray: "#505050",
-    border: "#505050",
-    separator: "#505050",
-    overlay: "rgba(0, 0, 0, 0.3)",
-    shadowColor: "rgba(0, 0, 0, 0.1)",
-    drawerBackground: "#1A1A1C",
-    drawerHeader: "#1A1A1C",
-    drawerItemBackground: "#3A3A3C",
-    drawerItemHover: "#48484A",
-    settingsBackground: "#1A1A1C",
-    settingsCardBackground: "#2A2A2C",
-    settingsTextPrimary: "#FFFFFF",
-    settingsTextSecondary: "#8E8E93",
-    settingsPrimaryColor: "#00A8E6",
-    settingsDangerColor: "#FF3B30",
-    settingsSeparator: "#3C3C3E",
-    settingsToggleActive: "#00A8E6",
-    settingsToggleInactive: "#3A3A3C"
+    primaryBackground: "#1a1a1a",
+    textPrimary: "#ffffff",
+    accentColor: "#ff9500"
   }
 };
 

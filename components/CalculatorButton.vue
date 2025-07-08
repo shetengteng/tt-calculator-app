@@ -104,26 +104,13 @@ const handleClick = () => {
   font-weight: 400;
 }
 
-/* 主题样式 */
-.theme-blue {
-  background-color: var(--theme-button-blue);
-  color: var(--theme-button-blue-text);
-}
-
-.theme-dark {
-  background-color: var(--theme-button-dark);
-  color: var(--theme-button-dark-text);
-}
-
-.theme-light {
-  background-color: var(--theme-button-light);
-  color: var(--theme-button-light-text);
-}
+/* 主题样式现在通过全局主题类定义 */
+/* 按钮的主题样式在 themes.scss 中的 .theme-* 选择器下定义 */
 
 /* 激活状态 */
 .calculator-button.active {
-  background-color: var(--theme-secondary-background) !important;
-  color: var(--theme-accent-blue) !important;
+  opacity: 0.8;
+  transform: scale(0.95);
 }
 
 /* 交互效果 */

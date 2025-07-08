@@ -161,35 +161,24 @@ export function useTheme() {
         return
       }
       
-      // 使用DOM适配器设置主题变量
+      // 使用动态类名方案（适用于小程序和H5）
       if (PlatformAdapter.dom.isDomAvailable()) {
-        // 构建主题变量映射
-        const themeProperties = {}
-        Object.keys(vars).forEach(key => {
-          const cssVar = `--theme-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`
-          themeProperties[cssVar] = vars[key]
-        })
-        
-        // 应用设置相关的变量
-        if (vars.settingsBackground) {
-          themeProperties['--settings-background'] = vars.settingsBackground
-          themeProperties['--settings-card-background'] = vars.settingsCardBackground
-          themeProperties['--settings-text-primary'] = vars.settingsTextPrimary
-          themeProperties['--settings-text-secondary'] = vars.settingsTextSecondary
-          themeProperties['--settings-primary-color'] = vars.settingsPrimaryColor
-          themeProperties['--settings-danger-color'] = vars.settingsDangerColor
-          themeProperties['--settings-separator'] = vars.settingsSeparator
-          themeProperties['--settings-toggle-active'] = vars.settingsToggleActive
-          themeProperties['--settings-toggle-inactive'] = vars.settingsToggleInactive
-        }
-        
-        // 批量设置CSS自定义属性
-        PlatformAdapter.dom.setCustomProperties(themeProperties)
-        
-        // 设置主题数据属性
         const rootElement = PlatformAdapter.dom.getRootElement()
         if (rootElement) {
+          // 移除所有主题类
+          const themeClasses = ['theme-dark', 'theme-light', 'theme-auto', 'theme-minimal-black', 'theme-minimal-white']
+          themeClasses.forEach(cls => {
+            PlatformAdapter.dom.removeClass(rootElement, cls)
+          })
+          
+          // 添加当前主题类
+          const themeClass = `theme-${activeTheme.value.toLowerCase().replace(/\s+/g, '-')}`
+          PlatformAdapter.dom.addClass(rootElement, themeClass)
+          
+          // 设置主题数据属性
           PlatformAdapter.dom.setAttribute(rootElement, 'data-theme', activeTheme.value.toLowerCase())
+          
+          console.log('Applied theme class:', themeClass)
         }
         
         // 设置页面背景色

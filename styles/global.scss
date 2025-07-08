@@ -2,9 +2,11 @@
 // Calculator App Global Styles
 // ============================================
 
+// 导入主题样式
+@import './themes.scss';
+
 // 全局页面样式
 page {
-  background-color: var(--theme-primary-background);
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, sans-serif;
   height: 100%;
   overflow: hidden;
@@ -125,17 +127,14 @@ uni-page-wrapper {
 .pr-xl { padding-right: $spacing-xl; }
 .pr-xxl { padding-right: $spacing-xxl; }
 
-// 颜色工具类
-.text-primary { color: var(--theme-text-primary); }
-.text-secondary { color: var(--theme-text-secondary); }
-.text-muted { color: var(--theme-text-muted); }
-.text-blue { color: var(--theme-accent-blue); }
+// 颜色工具类（现在通过主题类管理）
+// 这些类将通过主题类继承正确的颜色
+.text-primary { /* 颜色由主题类定义 */ }
+.text-secondary { opacity: 0.7; }
+.text-muted { opacity: 0.5; }
 
-.bg-primary { background-color: var(--theme-primary-background); }
-.bg-secondary { background-color: var(--theme-secondary-background); }
-.bg-blue { background-color: var(--theme-accent-blue); }
-.bg-light-gray { background-color: var(--theme-light-gray); }
-.bg-dark-gray { background-color: var(--theme-dark-gray); }
+.bg-primary { /* 背景色由主题类定义 */ }
+.bg-secondary { /* 背景色由主题类定义 */ }
 
 // 圆角工具类
 .rounded-sm { border-radius: $border-radius-small; }

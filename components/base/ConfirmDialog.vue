@@ -141,7 +141,7 @@ import { computed } from 'vue'
 
 .modal-footer {
   display: flex;
-  border-top: 1px solid var(--settings-separator);
+  border-top: none;
 }
 
 .modal-button {
@@ -156,7 +156,7 @@ import { computed } from 'vue'
 }
 
 .cancel-button {
-  border-right: 1px solid var(--settings-separator);
+  border-right: none;
 }
 
 .button-text {
