@@ -1,13 +1,17 @@
 <template>
-  <i 
-    :class="['svg-icon', className, name]" 
-    :style="iconStyle"
-    aria-hidden="true"
-  ></i>
+<!--  <i-->
+<!--    :class="['svg-icon', className, name]"-->
+<!--    :style="iconStyle"-->
+<!--    aria-hidden="true"-->
+<!--  ></i>-->
+
+  <SxSvg :style="iconStyle" :name="name" />
+
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import SxSvg from '@/components/sx-svg/sx-svg.vue'
 
 // Props
 const props = defineProps({
