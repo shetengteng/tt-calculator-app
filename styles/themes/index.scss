@@ -1,0 +1,14 @@
+/**
+ * 主题样式索引文件
+ * 导入所有主题样式
+ */
+
+// 导入所有主题
+@import './dark.scss';
+@import './light.scss';
+@import './minimal-black.scss';
+@import './minimal-white.scss';
+@import './auto.scss';
+
+// 导入通用主题样式
+@import './common.scss'; 

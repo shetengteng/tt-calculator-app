@@ -11,5 +11,8 @@
 // 3. 导入混合器
 @import './mixins.scss';
 
-// 4. 导入全局样式
+// 4. 导入主题样式
+@import './themes/index.scss';
+
+// 5. 导入全局样式
 @import './global.scss';

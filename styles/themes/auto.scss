@@ -1,0 +1,26 @@
+/**
+ * Auto 主题样式定义（跟随系统）
+ */
+
+.theme-auto {
+  /* Auto主题会根据系统设置动态应用dark或light类 */
+  /* 这里定义默认的CSS变量，会被实际应用的主题覆盖 */
+  --settings-background: #f8f9fa;
+  --settings-card-background: #ffffff;
+  --settings-text-primary: #1a1a1a;
+  --settings-text-secondary: #666666;
+  --settings-separator: #E5E5E5;
+  --settings-primary-color: #007AFF;
+  --settings-danger-color: #FF3B30;
+  --settings-toggle-active: #007AFF;
+  --settings-toggle-inactive: #E5E5E5;
+  
+  /* 主题变量定义 */
+  --theme-drawer-background: #f8f9fa;
+  --theme-drawer-item-background: #ffffff;
+  --theme-text-primary: #1a1a1a;
+  --theme-text-secondary: #666666;
+  --theme-shadow-color: rgba(0, 0, 0, 0.05);
+  --theme-overlay: rgba(0, 0, 0, 0.3);
+  --theme-light-gray: #8e8e93;
+} 

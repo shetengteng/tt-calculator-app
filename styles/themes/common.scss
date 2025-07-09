@@ -1,0 +1,44 @@
+/**
+ * 通用主题样式定义
+ * 这些样式适用于所有主题
+ */
+
+/* 确保主题类应用到所有相关元素 */
+[class*="theme-"] {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* 按钮通用交互效果 */
+[class*="theme-"] .calculator-button {
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: scale(1.02);
+  }
+  
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+/* 设置页面通用样式 */
+[class*="theme-"] .settings-item {
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 750rpx) {
+  [class*="theme-"] {
+    .calculator-button {
+      font-size: 28rpx;
+    }
+    
+    .calculator-display {
+      font-size: 48rpx;
+    }
+  }
+} 

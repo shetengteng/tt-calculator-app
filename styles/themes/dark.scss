@@ -1,0 +1,278 @@
+/**
+ * Dark 主题样式定义
+ */
+
+.theme-dark {
+  /* CSS 变量定义 */
+  --settings-background: #1a1a1a;
+  --settings-card-background: #333333;
+  --settings-text-primary: #ffffff;
+  --settings-text-secondary: #cccccc;
+  --settings-separator: #444444;
+  --settings-primary-color: #ff9500;
+  --settings-danger-color: #ff3b30;
+  --settings-toggle-active: #ff9500;
+  --settings-toggle-inactive: #555555;
+  
+  /* 主题变量定义 */
+  --theme-drawer-background: #1a1a1a;
+  --theme-drawer-item-background: #333333;
+  --theme-text-primary: #ffffff;
+  --theme-text-secondary: #cccccc;
+  --theme-shadow-color: rgba(0, 0, 0, 0.3);
+  --theme-overlay: rgba(0, 0, 0, 0.5);
+  --theme-light-gray: #8e8e93;
+  
+  /* 页面背景 */
+  page {
+    background: #1a1a1a;
+    color: #ffffff;
+  }
+  
+  /* 计算器显示屏 */
+  .calculator-display {
+    background: #1a1a1a;
+    color: #ffffff;
+    border: 1px solid #333333;
+    
+    .display-main {
+      color: #ffffff;
+    }
+    
+    .display-secondary {
+      color: #cccccc;
+    }
+  }
+  
+  /* 计算器按钮网格 */
+  .calculator-button-grid {
+    background: #1a1a1a;
+  }
+  
+  /* 计算器按钮 */
+  .calculator-button {
+    background: #333333;
+    color: #ffffff;
+    border: none;
+    
+    &:active {
+      background: #555555;
+    }
+    
+    /* 按钮主题样式 */
+    &.theme-blue {
+      background: #ff9500;
+      color: #ffffff;
+      
+      &:active {
+        background: #ffb143;
+      }
+    }
+    
+    &.theme-dark {
+      background: #505050;
+      color: #ffffff;
+      
+      &:active {
+        background: #666666;
+      }
+    }
+    
+    &.theme-light {
+      background: #a6a6a6;
+      color: #000000;
+      
+      &:active {
+        background: #cccccc;
+      }
+    }
+    
+    /* 兼容性：保留原有类名 */
+    &.operator {
+      background: #ff9500;
+      color: #ffffff;
+      
+      &:active {
+        background: #ffb143;
+      }
+    }
+    
+    &.number {
+      background: #505050;
+      color: #ffffff;
+      
+      &:active {
+        background: #666666;
+      }
+    }
+    
+    &.function {
+      background: #a6a6a6;
+      color: #000000;
+      
+      &:active {
+        background: #cccccc;
+      }
+    }
+    
+    &.zero {
+      background: #505050;
+      color: #ffffff;
+      
+      &:active {
+        background: #666666;
+      }
+    }
+  }
+  
+  /* 设置页面 */
+  .settings-container {
+    background: #1a1a1a;
+    color: #ffffff;
+  }
+  
+  .settings-card {
+    background: #1a1a1a;
+    border: 1px solid #333333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  .settings-item {
+    background: #333333;
+    color: #ffffff;
+    border-bottom: none;
+    
+    &:hover {
+      background: #404040;
+    }
+    
+    .settings-label {
+      color: #ffffff;
+    }
+    
+    .settings-description {
+      color: #cccccc;
+    }
+  }
+  
+  /* 设置抽屉样式 */
+  .settings-drawer {
+    background: #1a1a1a;
+  }
+  
+  .settings-section {
+    .section-title {
+      color: #cccccc;
+    }
+  }
+  
+  .settings-group {
+    background: #333333;
+    border: none;
+  }
+  
+  .drawer-scroll {
+    background: #1a1a1a;
+  }
+  
+  .settings-button {
+    background: #ff9500;
+    color: #ffffff;
+    
+    &.danger {
+      background: #ff3b30;
+    }
+  }
+  
+  .settings-toggle {
+    &.active {
+      background: #ff9500;
+    }
+    
+    &.inactive {
+      background: #333333;
+    }
+  }
+  
+  .settings-separator {
+    background: #333333;
+  }
+  
+  /* 抽屉组件 */
+  .drawer-overlay {
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  .drawer-content {
+    background: #1a1a1a;
+    color: #ffffff;
+  }
+  
+  .drawer-header {
+    background: #1a1a1a;
+    border-bottom: 1px solid #333333;
+  }
+  
+  .drawer-item {
+    background: #1a1a1a;
+    border-bottom: 1px solid #333333;
+    
+    &:hover {
+      background: #2a2a2a;
+    }
+  }
+  
+  /* 历史记录 */
+  .history-item {
+    background: #333333;
+    color: #ffffff;
+    border-bottom: 1px solid #444444;
+    
+    .history-calculation {
+      color: #cccccc;
+    }
+    
+    .history-result {
+      color: #ffffff;
+    }
+  }
+  
+  /* 历史记录抽屉样式 */
+  .history-drawer {
+    background: #1a1a1a;
+  }
+  
+  .history-list {
+    background: #1a1a1a;
+  }
+  
+  .history-group {
+    .group-header {
+      background: #1a1a1a;
+    }
+    
+    .group-title {
+      color: #cccccc;
+    }
+    
+    .group-items {
+      background: #333333;
+    }
+  }
+  
+  .history-info {
+    .history-title {
+      color: #ffffff;
+    }
+    
+    .history-description {
+      color: #cccccc;
+    }
+  }
+  
+  .empty-history {
+    .empty-text {
+      color: #8e8e93;
+    }
+  }
+}
