@@ -244,19 +244,6 @@ onMounted(() => {
   gap: 20rpx;
 }
 
-.clear-button {
-  font-size: 28rpx;
-  color: #FF3B30;
-  padding: 16rpx 24rpx;
-  border-radius: 12rpx;
-  background: rgba(255, 59, 48, 0.1);
-  transition: background-color 0.2s ease;
-}
-
-.clear-button:active {
-  background: rgba(255, 59, 48, 0.2);
-}
-
 .drawer-scroll {
   flex: 1;
   /* 修复宽度问题 - 确保不超过父容器宽度 */

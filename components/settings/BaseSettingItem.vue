@@ -4,7 +4,7 @@
       <SvgIcon 
         size="30"
         :name="icon" 
-        :color="isDanger ? 'var(--settings-danger-color)' : 'var(--settings-text-secondary)'"
+        color="var(--settings-text-secondary)"
       />
     </view>
     <view class="setting-info">

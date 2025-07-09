@@ -1,31 +1,30 @@
 <template>
-  <view class="calculator-container">
+  <view class="calculator-container" :class="{[`theme-${currentThemeId}`]: true}">
     <!-- 主计算器内容 -->
-    <view 
-      class="calculator" 
-      :class="{ 
+    <view
+        class="calculator"
+        :class="{
         'calculator-shifted-left': isSettingsOpen,
-        'calculator-shifted-right': isHistoryOpen,
-        [`theme-${currentThemeId}`]: true
+        'calculator-shifted-right': isHistoryOpen
       }"
     >
       <!-- 1. Header Section -->
-      <CalculatorHeader 
-        @settings-click="openSettings" 
-        @history-click="openHistory"
+      <CalculatorHeader
+          @settings-click="openSettings"
+          @history-click="openHistory"
       />
-      
+
       <!-- 2. Display Section -->
-      <CalculatorDisplay 
-        :calculation="calculator.calculation.value"
-        :result="calculator.result.value"
-        :secondary-calculation="calculator.secondaryCalculation.value"
-        :secondary-result="calculator.secondaryResult.value"
+      <CalculatorDisplay
+          :calculation="calculator.calculation.value"
+          :result="calculator.result.value"
+          :secondary-calculation="calculator.secondaryCalculation.value"
+          :secondary-result="calculator.secondaryResult.value"
       />
-      
+
       <!-- 3. Button Group Section -->
-      <CalculatorButtonGrid 
-        :calculator="calculator"
+      <CalculatorButtonGrid
+          :calculator="calculator"
       />
     </view>
 
@@ -54,37 +53,37 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import {onMounted, onUnmounted, ref} from 'vue'
 import CalculatorHeader from '@/components/CalculatorHeader.vue'
 import CalculatorDisplay from '@/components/CalculatorDisplay.vue'
 import CalculatorButtonGrid from '@/components/CalculatorButtonGrid.vue'
 import SettingsDrawer from '@/components/SettingsDrawer.vue'
 import HistoryDrawer from '@/components/HistoryDrawer.vue'
 import Toast from '@/components/base/Toast.vue'
-import { useCalculator } from '@/composables/useCalculator.js'
-import { useCalculatorHistory } from '@/composables/useCalculatorHistory.js'
-import { useTheme } from '@/composables/useTheme.js'
-import { useI18n } from '@/composables/useI18n.js'
-import { useSettings } from '@/composables/useSettings.js'
-import { useToast } from '@/composables/useToast.js'
+import {useCalculator} from '@/composables/useCalculator.js'
+import {useCalculatorHistory} from '@/composables/useCalculatorHistory.js'
+import {useTheme} from '@/composables/useTheme.js'
+import {useI18n} from '@/composables/useI18n.js'
+import {useSettings} from '@/composables/useSettings.js'
+import {useToast} from '@/composables/useToast.js'
 
 // 使用计算器组合函数，获取完整的计算器实例
 const calculator = useCalculator()
 
 // 使用历史记录系统
-const { loadHistory } = useCalculatorHistory()
+const {loadHistory} = useCalculatorHistory()
 
 // 使用主题系统
-const { currentThemeId } = useTheme()
+const {currentThemeId} = useTheme()
 
 // 使用国际化系统
-const { loadLanguage } = useI18n()
+const {loadLanguage} = useI18n()
 
 // 使用设置系统
-const { loadSettings } = useSettings()
+const {loadSettings} = useSettings()
 
 // 使用Toast系统
-const { toastState, hideToast } = useToast()
+const {toastState, hideToast} = useToast()
 
 // 抽屉状态
 const isSettingsOpen = ref(false)
@@ -124,7 +123,7 @@ onMounted(() => {
   loadSettings()
   loadHistory()
   loadLanguage()
-  
+
   // 监听设置变更事件
   uni.$on('settingsChanged', handleSettingsChanged)
 })
@@ -149,14 +148,14 @@ onUnmounted(() => {
 export default {
   async onShow() {
     console.log('Calculator page show')
-    
+
     try {
       // // 页面显示时只进行必要的更新，不重新初始化缓存
       // const { applyTheme } = useTheme()
       //
       // // 重新应用主题（可能系统主题已更改）
       // applyTheme()
-      
+
       console.log('Calculator page theme refreshed')
     } catch (error) {
       console.error('Failed to refresh theme on calculator page show:', error)
@@ -182,7 +181,7 @@ export default {
   overflow: hidden;
   position: relative;
   transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  
+
   /* 主题样式现在通过themes.scss中的主题类定义 */
 }
 
@@ -201,11 +200,11 @@ export default {
   .calculator {
     justify-content: space-between;
   }
-  
+
   .calculator.calculator-shifted-left {
     transform: translateX(85%);
   }
-  
+
   .calculator.calculator-shifted-right {
     transform: translateX(-85%);
   }
@@ -216,11 +215,11 @@ export default {
   .calculator {
     justify-content: space-between;
   }
-  
+
   .calculator.calculator-shifted-left {
     transform: translateX(85%);
   }
-  
+
   .calculator.calculator-shifted-right {
     transform: translateX(-85%);
   }
@@ -231,7 +230,7 @@ export default {
   .calculator.calculator-shifted-left {
     transform: translateX(85%);
   }
-  
+
   .calculator.calculator-shifted-right {
     transform: translateX(-85%);
   }
