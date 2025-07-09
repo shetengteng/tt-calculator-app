@@ -50,7 +50,7 @@ const loadLanguageList = async () => {
     
     console.log('Language list loaded from config:', availableLanguages.value)
   } catch (error) {
-    console.error('Failed to load language list:', error)
+    console.error('[error] Failed to load language list:', error)
     throw error
   }
 }
@@ -71,7 +71,7 @@ const loadLanguageFile = async (language) => {
     console.log(`Language file loaded from config: ${language}`)
     return languageData
   } catch (error) {
-    console.error(`Failed to load language file for ${language}:`, error)
+    console.error(`[error] Failed to load language file for ${language}:`, error)
     throw error
   }
 }
@@ -109,7 +109,7 @@ const initializeLanguageSystem = async () => {
     
     console.log('Language system initialized and all languages preloaded successfully')
   } catch (error) {
-    console.error('Failed to refresh language cache:', error)
+    console.error('[error] Failed to refresh language cache:', error)
     throw error
   }
 }
@@ -133,7 +133,7 @@ export function useI18n() {
     
     // 如果仍然没有找到，返回键名
     if (!text) {
-      console.warn(`Translation missing for key: ${key}`)
+      console.warn(`[warn] Translation missing for key: ${key}`)
       return key
     }
     
@@ -159,7 +159,7 @@ export function useI18n() {
     }
     
     if (!localeConfig.isLanguageSupported(language)) {
-      console.warn('Invalid language:', language)
+      console.warn('[warn] Invalid language:', language)
       return
     }
     
@@ -190,7 +190,7 @@ export function useI18n() {
       await setLanguage(targetLanguage)
       await loadLanguageFile(targetLanguage)
     } catch (error) {
-      console.warn('Failed to load language:', error)
+      console.warn('[warn] Failed to load language:', error)
       // 使用默认语言作为后备
       const defaultLang = languageConfig.value.defaultLanguage
       await setLanguage(defaultLang)

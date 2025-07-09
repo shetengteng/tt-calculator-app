@@ -14,7 +14,7 @@ export const safeStorageOperation = (operation, key, value = null) => {
   try {
     return operation === 'get' ? uni.getStorageSync(key) : uni.setStorageSync(key, value)
   } catch (error) {
-    console.warn(`Storage operation failed: ${error.message}`)
+    console.warn(`[warn] Storage operation failed: ${error.message}`)
     return operation === 'get' ? null : false
   }
 }

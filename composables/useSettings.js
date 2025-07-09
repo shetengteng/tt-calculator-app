@@ -64,7 +64,7 @@ export function useSettings() {
       
       isInitialized.value = true
     } catch (error) {
-      console.error('Failed to load settings:', error)
+      console.error('[error] Failed to load settings:', error)
       isInitialized.value = true
     }
   }
@@ -74,7 +74,7 @@ export function useSettings() {
     try {
       uni.setStorageSync('calculator-settings', { ...settings })
     } catch (error) {
-      console.error('Failed to save settings:', error)
+      console.error('[error] Failed to save settings:', error)
     }
   }
 

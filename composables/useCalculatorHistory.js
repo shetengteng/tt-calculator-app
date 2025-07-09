@@ -44,7 +44,7 @@ export function useCalculatorHistory() {
         globalHistory.value = []
       }
     } catch (error) {
-      console.error('Failed to load calculator history:', error)
+      console.error('[error] Failed to load calculator history:', error)
       uni.removeStorageSync('calculator-history')
       globalHistory.value = []
     }
@@ -71,7 +71,7 @@ export function useCalculatorHistory() {
     try {
       uni.setStorageSync('calculator-history', JSON.stringify(globalHistory.value))
     } catch (error) {
-      console.error('保存历史记录失败:', error)
+      console.error('[error] 保存历史记录失败:', error)
     }
   }
 
@@ -81,7 +81,7 @@ export function useCalculatorHistory() {
     try {
       uni.removeStorageSync('calculatorHistory')
     } catch (error) {
-      console.error('清空历史记录失败:', error)
+      console.error('[error] 清空历史记录失败:', error)
     }
   }
 

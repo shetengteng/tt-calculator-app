@@ -18,7 +18,7 @@ export function useSound() {
       await audioAdapter.initializeAudioSystem()
       console.log('Sound system initialized successfully')
     } catch (error) {
-      console.error('Failed to refresh sound cache:', error)
+      console.error('[error] Failed to refresh sound cache:', error)
     }
   }
   
@@ -63,7 +63,7 @@ export function useSound() {
       await audioAdapter.playAudio(cacheKey, finalVolume)
       
     } catch (error) {
-      console.warn(`Failed to play sound: ${soundType}/${scenario}`, error)
+      console.warn(`[warn] Failed to play sound: ${soundType}/${scenario}`, error)
     }
   }
   

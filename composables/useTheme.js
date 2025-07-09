@@ -1,13 +1,16 @@
 import { ref, computed, watch, onMounted } from 'vue'
-import { themeConfig, getTheme } from '@/config/themes/index.js'
+import { themes, getTheme } from '@/config/themes/index.js'
 import { PlatformAdapter } from '@/compatibility/index.js'
+
+
+const defaultThemeId = 'auto'
 
 // 动态主题类型（将从配置文件加载）
 export const THEMES = ref({})
 
 // 当前主题状态
-const currentTheme = ref('Dark')
-const systemTheme = ref('Dark')
+const currentTheme = ref('Auto')
+const systemTheme = ref(null) // 将在detectSystemTheme中正确初始化
 
 // 主题配置缓存
 const themeConfigs = ref({})
@@ -21,10 +24,13 @@ const loadThemeIndex = () => {
     return themeIndex.value
   }
   
-  // 直接使用导入的主题配置
-  themeIndex.value = themeConfig
-  console.log('Theme index loaded from direct import:', themeConfig)
-  return themeConfig
+  // 创建主题索引对象
+  themeIndex.value = {
+    themes: themes,
+    defaultTheme: defaultTheme
+  }
+  console.log('Theme index loaded from direct import')
+  return themeIndex.value
 }
 
 // 加载单个主题配置（直接从主题配置获取）
@@ -34,21 +40,26 @@ const loadSingleThemeConfig = (themeId) => {
     return themeConfigs.value[themeId]
   }
   
-  // 直接从主题配置获取
-  const config = getTheme(themeId)
-  if (!config) {
-    throw new Error(`Theme config not found for ${themeId}`)
+  try {
+    // 直接从主题配置获取，这将处理auto主题的特殊逻辑
+    const config = getTheme(themeId)
+    if (!config) {
+      throw new Error(`Theme config not found for ${themeId}`)
+    }
+    
+    // 主题配置验证
+    if (!config.id) {
+      throw new Error(`Invalid theme config: missing id for ${themeId}`)
+    }
+    
+    // 缓存配置 - 使用原始themeId作为key，以便能够找到auto主题
+    themeConfigs.value[themeId] = config
+    console.log(`Theme config loaded for ${themeId}:`, config.id)
+    return config
+  } catch (error) {
+    console.error(`[error] Failed to load theme config for ${themeId}:`, error)
+    throw error
   }
-  
-  // 主题配置验证（现在不需要colors，由themes.scss负责）
-  if (!config.id) {
-    throw new Error(`Invalid theme config: missing id for ${themeId}`)
-  }
-  
-  // 缓存配置
-  themeConfigs.value[themeId] = config
-  console.log(`Theme config loaded from direct import: ${themeId}`)
-  return config
 }
 
 // 统一的主题系统初始化函数
@@ -64,7 +75,7 @@ const initializeThemeSystem = () => {
   const themeList = index.themes || []
   
   // 初始化主题常量和配置
-  const themes = {}
+  const themesConstant = {}
   const availableThemes = []
   
   for (const theme of themeList) {
@@ -73,12 +84,12 @@ const initializeThemeSystem = () => {
       // 将主题ID转换为常量名称格式
       const constantName = theme.id.toUpperCase().replace(/-/g, '_')
       const themeValue = theme.id.charAt(0).toUpperCase() + theme.id.slice(1)
-      themes[constantName] = themeValue
+      themesConstant[constantName] = themeValue
       availableThemes.push(config)
     }
   }
   
-  THEMES.value = themes
+  THEMES.value = themesConstant
   console.log('Theme system initialized:', THEMES.value)
   
   return {
@@ -88,13 +99,13 @@ const initializeThemeSystem = () => {
   }
 }
 
-
-
 export function useTheme() {
   // 计算当前激活的主题
   const activeTheme = computed(() => {
+    // 如果当前选择的是Auto主题，则返回系统主题
     if (currentTheme.value === 'Auto') {
-      return systemTheme.value
+      // 确保有返回值
+      return systemTheme.value || 'Dark'
     }
     return currentTheme.value
   })
@@ -103,21 +114,33 @@ export function useTheme() {
   const themeVars = computed(() => {
     // 确保activeTheme.value存在
     if (!activeTheme.value) {
-      console.warn('Active theme is undefined')
+      console.warn('[warn] Active theme is undefined')
       return {}
     }
     
-    const themeId = activeTheme.value.toLowerCase()
+    let themeId = activeTheme.value.toLowerCase()
+    let config
     
-          // 从主题配置中获取scss类名
-      const themeConfig = themeConfigs.value[themeId]
-      const themeClass = themeConfig?.scss || `theme-${themeId}`
-      
-      // 现在主要返回主题类名，实际样式由themes.scss负责
-      return {
-        themeClass: themeClass,
-        themeId: themeId
-      }
+    // 特殊处理auto主题 - 使用getTheme函数获取实际主题配置
+    if (themeId === 'auto') {
+      // 直接使用getTheme函数处理auto主题
+      config = getTheme('auto')
+      // 更新themeId为实际主题ID
+      themeId = config.id
+    } else {
+      // 从缓存中获取主题配置
+      config = themeConfigs.value[themeId]
+    }
+    
+    // 获取主题类名
+    const themeClass = config?.scss || `theme-${themeId}`
+    
+    // 返回主题变量
+    return {
+      themeClass: themeClass,
+      themeId: themeId,
+      originalThemeId: currentTheme.value.toLowerCase() // 保留原始选择的主题ID
+    }
   })
   
   // 使用 CSS 变量获取颜色，避免硬编码
@@ -142,7 +165,7 @@ export function useTheme() {
         }
         throw new Error(`Theme variable ${variable} not found for theme ${themeId}`);
       } catch (error) {
-        console.error(`Failed to get theme variable ${variable}:`, error);
+        console.error(`[error] Failed to get theme variable ${variable}:`, error);
         throw error;
       }
     }
@@ -156,7 +179,7 @@ export function useTheme() {
       const theme = PlatformAdapter.system.getSystemTheme()
       systemTheme.value = theme === 'dark' ? 'Dark' : 'Light'
     } catch (error) {
-      console.warn('Failed to detect system theme:', error)
+      console.warn('[warn] Failed to detect system theme:', error)
       systemTheme.value = 'Dark'
     }
   }
@@ -168,7 +191,7 @@ export function useTheme() {
       
       // 如果主题变量为空，跳过应用
       if (!vars || !vars.themeClass) {
-        console.warn('Theme vars is empty, skipping theme application')
+        console.warn('[warn] Theme vars is empty, skipping theme application')
         return
       }
       
@@ -185,10 +208,10 @@ export function useTheme() {
           // 添加当前主题类
           PlatformAdapter.dom.addClass(rootElement, vars.themeClass)
           
-          // 设置主题数据属性
-          PlatformAdapter.dom.setAttribute(rootElement, 'data-theme', vars.themeId)
+          // 设置主题数据属性 - 使用原始主题ID用于识别
+          PlatformAdapter.dom.setAttribute(rootElement, 'data-theme', vars.originalThemeId || vars.themeId)
           
-          console.log('Applied theme class:', vars.themeClass)
+          console.log('Applied theme class:', vars.themeClass, 'for theme ID:', vars.themeId)
         }
         
         // 设置页面背景色 - 使用 CSS 变量
@@ -228,7 +251,7 @@ export function useTheme() {
       console.log('Applied theme:', activeTheme.value, vars)
       
     } catch (error) {
-      console.error('Failed to apply theme:', error)
+      console.error('[error] Failed to apply theme:', error)
       // 主题应用失败是严重错误，应该让用户知道
       throw error
     }
@@ -238,13 +261,13 @@ export function useTheme() {
   const setTheme = (theme) => {
     // 确保THEMES已初始化
     if (!THEMES.value || Object.keys(THEMES.value).length === 0) {
-      console.warn('THEMES not initialized yet, deferring theme setting')
+      console.warn('[warn] THEMES not initialized yet, deferring theme setting')
       setTimeout(() => setTheme(theme), 100)
       return
     }
     
     if (!Object.values(THEMES.value).includes(theme)) {
-      console.warn('Invalid theme:', theme)
+      console.warn('[warn] Invalid theme:', theme)
       return
     }
     
@@ -256,17 +279,21 @@ export function useTheme() {
   // 从本地存储加载主题
   const loadTheme = () => {
     const savedTheme = PlatformAdapter.storage.getSync('app-theme')
-    if (!savedTheme) return
     
     // 确保THEMES已初始化
     if (!THEMES.value || Object.keys(THEMES.value).length === 0) {
-      console.warn('THEMES not initialized yet, deferring theme loading')
+      console.warn('[warn] THEMES not initialized yet, deferring theme loading')
       setTimeout(() => loadTheme(), 100)
       return
     }
     
-    if (Object.values(THEMES.value).includes(savedTheme)) {
+    // 使用已保存的主题或默认主题
+    if (savedTheme && Object.values(THEMES.value).includes(savedTheme)) {
       currentTheme.value = savedTheme
+    } else {
+      // 使用默认主题
+      const defaultThemeValue = defaultThemeId.charAt(0).toUpperCase() + defaultThemeId.slice(1)
+      currentTheme.value = defaultThemeValue
     }
   }
   
@@ -290,7 +317,7 @@ export function useTheme() {
         if (currentTheme.value === 'Auto') applyTheme()
       })
     } catch (error) {
-      console.warn('Failed to watch system theme:', error)
+      console.warn('[warn] Failed to watch system theme:', error)
     }
   }
   
