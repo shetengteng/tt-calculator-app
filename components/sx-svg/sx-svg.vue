@@ -216,12 +216,12 @@ export default {
 		
 		  // 普通颜色
 		  if (!this.color) {
-				console.log('fsafsafasf');
-				return html
-			}
+		    return html
+		  }
 			
-		  return html.replace(/(fill|stroke)="(?!none)[^"]*"/g, (match, p1, p2) => {
-		    return `${p1}="${p2 === 'none' ? 'none' : this.color}"`
+		  return html.replace(/(fill|stroke)="(?!none)[^"]*"/g, (match, attr) => {
+		    // attr 是 "fill" 或 "stroke"
+		    return `${attr}="${this.color}"`
 		  })
 		}
 	},
