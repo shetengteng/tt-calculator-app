@@ -3,51 +3,86 @@
  * 统一管理所有主题配置
  * 实际样式由 themes.scss 负责，这里只保留元数据
  */
-import {PlatformAdapter} from '@/compatibility/index.js'
 
 // 主题基础配置
 export const themes = [
   {
     id: "auto",
-    name: "自动",
-    description: "跟随系统设置自动切换主题",
-    scss: "theme-auto"
+    scss: "theme-auto",
+    class: "theme-auto",
+    colors: {
+      primaryBackground: (() => {
+        const lightBackground = "#FFFFFF"
+        const darkBackground = "#1a1a1a"
+        return `linear-gradient(135deg, ${lightBackground} 0%, ${lightBackground} 50%, ${darkBackground} 50%, ${darkBackground} 100%)`
+      })(),
+      secondaryBackground: "#F2F2F7",
+      textPrimary: "#000000",
+      buttonDark: "#E5E5EA",
+      buttonDarkText: "#000000",
+      buttonBlue: "#007AFF",
+      buttonBlueText: "#FFFFFF",
+      border: "#C6C6C8"
+    }
   },
   {
     id: "light",
-    name: "浅色",
-    description: "经典浅色主题，适合日间使用",
-    scss: "theme-light"
+    scss: "theme-light",
+    class: "theme-light",
+    colors: {
+      primaryBackground: "#FFFFFF",
+      secondaryBackground: "#F2F2F7",
+      textPrimary: "#000000",
+      buttonDark: "#E5E5EA",
+      buttonDarkText: "#000000",
+      buttonBlue: "#007AFF",
+      buttonBlueText: "#FFFFFF",
+      border: "#C6C6C8"
+    }
   },
   {
     id: "dark",
-    name: "深色",
-    description: "护眼深色主题，适合夜间使用",
-    scss: "theme-dark"
+    scss: "theme-dark",
+    class: "theme-dark",
+    colors: {
+      primaryBackground: "#1a1a1a",
+      secondaryBackground: "#1a1a1a",
+      textPrimary: "#ffffff",
+      buttonDark: "#505050",
+      buttonDarkText: "#ffffff",
+      buttonBlue: "#ff9500",
+      buttonBlueText: "#ffffff",
+      border: "#444444"
+    }
   },
   {
     id: "minimal-black",
-    name: "简约黑",
-    description: "极简纯黑主题，优雅深邃",
-    scss: "theme-minimal-black"
+    scss: "theme-minimal-black",
+    class: "theme-minimal-black",
+    colors: {
+      primaryBackground: "#000000",
+      secondaryBackground: "#000000",
+      textPrimary: "#ffffff",
+      buttonDark: "#000000",
+      buttonDarkText: "#ffffff",
+      buttonBlue: "#007AFF",
+      buttonBlueText: "#ffffff",
+      border: "#0F0F0F"
+    }
   },
   {
     id: "minimal-white",
-    name: "简约白",
-    description: "极简纯白主题，清爽简洁",
-    scss: "theme-minimal-white"
+    scss: "theme-minimal-white",
+    class: "theme-minimal-white",
+    colors: {
+      primaryBackground: "#ffffff",
+      secondaryBackground: "#ffffff",
+      textPrimary: "#000000",
+      buttonDark: "#ffffff",
+      buttonDarkText: "#000000",
+      buttonBlue: "#007AFF",
+      buttonBlueText: "#000000",
+      border: "#F0F0F0"
+    }
   }
-];
-
-/**
- * 获取主题配置
- * @param {string} themeId - 主题ID
- * @returns {object} 主题配置对象
- */
-export const getTheme = (themeId) => {
-  // 处理auto主题逻辑：根据系统主题返回dark或light
-  if (themeId === 'auto') {
-    themeId = PlatformAdapter.system.getSystemTheme()
-  }
-  return themes.find(t => t.id === themeId)
-}
+]

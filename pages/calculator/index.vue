@@ -6,7 +6,7 @@
       :class="{ 
         'calculator-shifted-left': isSettingsOpen,
         'calculator-shifted-right': isHistoryOpen,
-        [`theme-${activeTheme.toLowerCase()}`]: true
+        [`theme-${currentThemeId}`]: true
       }"
     >
       <!-- 1. Header Section -->
@@ -75,7 +75,7 @@ const calculator = useCalculator()
 const { loadHistory } = useCalculatorHistory()
 
 // 使用主题系统
-const { themeVars, activeTheme, applyTheme } = useTheme()
+const { currentThemeId } = useTheme()
 
 // 使用国际化系统
 const { loadLanguage } = useI18n()
@@ -135,7 +135,7 @@ const handleSettingsChanged = (data) => {
   // 这里可以根据需要处理特定的设置变更
   // 例如，如果主题变更，可以重新应用主题
   if (data.key === 'theme') {
-    applyTheme()
+    // applyTheme()
   }
 }
 
@@ -151,11 +151,11 @@ export default {
     console.log('Calculator page show')
     
     try {
-      // 页面显示时只进行必要的更新，不重新初始化缓存
-      const { applyTheme } = useTheme()
-      
-      // 重新应用主题（可能系统主题已更改）
-      applyTheme()
+      // // 页面显示时只进行必要的更新，不重新初始化缓存
+      // const { applyTheme } = useTheme()
+      //
+      // // 重新应用主题（可能系统主题已更改）
+      // applyTheme()
       
       console.log('Calculator page theme refreshed')
     } catch (error) {

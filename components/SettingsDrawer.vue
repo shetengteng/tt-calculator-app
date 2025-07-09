@@ -70,7 +70,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import CloseButton from '@/components/base/CloseButton.vue'
 import LanguageSetting from './settings/LanguageSetting.vue'
 import ThemeSetting from './settings/ThemeSetting.vue'
