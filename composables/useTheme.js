@@ -120,6 +120,36 @@ export function useTheme() {
       }
   })
   
+  // 使用 CSS 变量获取颜色，避免硬编码
+  const getThemeVariable = (themeId, variable) => {
+    // 如果 DOM 可用，尝试从 CSS 变量获取值
+    if (PlatformAdapter.dom.isDomAvailable()) {
+      try {
+        // 创建临时元素并添加主题类
+        const tempElement = document.createElement('div');
+        tempElement.className = `theme-${themeId}`;
+        document.body.appendChild(tempElement);
+        
+        // 获取计算后的样式
+        const style = window.getComputedStyle(tempElement);
+        const value = style.getPropertyValue(variable).trim();
+        
+        // 移除临时元素
+        document.body.removeChild(tempElement);
+        
+        if (value) {
+          return value;
+        }
+        throw new Error(`Theme variable ${variable} not found for theme ${themeId}`);
+      } catch (error) {
+        console.error(`Failed to get theme variable ${variable}:`, error);
+        throw error;
+      }
+    }
+    
+    throw new Error(`DOM not available, cannot get theme variable ${variable} for theme ${themeId}`);
+  };
+  
   // 检测系统主题
   const detectSystemTheme = () => {
     try {
@@ -161,40 +191,39 @@ export function useTheme() {
           console.log('Applied theme class:', vars.themeClass)
         }
         
-        // 设置页面背景色 - 使用硬编码的默认颜色
-        const backgroundColors = {
-          light: '#ffffff',
-          dark: '#1a1a1a',
-          'minimal-black': '#000000',
-          'minimal-white': '#ffffff',
-          auto: activeTheme.value === 'Light' ? '#ffffff' : '#1a1a1a'
-        }
-        const textColors = {
-          light: '#000000',
-          dark: '#ffffff',
-          'minimal-black': '#ffffff',
-          'minimal-white': '#000000',
-          auto: activeTheme.value === 'Light' ? '#000000' : '#ffffff'
-        }
+        // 设置页面背景色 - 使用 CSS 变量
+        const backgroundColor = getThemeVariable(
+          vars.themeId, 
+          '--theme-primary-background'
+        );
         
-        PlatformAdapter.dom.setPageBackground(
-          backgroundColors[vars.themeId] || backgroundColors.light,
-          textColors[vars.themeId] || textColors.light
-        )
+        const textColor = getThemeVariable(
+          vars.themeId, 
+          '--theme-text-primary'
+        );
+        
+        PlatformAdapter.dom.setPageBackground(backgroundColor, textColor);
       }
       
-      // 设置导航栏颜色
-      const isDarkTheme = ['dark', 'minimal-black'].includes(vars.themeId) || 
-                          (vars.themeId === 'auto' && activeTheme.value !== 'Light')
+      // 设置导航栏颜色 - 使用 CSS 变量
+      const navBackgroundColor = getThemeVariable(
+        vars.themeId,
+        '--theme-primary-background'
+      );
+      
+      const navFrontColor = getThemeVariable(
+        vars.themeId,
+        '--theme-text-primary'
+      );
       
       await PlatformAdapter.system.setNavigationBarColor({
-        frontColor: isDarkTheme ? '#ffffff' : '#000000',
-        backgroundColor: isDarkTheme ? '#1a1a1a' : '#ffffff',
+        frontColor: navFrontColor,
+        backgroundColor: navBackgroundColor,
         animation: {
           duration: 300,
           timingFunc: 'easeInOut'
         }
-      })
+      });
       
       console.log('Applied theme:', activeTheme.value, vars)
       
