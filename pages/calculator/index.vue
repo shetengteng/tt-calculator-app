@@ -1,5 +1,5 @@
 <template>
-  <view class="calculator-container" :class="{[`theme-${currentThemeId}`]: true}">
+  <view class="calculator-container" :class="{[`${getCurrentPracticalThemeClass()}`]: true}">
     <!-- 主计算器内容 -->
     <view
         class="calculator"
@@ -74,7 +74,7 @@ const calculator = useCalculator()
 const {loadHistory} = useCalculatorHistory()
 
 // 使用主题系统
-const {currentThemeId} = useTheme()
+const {getCurrentPracticalThemeClass} = useTheme()
 
 // 使用国际化系统
 const {loadLanguage} = useI18n()

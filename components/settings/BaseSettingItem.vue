@@ -1,10 +1,10 @@
 <template>
   <view class="setting-item" :class="{ 'clickable': clickable, 'danger': isDanger }" @click="handleClick">
     <view class="setting-icon" v-if="icon">
-      <SvgIcon 
+      <SvgIcon
         size="30"
-        :name="icon" 
-        color="var(--settings-text-secondary)"
+        :name="icon"
+        :color="isDanger ? 'red' : getCurrentPracticalTheme().colors.settingsTextSecondary"
       />
     </view>
     <view class="setting-info">
@@ -22,6 +22,7 @@
 
 <script setup>
 import SvgIcon from '@/components/base/SvgIcon.vue'
+import {useTheme} from "@/composables/useTheme";
 
 // Props
 const props = defineProps({
@@ -53,7 +54,7 @@ const props = defineProps({
 
 // Emits
 const emit = defineEmits(['click'])
-
+const {getCurrentPracticalTheme} = useTheme()
 // 处理点击事件
 const handleClick = () => {
   if (props.clickable) {
@@ -71,14 +72,14 @@ const handleClick = () => {
   border-bottom: 1px solid var(--settings-separator);
   min-height: 60rpx;
   transition: background-color 0.2s ease;
-  
+
   &:last-child {
     border-bottom: none;
   }
-  
+
   &.clickable {
     cursor: pointer;
-    
+
     &:active {
       background: var(--settings-separator);
     }
@@ -108,7 +109,7 @@ const handleClick = () => {
   font-weight: 400;
   color: var(--settings-text-primary);
   line-height: 1.4;
-  
+
   &.danger-text {
     color: var(--settings-danger-color);
   }
@@ -145,11 +146,11 @@ const handleClick = () => {
   .setting-item {
     padding: 14rpx 20rpx;
   }
-  
+
   .setting-title {
     font-size: 26rpx;
   }
-  
+
   .setting-description {
     font-size: 22rpx;
   }

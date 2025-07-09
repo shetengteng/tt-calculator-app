@@ -11,6 +11,7 @@ export const themes = [
     scss: "theme-auto",
     class: "theme-auto",
     colors: {
+      settingsTextSecondary: "#cccccc",
       primaryBackground: (() => {
         const lightBackground = "#FFFFFF"
         const darkBackground = "#1a1a1a"
@@ -30,6 +31,7 @@ export const themes = [
     scss: "theme-light",
     class: "theme-light",
     colors: {
+      settingsTextSecondary: "#666666",
       primaryBackground: "#FFFFFF",
       secondaryBackground: "#F2F2F7",
       textPrimary: "#000000",
@@ -45,6 +47,7 @@ export const themes = [
     scss: "theme-dark",
     class: "theme-dark",
     colors: {
+      settingsTextSecondary: "#cccccc",
       primaryBackground: "#1a1a1a",
       secondaryBackground: "#1a1a1a",
       textPrimary: "#ffffff",
@@ -60,6 +63,7 @@ export const themes = [
     scss: "theme-minimal-black",
     class: "theme-minimal-black",
     colors: {
+      settingsTextSecondary: "#999999",
       primaryBackground: "#000000",
       secondaryBackground: "#000000",
       textPrimary: "#ffffff",
@@ -75,6 +79,7 @@ export const themes = [
     scss: "theme-minimal-white",
     class: "theme-minimal-white",
     colors: {
+      settingsTextSecondary: "#666666",
       primaryBackground: "#ffffff",
       secondaryBackground: "#ffffff",
       textPrimary: "#000000",

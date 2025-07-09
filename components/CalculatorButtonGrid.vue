@@ -206,7 +206,6 @@ const handleButtonClick = (buttonData) => {
   justify-content: center;
   align-items: center;
   padding: 40rpx;
-  padding-bottom: calc(40rpx + var(--window-bottom, 0px));
   flex-shrink: 0;
 }
 
@@ -225,7 +224,6 @@ const handleButtonClick = (buttonData) => {
 @include small-screen {
   .button-group-section {
     padding: 30rpx;
-    padding-bottom: calc(30rpx + var(--window-bottom, 0px));
   }
   
   .button-grid {
@@ -238,7 +236,6 @@ const handleButtonClick = (buttonData) => {
 @include extra-small-screen {
   .button-group-section {
     padding: 20rpx;
-    padding-bottom: calc(20rpx + var(--window-bottom, 0px));
   }
   
   .button-grid {
@@ -281,7 +278,6 @@ const handleButtonClick = (buttonData) => {
 @include large-screen {
   .button-group-section {
     padding: 60rpx;
-    padding-bottom: calc(60rpx + var(--window-bottom, 0px));
   }
   
   .button-grid {

@@ -177,27 +177,34 @@ export default {
 		},
 		
 		setSvgColor(html) {
-		  if (this.gradient && this.gradient.length > 1) {
-		    const gradientId = this.gradientId
-		
-		    // 渐变方向（只对 linear 有效）
-		    const { x1, y1, x2, y2 } = this.getGradientDirectionAttr(this.gradientDirection)
-		
-		    const gradientDef =
-		      this.gradientType === 'radial'
-		        ? `
-		      <defs>
-		        <radialGradient id="${gradientId}" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-		          ${this.gradient.map((color, index) => {
-		            const offset = (index / (this.gradient.length - 1)) * 100
-		            return `<stop offset="${offset}%" stop-color="${color}" />`
-		          }).join('')}
-		        </radialGradient>
-		      </defs>
-		      `
-		        : `
-		      <defs>
-		        <linearGradient id="${gradientId}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}">
+      // 处理CSS变量颜色值
+      let colorValue = this.color;
+      if (colorValue && colorValue.startsWith('var(')) {
+        const varName = colorValue.match(/var\(([^)]+)\)/)[1];
+        colorValue = getComputedStyle(document.documentElement).getPropertyValue(varName).trim() || colorValue;
+      }
+
+      if (this.gradient && this.gradient.length > 1) {
+        const gradientId = this.gradientId
+
+        // 渐变方向（只对 linear 有效）
+        const { x1, y1, x2, y2 } = this.getGradientDirectionAttr(this.gradientDirection)
+
+        const gradientDef = 
+          this.gradientType === 'radial'
+            ? `
+          <defs>
+            <radialGradient id="${gradientId}" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+              ${this.gradient.map((color, index) => {
+                const offset = (index / (this.gradient.length - 1)) * 100
+                return `<stop offset="${offset}%" stop-color="${color}" />`
+              }).join('')}
+            </radialGradient>
+          </defs>
+          `
+            : `
+          <defs>
+            <linearGradient id="${gradientId}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}">
 		          ${this.gradient.map((color, index) => {
 		            const offset = (index / (this.gradient.length - 1)) * 100
 		            return `<stop offset="${offset}%" stop-color="${color}" />`
@@ -221,8 +228,8 @@ export default {
 			
 		  return html.replace(/(fill|stroke)="(?!none)[^"]*"/g, (match, attr) => {
 		    // attr 是 "fill" 或 "stroke"
-		    return `${attr}="${this.color}"`
-		  })
+		    return `${attr}="${colorValue}"`
+        })
 		}
 	},
 }

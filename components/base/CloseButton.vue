@@ -1,14 +1,17 @@
 <template>
   <view class="close-button" @click="handleClick">
     <view class="icon-svg">
-      <SvgIcon name="ri-close-line" size="48" color="currentColor" />
+      <SvgIcon name="ri-close-line" size="48"
+               :color="getCurrentPracticalTheme().colors.settingsTextSecondary"/>
     </view>
   </view>
 </template>
 
 <script setup>
 import SvgIcon from '@/components/base/SvgIcon.vue'
+import {useTheme} from "@/composables/useTheme";
 
+const {getCurrentPracticalTheme} = useTheme()
 const emit = defineEmits(['click'])
 
 const handleClick = () => {

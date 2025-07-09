@@ -1,12 +1,12 @@
 <template>
   <view class="decimal-places-setting">
     <!-- 小数位数设置头部 -->
-    <BaseSettingItem 
-      :title="t('settings.decimalPlaces')" 
-      icon="ri-hashtag"
-      :clickable="true"
-      :showChevron="true"
-      @click="toggleCollapse"
+    <BaseSettingItem
+        :title="t('settings.decimalPlaces')"
+        icon="ri-hashtag"
+        :clickable="true"
+        :showChevron="true"
+        @click="toggleCollapse"
     >
       <template #control>
         <view class="current-decimal">
@@ -14,20 +14,22 @@
         </view>
       </template>
     </BaseSettingItem>
-    
+
     <!-- 折叠面板内容 -->
     <view class="decimal-collapse" :class="{ 'collapsed': !isExpanded }">
       <view class="decimal-options">
-        <view 
-          class="decimal-option" 
-          v-for="option in decimalOptionsDetailed" 
-          :key="option.value"
-          :class="{ 'active': option.value === currentDecimalPlaces }"
-          @click="selectDecimalPlaces(option.value)"
+        <view
+            class="decimal-option"
+            v-for="option in decimalOptionsDetailed"
+            :key="option.value"
+            :class="{ 'active': option.value === currentDecimalPlaces }"
+            @click="selectDecimalPlaces(option.value)"
         >
           <view class="option-content">
             <view class="option-icon">
-              <SvgIcon :name="option.icon" size="32" color="var(--settings-text-primary)" />
+              <SvgIcon :name="option.icon"
+                       size="32"
+                       :color="getCurrentPracticalTheme().colors.settingsTextSecondary"/>
             </view>
             <view class="option-text">
               <text class="option-name">{{ option.name }}</text>
@@ -44,21 +46,21 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue'
+import {computed, ref} from 'vue'
 import BaseSettingItem from './BaseSettingItem.vue'
 import SvgIcon from '@/components/base/SvgIcon.vue'
-import { useSettings } from '@/composables/useSettings.js'
-import { useI18n } from '@/composables/useI18n.js'
+import {useSettings} from '@/composables/useSettings.js'
+import {useI18n} from '@/composables/useI18n.js'
+import {useTheme} from "@/composables/useTheme";
 
-// Props - 不再需要 calculator 实例
 
 // Emits
 const emit = defineEmits(['change'])
 
 // 使用设置管理和国际化
-const { settings, updateSetting } = useSettings()
-const { t } = useI18n()
-
+const {settings, updateSetting} = useSettings()
+const {getCurrentPracticalTheme} = useTheme()
+const {t} = useI18n()
 // 组件状态
 const isExpanded = ref(false)
 
@@ -120,13 +122,13 @@ const toggleCollapse = () => {
 const selectDecimalPlaces = (decimalPlaces) => {
   // 更新设置（会自动通过事件通知系统）
   updateSetting('decimalPlaces', decimalPlaces)
-  
+
   // 触发变更事件
   emit('change', {
     type: 'decimalPlaces',
     value: decimalPlaces
   })
-  
+
   // 选择后自动收起
   isExpanded.value = false
 }
@@ -239,20 +241,20 @@ const selectDecimalPlaces = (decimalPlaces) => {
   .decimal-option {
     padding: 16rpx 32rpx;
   }
-  
+
   .option-icon {
     width: 48rpx;
     height: 48rpx;
   }
-  
+
   .option-name {
     font-size: 28rpx;
   }
-  
+
   .option-description {
     font-size: 22rpx;
   }
-  
+
   .decimal-text {
     font-size: 24rpx;
   }

@@ -3,14 +3,16 @@
     <view class="header-left">
       <view class="setting-button" @click="handleSettings">
         <view class="icon-svg">
-          <SvgIcon name="ri-settings-line" size="48" color="currentColor" />
+          <SvgIcon name="ri-settings-line" size="48"
+                   :color="getCurrentPracticalTheme().colors.settingsTextSecondary"/>
         </view>
       </view>
     </view>
     <view class="header-right">
       <view class="history-button" @click="handleHistory">
         <view class="icon-svg">
-          <SvgIcon name="ri-time-line" size="48" color="currentColor" />
+          <SvgIcon name="ri-time-line" size="48"
+                   :color="getCurrentPracticalTheme().colors.settingsTextSecondary"/>
         </view>
       </view>
     </view>
@@ -19,9 +21,11 @@
 
 <script setup>
 import SvgIcon from '@/components/base/SvgIcon.vue'
+import {useTheme} from "@/composables/useTheme";
 
 // 定义事件
 const emit = defineEmits(['settings-click', 'history-click'])
+const {getCurrentPracticalTheme} = useTheme()
 
 // 处理历史记录事件 - 发射事件而不是导航
 const handleHistory = () => {
@@ -41,7 +45,6 @@ const handleSettings = () => {
   align-items: center;
   padding: 0 40rpx;
   color: var(--theme-text-primary);
-  background-color: var(--theme-primary-background);
   flex-shrink: 0;
   min-height: 120rpx;
 }

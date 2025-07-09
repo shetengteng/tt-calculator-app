@@ -2,58 +2,54 @@
 // Dynamic Theme Variables
 // ============================================
 
-// CSS自定义属性，完全通过 JavaScript 从主题配置文件中动态设置
-// 所有颜色值都从 static/themes/*.json 配置文件中读取
-// 这里只声明变量，不设置默认值，确保完全依赖主题配置
-:root {
-  // 主题颜色变量声明
-  // 实际值通过 useTheme.js 中的 applyTheme() 函数从JSON配置文件动态设置
-  
-  // 主要颜色
-  --theme-primary-background: ;
-  --theme-secondary-background: ;
-  
-  // 文字颜色
-  --theme-text-primary: ;
-  --theme-text-secondary: ;
-  --theme-text-muted: ;
-  
-  // 按钮颜色
-  --theme-button-blue: ;
-  --theme-button-dark: ;
-  --theme-button-light: ;
-  --theme-button-blue-text: ;
-  --theme-button-dark-text: ;
-  --theme-button-light-text: ;
-  
-  // 其他颜色
-  --theme-accent-blue: ;
-  --theme-light-gray: ;
-  --theme-dark-gray: ;
-  --theme-border: ;
-  --theme-separator: ;
-  --theme-overlay: ;
-  --theme-shadow-color: ;
-  
-  // 抽屉颜色
-  --theme-drawer-background: ;
-  --theme-drawer-header: ;
-  --theme-drawer-item-background: ;
-  --theme-drawer-item-hover: ;
-  
-  // 设置页面颜色
-  --settings-background: ;
-  --settings-card-background: ;
-  --settings-text-primary: ;
-  --settings-text-secondary: ;
-  --settings-primary-color: ;
-  --settings-danger-color: ;
-  --settings-separator: ;
-  --settings-toggle-active: ;
-  --settings-toggle-inactive: ;
-}
 
-// 兼容性变量已移除，现在直接使用 CSS 自定义属性
+//:root {
+//  // 主题颜色变量声明
+//
+//  // 主要颜色
+//  --theme-primary-background: ;
+//  --theme-secondary-background: ;
+//
+//  // 文字颜色
+//  --theme-text-primary: ;
+//  --theme-text-secondary: ;
+//  --theme-text-muted: ;
+//
+//  // 按钮颜色
+//  --theme-button-blue: ;
+//  --theme-button-dark: ;
+//  --theme-button-light: ;
+//  --theme-button-blue-text: ;
+//  --theme-button-dark-text: ;
+//  --theme-button-light-text: ;
+//
+//  // 其他颜色
+//  --theme-accent-blue: ;
+//  --theme-light-gray: ;
+//  --theme-dark-gray: ;
+//  --theme-border: ;
+//  --theme-separator: ;
+//  --theme-overlay: ;
+//  --theme-shadow-color: ;
+//
+//  // 抽屉颜色
+//  --theme-drawer-background: ;
+//  --theme-drawer-header: ;
+//  --theme-drawer-item-background: ;
+//  --theme-drawer-item-hover: ;
+//
+//  // 设置页面颜色
+//  --settings-background: ;
+//  --settings-card-background: ;
+//  --settings-text-primary: ;
+//  --settings-text-secondary: ;
+//  --settings-primary-color: ;
+//  --settings-danger-color: ;
+//  --settings-separator: ;
+//  --settings-toggle-active: ;
+//  --settings-toggle-inactive: ;
+//}
+
 
 // 按钮主题变量
 $button-theme-blue: var(--theme-button-blue);

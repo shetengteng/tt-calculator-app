@@ -19,6 +19,18 @@ const applyTheme = ()=>{
   PlatformAdapter.dom.addClass(rootElement, getPracticalTheme(currentThemeId.value).class)
   // 设置主题数据属性 - 使用原始主题ID用于识别
   PlatformAdapter.dom.setAttribute(rootElement, 'data-theme', getCurrentTheme().id)
+  // 设置页面背景色 - 使用 CSS 变量
+  // const backgroundColor = getThemeVariable(
+  //     vars.themeId,
+  //     '--theme-primary-background'
+  // );
+  //
+  // const textColor = getThemeVariable(
+  //     vars.themeId,
+  //     '--theme-text-primary'
+  // );
+
+  PlatformAdapter.dom.setPageBackground('red', 'black');
 }
 
 /**
@@ -29,6 +41,15 @@ const applyTheme = ()=>{
 const getThemeColor = (themeId) => {
   return getPracticalTheme(themeId)?.color
 }
+
+const getCurrentPracticalTheme = () => {
+  return getPracticalTheme(currentThemeId.value)
+}
+
+const getCurrentPracticalThemeClass = () => {
+  return getCurrentPracticalTheme()?.class
+}
+
 const getPracticalTheme = (themeId) => {
   if (themeId === 'auto') {
     themeId = PlatformAdapter.system.getSystemTheme()
@@ -52,6 +73,8 @@ export function useTheme() {
     setTheme,
     getThemeColor,
     getCurrentTheme,
+    getCurrentPracticalTheme,
+    getCurrentPracticalThemeClass,
 
     themes,
     currentThemeId

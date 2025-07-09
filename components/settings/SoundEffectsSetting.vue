@@ -29,7 +29,8 @@
         >
           <view class="option-content">
             <view class="option-icon">
-              <SvgIcon :name="option.icon" size="32" color="var(--settings-text-secondary)" />
+              <SvgIcon :name="option.icon" size="32"
+                       :color="getCurrentPracticalTheme().colors.settingsTextSecondary"/>
             </view>
             <view class="option-text">
               <text class="option-name">{{ option.name }}</text>
@@ -52,13 +53,14 @@ import SvgIcon from '@/components/base/SvgIcon.vue'
 import { useSettings } from '@/composables/useSettings.js'
 import { useI18n } from '@/composables/useI18n.js'
 import { useSound } from '@/composables/useSound.js'
+import {useTheme} from "@/composables/useTheme";
 
-// Props - 不再需要 calculator 实例
 
 // 使用设置管理和国际化
 const { settings, updateSetting } = useSettings()
+const {getCurrentPracticalTheme} = useTheme()
 const { t } = useI18n()
-const { playSound, initializeSound, preloadSounds } = useSound()
+const { playSound, initializeSound } = useSound()
 
 // 组件状态
 const isExpanded = ref(false)
