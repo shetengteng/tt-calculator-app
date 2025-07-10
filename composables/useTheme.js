@@ -33,21 +33,9 @@ const applyTheme = ()=>{
   PlatformAdapter.dom.setPageBackground('red', 'black');
 }
 
-/**
- * 获取主题配置
- * @param {string} themeId - 主题ID
- * @returns {object} 主题配置对象
- */
-const getThemeColor = (themeId) => {
-  return getPracticalTheme(themeId)?.color
-}
 
 const getCurrentPracticalTheme = () => {
   return getPracticalTheme(currentThemeId.value)
-}
-
-const getCurrentPracticalThemeClass = () => {
-  return getCurrentPracticalTheme()?.class
 }
 
 const getPracticalTheme = (themeId) => {
@@ -71,10 +59,8 @@ export function useTheme() {
   return {
     initTheme,
     setTheme,
-    getThemeColor,
     getCurrentTheme,
     getCurrentPracticalTheme,
-    getCurrentPracticalThemeClass,
 
     themes,
     currentThemeId

@@ -126,7 +126,6 @@ const selectSoundType = async (type) => {
 }
 
 
-
 // 播放测试音效
 const playTestSound = async () => {
   if (isPlayingTest.value || settings.soundType === 'none') return
@@ -156,7 +155,6 @@ const playTestSound = async () => {
   }
 }
 
-// 设置变更会自动通过事件通知系统应用
 </script>
 
 <style scoped lang="scss">
