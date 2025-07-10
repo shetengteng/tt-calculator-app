@@ -1,4 +1,5 @@
 import { ref, reactive } from 'vue'
+import PlatformAdapter from "@/compatibility";
 
 // 设置默认值
 const DEFAULT_SETTINGS = {
@@ -36,7 +37,7 @@ export function useSettings() {
   // 从本地存储加载设置
   const loadSettings = () => {
     try {
-      const savedSettings = uni.getStorageSync('calculator-settings')
+      const savedSettings = PlatformAdapter.storage.getSync('calculator-settings')
       if (savedSettings) {
         Object.keys(DEFAULT_SETTINGS).forEach(key => {
           if (savedSettings[key] !== undefined) {
@@ -44,13 +45,13 @@ export function useSettings() {
           }
         })
       }
-      
+
       // 迁移旧的音效设置
       if (savedSettings && savedSettings.soundEffects !== undefined && !savedSettings.soundType) {
         // 将旧的布尔值转换为新的字符串值
         settings.soundType = savedSettings.soundEffects ? 'classic' : 'none'
       }
-      
+
       // 确保新的音效设置字段存在
       if (!settings.soundType) {
         settings.soundType = DEFAULT_SETTINGS.soundType
@@ -61,7 +62,7 @@ export function useSettings() {
       if (!settings.soundScenarios) {
         settings.soundScenarios = { ...DEFAULT_SETTINGS.soundScenarios }
       }
-      
+
       isInitialized.value = true
     } catch (error) {
       console.error('[error] Failed to load settings:', error)
@@ -72,7 +73,7 @@ export function useSettings() {
   // 保存设置到本地存储
   const saveSettings = () => {
     try {
-      uni.setStorageSync('calculator-settings', { ...settings })
+      PlatformAdapter.storage.setSync('calculator-settings', { ...settings })
     } catch (error) {
       console.error('[error] Failed to save settings:', error)
     }
