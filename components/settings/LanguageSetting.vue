@@ -1,12 +1,12 @@
 <template>
   <view class="language-setting">
     <!-- 语言设置头部 -->
-    <BaseSettingItem 
-      :title="t('menu.language')" 
-      icon="ri-global-line"
-      :clickable="true"
-      :showChevron="true"
-      @click="toggleCollapse"
+    <BaseSettingItem
+        :title="t('menu.language')"
+        icon="ri-global-line"
+        :clickable="true"
+        :showChevron="true"
+        @click="toggleCollapse"
     >
       <template #control>
         <view class="current-language">
@@ -15,25 +15,25 @@
         </view>
       </template>
     </BaseSettingItem>
-    
+
     <!-- 折叠面板内容 -->
     <view class="language-collapse" :class="{ 'collapsed': !isExpanded }">
       <view class="language-options">
-        <view 
-          class="language-option" 
-          v-for="option in languageOptions" 
-          :key="option.value"
-          :class="{ 'active': option.value === currentLanguage }"
-          @click="selectLanguage(option.value)"
+        <view
+            class="language-option"
+            v-for="option in languages"
+            :key="option.id"
+            :class="{ 'active': option.id === currentLanguageId }"
+            @click="selectLanguage(option.id)"
         >
           <view class="option-content">
-            <text class="option-flag">{{ option.flag }}</text>
+            <text class="option-flag">{{ option.value._metadata.flag }}</text>
             <view class="option-text">
-              <text class="option-name">{{ option.name }}</text>
-              <text class="option-region">{{ option.region }}</text>
+              <text class="option-name">{{ option.value._metadata.name }}</text>
+              <text class="option-region">{{ option.value._metadata.region }}</text>
             </view>
           </view>
-          <view class="option-check" v-if="option.value === currentLanguage">
+          <view class="option-check" v-if="option.id === currentLanguageId">
             <text class="check-icon">✓</text>
           </view>
         </view>
@@ -43,23 +43,23 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import {onMounted, ref} from 'vue'
 import BaseSettingItem from './BaseSettingItem.vue'
-import { useI18n } from '@/composables/useI18n.js'
+import {useI18n} from '@/composables/useI18n.js'
 
 const emit = defineEmits(['change'])
 
 // 使用国际化系统
-const { 
-  t, 
-  setLanguage, 
-  getLanguageOptions, 
-  currentLanguage
+const {
+  t,
+  languages,
+  currentLanguageId,
+  currentLanguageValue,
+  setLocale
 } = useI18n()
 
 // 组件状态
 const isExpanded = ref(false)
-const languageOptions = ref([])
 const currentLanguageName = ref('')
 const currentLanguageFlag = ref('')
 
@@ -69,48 +69,21 @@ const toggleCollapse = () => {
 }
 
 // 选择语言
-const selectLanguage = async (languageCode) => {
-  await setLanguage(languageCode)
-  await updateCurrentLanguageInfo()
-  
-  // 触发变更事件
-  emit('change', {
-    type: 'language',
-    value: languageCode
-  })
-  
-  // 选择后自动收起
+const selectLanguage = (languageId) => {
+  setLocale(languageId)
   isExpanded.value = false
+  updateCurrentLanguageInfo()
+
+}
+const updateCurrentLanguageInfo = () => {
+  currentLanguageName.value = currentLanguageValue.value._metadata.name
+  currentLanguageFlag.value = currentLanguageValue.value._metadata.flag || '🌐'
 }
 
-// 更新当前语言信息
-const updateCurrentLanguageInfo = async () => {
-  const options = await getLanguageOptions()
-  const currentOption = options.find(opt => opt.value === currentLanguage.value)
-  if (currentOption) {
-    currentLanguageName.value = currentOption.name
-    currentLanguageFlag.value = currentOption.flag || '🌐'
-  }
-}
-
-// 初始化语言选项
-const initializeLanguageOptions = async () => {
-  try {
-    // 获取完整的语言信息（应用启动时已经预加载了所有语言文件）
-    const options = await getLanguageOptions()
-    
-    languageOptions.value = options
-    await updateCurrentLanguageInfo()
-  } catch (error) {
-    console.error('Failed to initialize language options:', error)
-    throw error
-  }
-}
-
-// 初始化
-onMounted(async () => {
-  await initializeLanguageOptions()
+onMounted(() => {
+  updateCurrentLanguageInfo()
 })
+
 </script>
 
 <style scoped lang="scss">
@@ -220,16 +193,16 @@ onMounted(async () => {
   .language-option {
     padding: 16rpx 32rpx;
   }
-  
+
   .option-flag {
     font-size: 36rpx;
     width: 48rpx;
   }
-  
+
   .option-name {
     font-size: 28rpx;
   }
-  
+
   .option-region {
     font-size: 22rpx;
   }

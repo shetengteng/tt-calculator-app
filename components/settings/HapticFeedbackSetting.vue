@@ -9,12 +9,9 @@
 </template>
 
 <script setup>
-import { watch } from 'vue'
 import SwitchSetting from './SwitchSetting.vue'
 import { useSettings } from '@/composables/useSettings.js'
 import { useI18n } from '@/composables/useI18n.js'
-
-// Props - 不再需要 calculator 实例
 
 // 使用设置管理和国际化
 const { settings, updateSetting } = useSettings()
