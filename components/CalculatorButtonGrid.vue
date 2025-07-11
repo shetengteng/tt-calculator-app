@@ -142,14 +142,6 @@
 import CalculatorButton from './CalculatorButton.vue'
 import { calculator } from '@/composables/useCalculator.js'
 
-// 定义组件属性 - 现在只需要传入计算器实例
-const props = defineProps({
-  // 可以移除 calculator 属性，因为现在直接使用全局实例
-  // calculator: {
-  //   type: Object,
-  //   required: true
-  // }
-})
 
 // 从计算器实例解构需要的状态和方法
 const {

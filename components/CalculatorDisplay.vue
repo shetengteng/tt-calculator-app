@@ -10,7 +10,7 @@
       <!-- Current calculation -->
       <view class="current-display">
         <text class="calculation" v-if="calculator.calculation.value && calculator.calculation.value !== '' && calculator.calculation.value !== 'null'">{{ calculator.calculation.value || '' }}</text>
-        <text class="result">{{ displayResult }}</text>
+        <text class="result" v-else>{{ displayResult }}</text>
       </view>
     </view>
   </view>
@@ -19,10 +19,47 @@
 <script setup>
 import { computed } from 'vue'
 import { calculator } from '@/composables/useCalculator.js'
+import { useSettings } from '@/composables/useSettings.js'
+
+// 获取用户设置
+const { settings } = useSettings()
 
 // 格式化显示结果
 const displayResult = computed(() => {
-  return calculator.formatNumber(calculator.result.value || '0')
+  // 处理特殊情况
+  if (calculator.result.value === 'Error') {
+    return 'Error'
+  }
+  
+  if (calculator.result.value === null || calculator.result.value === undefined || calculator.result.value === '') {
+    return '0'
+  }
+  
+  // 获取数值
+  const num = parseFloat(String(calculator.result.value))
+  if (isNaN(num)) return '0'
+  
+  // 处理科学计数法情况
+  if (Math.abs(num) >= 1e10 || (Math.abs(num) < 0.0001 && Math.abs(num) > 0)) {
+    return num.toExponential(settings.decimalPlaces || 5)
+  }
+  
+  // 处理小数位数和千位分隔符
+  let formattedNum
+  if (settings.decimalPlaces !== undefined && settings.decimalPlaces !== null) {
+    formattedNum = num.toFixed(settings.decimalPlaces)
+  } else {
+    formattedNum = String(num)
+  }
+  
+  // 应用千位分隔符（如果设置启用）
+  if (settings.thousandSeparator) {
+    const parts = formattedNum.split('.')
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    formattedNum = parts.join('.')
+  }
+  
+  return formattedNum
 })
 </script>
 

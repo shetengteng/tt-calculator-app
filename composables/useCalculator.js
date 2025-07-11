@@ -3,13 +3,19 @@ import { useSound } from './useSound.js'
 import { useSettings } from './useSettings.js'
 import { useCalculatorHistory } from './useCalculatorHistory.js'
 
-// 音效系统
+import {
+  addDependencies,
+  create,
+  divideDependencies,
+  formatDependencies,
+  fractionDependencies
+} from 'mathjs'
+
 const { playButtonSound, playResultSound } = useSound()
 const { settings } = useSettings()
-// 历史记录系统
 const { addHistory } = useCalculatorHistory()
 
-// 将响应式数据提取到外部作为全局变量
+// 响应式数据
 const displayValue = ref('0')
 const calculation = ref('')
 const result = ref('0')
@@ -29,7 +35,7 @@ watch(result, (newResult) => {
   }
 })
 
-// 计算器核心方法也提取到外部
+// 计算器核心方法
 const appendNumber = (number) => {
   if (settings.soundType !== 'none') {
     playButtonSound(settings.soundType)
@@ -234,7 +240,7 @@ const calculator = {
   formatNumber
 }
 
-// 保留 useCalculator 函数以兼容现有代码
+// 导出函数和实例
 export function useCalculator() {
   return calculator
 }
