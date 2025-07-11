@@ -14,11 +14,7 @@ export default {
 		try {
       initTheme()
       initLocale()
-
-			// 并行初始化所有系统（语言系统初始化已包含预加载）
-			await Promise.all([
-				initializeSound()
-			])
+      await initializeSound()
 
 			console.log('App launch completed - All systems initialized successfully')
 		} catch (error) {

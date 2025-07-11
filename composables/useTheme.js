@@ -30,8 +30,15 @@ const applyTheme = () => {
   //     vars.themeId,
   //     '--theme-text-primary'
   // );
-
-  PlatformAdapter.dom.setPageBackground('red', 'black');
+  //  PlatformAdapter.system.setNavigationBarColor({
+  //   frontColor: 'red',
+  //   backgroundColor: 'black',
+  //   animation: {
+  //     duration: 300,
+  //     timingFunc: 'easeInOut'
+  //   }
+  // });
+  // PlatformAdapter.dom.setPageBackground('#000000', '#000000');
 }
 
 const getCurrentPracticalTheme = () => {

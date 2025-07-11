@@ -335,4 +335,3 @@ class StorageAdapter {
 }
 
 export const storageAdapter = new StorageAdapter()
-export default storageAdapter 

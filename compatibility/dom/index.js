@@ -17,7 +17,7 @@ class DomAdapter {
       targetElement.style.setProperty(property, value)
     }
     // #endif
-    
+
     // #ifdef MP
     // 小程序环境通过页面实例设置样式
     try {
@@ -33,7 +33,7 @@ class DomAdapter {
     }
     // #endif
   }
-  
+
   /**
    * 批量设置CSS自定义属性
    * @param {Object} properties - 属性对象 {propertyName: value}
@@ -44,7 +44,7 @@ class DomAdapter {
       this.setCustomProperty(key, properties[key], element)
     })
   }
-  
+
   /**
    * 设置元素样式
    * @param {Element} element - 目标元素
@@ -58,7 +58,7 @@ class DomAdapter {
       })
     }
     // #endif
-    
+
     // #ifdef MP
     // 小程序环境样式设置
     try {
@@ -76,7 +76,7 @@ class DomAdapter {
     }
     // #endif
   }
-  
+
   /**
    * 设置页面背景色
    * @param {string} backgroundColor - 背景色
@@ -91,7 +91,7 @@ class DomAdapter {
       }
     }
     // #endif
-    
+
     // #ifdef MP
     // 小程序环境设置页面背景
     try {
@@ -110,7 +110,7 @@ class DomAdapter {
     }
     // #endif
   }
-  
+
   /**
    * 设置元素属性
    * @param {Element} element - 目标元素
@@ -123,14 +123,14 @@ class DomAdapter {
       element.setAttribute(attribute, value)
     }
     // #endif
-    
+
     // #ifdef MP
     // 小程序环境属性设置
     console.log(`Setting attribute ${attribute}=${value} in mini-program environment`)
     // 小程序中通过数据绑定设置属性，这里主要用于日志记录
     // #endif
   }
-  
+
   /**
    * 获取根元素
    * @returns {Element|null} 根元素
@@ -139,7 +139,7 @@ class DomAdapter {
     // #ifdef H5
     return document.documentElement
     // #endif
-    
+
     // #ifdef MP
     // 小程序环境返回当前页面元素
     try {
@@ -154,7 +154,7 @@ class DomAdapter {
     return null
     // #endif
   }
-  
+
   /**
    * 添加CSS类名
    * @param {Element|string} element - 目标元素或选择器
@@ -165,16 +165,16 @@ class DomAdapter {
     if (typeof element === 'string') {
       element = this.querySelector(element)
     }
-    
+
     if (!element) return false
-    
+
     // #ifdef H5
     if (element.classList) {
       element.classList.add(className)
       return true
     }
     // #endif
-    
+
     // #ifdef MP
     // 小程序环境：通过操作className属性
     try {
@@ -190,10 +190,10 @@ class DomAdapter {
       return false
     }
     // #endif
-    
+
     return false
   }
-  
+
   /**
    * 移除CSS类名
    * @param {Element|string} element - 目标元素或选择器
@@ -204,16 +204,16 @@ class DomAdapter {
     if (typeof element === 'string') {
       element = this.querySelector(element)
     }
-    
+
     if (!element) return false
-    
+
     // #ifdef H5
     if (element.classList) {
       element.classList.remove(className)
       return true
     }
     // #endif
-    
+
     // #ifdef MP
     // 小程序环境：通过操作className属性
     try {
@@ -230,10 +230,10 @@ class DomAdapter {
       return false
     }
     // #endif
-    
+
     return false
   }
-  
+
   /**
    * 查询元素
    * @param {string} selector - 选择器
@@ -243,14 +243,14 @@ class DomAdapter {
     // #ifdef H5
     return document.querySelector(selector)
     // #endif
-    
+
     // #ifdef MP
     // 小程序环境暂不支持复杂选择器，返回null
     console.warn('querySelector not fully supported in mini-program environment')
     return null
     // #endif
   }
-  
+
   /**
    * 检查DOM是否可用
    * @returns {boolean} DOM是否可用
@@ -259,7 +259,7 @@ class DomAdapter {
     // #ifdef H5
     return typeof document !== 'undefined' && document.documentElement
     // #endif
-    
+
     // #ifdef MP
     // 小程序环境检查页面是否存在
     try {
@@ -273,4 +273,3 @@ class DomAdapter {
 }
 
 export const domAdapter = new DomAdapter()
-export default domAdapter 

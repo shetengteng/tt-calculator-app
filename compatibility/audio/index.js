@@ -7,7 +7,6 @@ class AudioAdapter {
   constructor() {
     this.audioContext = null
     this.audioInstances = {}
-    this.audioBuffers = {}
   }
   
   /**
@@ -235,10 +234,8 @@ class AudioAdapter {
     
     // 清理缓存
     this.audioInstances = {}
-    this.audioBuffers = {}
     this.audioContext = null
   }
 }
 
 export const audioAdapter = new AudioAdapter()
-export default audioAdapter 

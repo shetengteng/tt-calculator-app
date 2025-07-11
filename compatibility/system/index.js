@@ -144,9 +144,9 @@ class SystemAdapter {
    * @param {string} options.frontColor - 前景色
    * @param {string} options.backgroundColor - 背景色
    * @param {Object} options.animation - 动画配置
-   * @returns {Promise<boolean>} 是否成功
+   * @returns {boolean} 是否成功
    */
-  async setNavigationBarColor(options) {
+  setNavigationBarColor(options) {
     try {
       // #ifdef H5
       // H5环境设置页面标题栏颜色（有限支持）
@@ -168,17 +168,8 @@ class SystemAdapter {
       // #ifdef MP || APP-PLUS
       // 小程序和App环境使用uni.setNavigationBarColor
       if (typeof uni !== 'undefined' && uni.setNavigationBarColor) {
-        return new Promise((resolve) => {
-          uni.setNavigationBarColor({
-            ...options,
-            success: () => {
-              resolve(true)
-            },
-            fail: () => {
-              resolve(false)
-            }
-          })
-        })
+        uni.setNavigationBarColor({...options})
+        return true
       }
       // #endif
 
@@ -315,4 +306,3 @@ class SystemAdapter {
 }
 
 export const systemAdapter = new SystemAdapter()
-export default systemAdapter 

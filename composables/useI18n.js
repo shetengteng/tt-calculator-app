@@ -1,6 +1,6 @@
 import {ref} from 'vue'
 import PlatformAdapter from "@/compatibility";
-import {languages} from "@/config/locales/index";
+import {languages} from "@/config/locales";
 
 const currentLanguageId = ref('zh-CN')
 const currentLanguageValue = ref({})
@@ -25,26 +25,13 @@ const setLocale = (languageId) => {
 }
 
 const applyLocale = () => {
-  currentLanguageValue.value = getLocale(currentLanguageId.value).value
-}
-//
-// const refreshUI = () => {
-//   const currentLang = currentLanguageId.value
-//   currentLanguageId.value = ''
-//   setTimeout(() => {
-//     currentLanguageId.value = currentLang
-//     applyLocale()
-//   }, 0)
-// }
-
-const t = (key) => {
-  return getNestedValue(currentLanguageValue.value, key)
+  currentLanguageValue.value = getCurrentLocale().value
 }
 
-const getNestedValue = (obj, path) => {
+const t = (path) => {
   return path.split('.').reduce((current, key) => {
     return current && current[key] !== undefined ? current[key] : null
-  }, obj)
+  }, currentLanguageValue.value)
 }
 
 export function useI18n() {
