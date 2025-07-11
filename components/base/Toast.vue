@@ -5,7 +5,7 @@
         <SvgIcon 
           :name="iconName" 
           :color="iconColor"
-          size="40rpx"
+          size="40"
         />
       </view>
       <text class="toast-text">{{ message }}</text>

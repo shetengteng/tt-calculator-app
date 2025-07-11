@@ -140,7 +140,6 @@
 
 <script setup>
 import CalculatorButton from './CalculatorButton.vue'
-import { useCalculator } from '@/composables/useCalculator.js'
 
 // 定义组件属性 - 现在只需要传入计算器实例
 const props = defineProps({

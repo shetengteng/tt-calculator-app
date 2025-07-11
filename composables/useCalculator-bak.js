@@ -30,6 +30,15 @@ export function useCalculator() {
       displayValue.value = newResult
     }
   })
+  //
+  // // 监听器 - 当操作符改变时提供视觉反馈
+  // watch(currentOperator, (newOperator, oldOperator) => {
+  //   if (newOperator !== oldOperator) {
+  //     nextTick(() => {
+  //       // 可以在这里添加视觉反馈逻辑
+  //     })
+  //   }
+  // })
 
   // 计算器核心方法
   const appendNumber = (number) => {

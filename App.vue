@@ -2,10 +2,14 @@
 import { useI18n } from '@/composables/useI18n.js'
 import { useTheme } from '@/composables/useTheme.js'
 import { useSound } from '@/composables/useSound.js'
+import {useSettings} from "@/composables/useSettings";
+import {useCalculatorHistory} from "@/composables/useCalculatorHistory";
 
 const { initTheme } = useTheme()
 const {initLocale}  = useI18n()
 const { initializeSound } = useSound()
+const {loadSettings} = useSettings()
+const {loadHistory} = useCalculatorHistory()
 
 export default {
 	async onLaunch() {
@@ -14,6 +18,9 @@ export default {
 		try {
       initTheme()
       initLocale()
+      loadSettings()
+      loadHistory()
+
       await initializeSound()
 
 			console.log('App launch completed - All systems initialized successfully')
