@@ -15,17 +15,11 @@
       />
 
       <!-- 2. Display Section -->
-      <CalculatorDisplay
-          :calculation="calculator.calculation.value"
-          :result="calculator.result.value"
-          :secondary-calculation="calculator.secondaryCalculation.value"
-          :secondary-result="calculator.secondaryResult.value"
-      />
+      <CalculatorDisplay />
 
       <!-- 3. Button Group Section -->
-      <CalculatorButtonGrid
-          :calculator="calculator"
-      />
+      <CalculatorButtonGrid />
+
     </view>
 
     <!-- 设置抽屉组件 -->
@@ -60,12 +54,12 @@ import CalculatorButtonGrid from '@/components/CalculatorButtonGrid.vue'
 import SettingsDrawer from '@/components/SettingsDrawer.vue'
 import HistoryDrawer from '@/components/HistoryDrawer.vue'
 import Toast from '@/components/base/Toast.vue'
-import {useCalculator} from '@/composables/useCalculator.js'
+import { calculator } from '@/composables/useCalculator.js'
 import {useTheme} from '@/composables/useTheme.js'
 import {useToast} from '@/composables/useToast.js'
 
 // 使用计算器组合函数，获取完整的计算器实例
-const calculator = useCalculator()
+// const calculator = useCalculator() // 删除此行
 
 // 使用主题系统
 const {getCurrentPracticalTheme} = useTheme()

@@ -2,15 +2,15 @@
   <view class="display-section">
     <view class="display-container">
       <!-- Secondary calculation (previous operation) -->
-      <view class="secondary-display" v-if="secondaryCalculation && secondaryResult && secondaryCalculation !== '' && secondaryResult !== '' && secondaryCalculation !== 'null' && secondaryResult !== 'null'">
-        <text class="secondary-calculation">{{ secondaryCalculation || '' }}</text>
-        <text class="secondary-result">{{ secondaryResult || '0' }}</text>
+      <view class="secondary-display" v-if="calculator.secondaryCalculation.value && calculator.secondaryResult.value && calculator.secondaryCalculation.value !== '' && calculator.secondaryResult.value !== '' && calculator.secondaryCalculation.value !== 'null' && calculator.secondaryResult.value !== 'null'">
+        <text class="secondary-calculation">{{ calculator.secondaryCalculation.value || '' }}</text>
+        <text class="secondary-result">{{ calculator.secondaryResult.value || '0' }}</text>
       </view>
       
       <!-- Current calculation -->
       <view class="current-display">
-        <text class="calculation" v-if="calculation && calculation !== '' && calculation !== 'null'">{{ calculation || '' }}</text>
-        <text class="result">{{ displayResult || '0' }}</text>
+        <text class="calculation" v-if="calculator.calculation.value && calculator.calculation.value !== '' && calculator.calculation.value !== 'null'">{{ calculator.calculation.value || '' }}</text>
+        <text class="result">{{ displayResult }}</text>
       </view>
     </view>
   </view>
@@ -18,55 +18,12 @@
 
 <script setup>
 import { computed } from 'vue'
-
-// 定义组件属性
-const props = defineProps({
-  // 当前计算表达式
-  calculation: {
-    type: String,
-    default: '0'
-  },
-  // 计算结果
-  result: {
-    type: String,
-    default: '0'
-  },
-  // 历史计算表达式
-  secondaryCalculation: {
-    type: String,
-    default: null
-  },
-  // 历史计算结果
-  secondaryResult: {
-    type: String,
-    default: null
-  }
-})
+import { calculator } from '@/composables/useCalculator.js'
 
 // 格式化显示结果
 const displayResult = computed(() => {
-  return formatNumber(props.result || '0')
+  return calculator.formatNumber(calculator.result.value || '0')
 })
-
-// 数字格式化函数
-const formatNumber = (value) => {
-  // 处理特殊情况
-  if (value === null || value === undefined || value === '') return '0'
-  if (value === 'Error') return value
-  
-  const num = parseFloat(String(value))
-  if (isNaN(num)) return '0'
-  
-  // Check if scientific notation is needed
-  if (Math.abs(num) >= 1e10 || (Math.abs(num) < 0.0001 && Math.abs(num) > 0)) {
-    return num.toExponential(5)
-  }
-  
-  // Format with commas
-  const parts = num.toString().split('.')
-  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-  return parts.join('.')
-}
 </script>
 
 <style scoped lang="scss">
