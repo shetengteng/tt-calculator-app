@@ -31,6 +31,7 @@ const buttons = createButtonsConfig()
   justify-content: center;
   align-items: center;
   padding: 40rpx;
+  padding-top: 0;
   flex-shrink: 0;
 }
 

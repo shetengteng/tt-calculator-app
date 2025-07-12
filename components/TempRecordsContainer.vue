@@ -1,6 +1,6 @@
 <template>
     <view class="temp-records-container">
-        <scroll-view class="temp-records" scroll-y="true" scroll-x="true" show-scrollbar="false"
+        <scroll-view class="temp-records" :scroll-y="true" :scroll-x="true" :show-scrollbar="true"
             :scroll-into-view="lastItemId">
             <view v-for="(record, index) in tempRecords" :key="index" class="temp-record-item"
                 :id="'temp-record-' + index">
@@ -33,7 +33,7 @@ watch(() => tempRecords.value.length, (newLength) => {
 <style scoped lang="scss">
 .temp-records-container {
     padding: 0 40rpx;
-    height: 200rpx; /* 使用100%高度填满父容器 */
+    height: 100%; /* 使用100%高度填满父容器 */
     overflow: hidden;
     margin-bottom: 10rpx;
     display: flex;
@@ -42,8 +42,8 @@ watch(() => tempRecords.value.length, (newLength) => {
 }
 
 .temp-records {
-  height: 200rpx;
-  width: 100%;
+    height: 100%;
+    width: 100%;
     flex-direction: column;
     display: flex; /* 添加flex布局 */
     overflow-y: auto; /* 垂直方向滚动 */
