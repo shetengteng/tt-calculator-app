@@ -138,12 +138,13 @@ export default {
   height: 25vh; /* 或者使用具体像素值 */
   min-height: 100rpx;
   max-height: 30vh;
-  overflow-y: auto;
+  /* 移除overflow-y，使用组件内部的scroll-view处理滚动 */
 }
 
 /* 为计算器显示区设置固定高度 */
 .calculator-display {
   height: 100rpx;
+  border: none !important; /* 覆盖主题中的边框样式 */
 }
 
 /* 设置抽屉打开时向右滑动 */

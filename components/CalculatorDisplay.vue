@@ -94,7 +94,9 @@ const fontSizeClass = computed(() => {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  height: 100rpx; /* 保持较小的高度 */
+  height: 100rpx; /* 使用100%高度填充父容器 */
+  box-sizing: border-box; /* 确保padding不会增加元素高度 */
+  border: none; /* 移除边框 */
 }
 
 .display-container {
