@@ -3,17 +3,6 @@
       class="temp-records"
       scroll-y="true"
       scroll-x="true"
-      show-scrollbar="true"
-      :scroll-into-view="lastItemId"
-      enable-passive="true"
-      scroll-anchoring="true"
-      enable-back-to-top="false"
-      scroll-with-animation="true"
-      upper-threshold="50"
-      lower-threshold="50"
-      bounces="true"
-      fast-deceleration="false"
-      @touchmove="onTouchMove"
   >
     <view v-for="(record, index) in tempRecords" :key="index" class="temp-record-item"
           :id="'temp-record-' + index">
