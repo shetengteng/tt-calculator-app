@@ -7,6 +7,7 @@ const { playButtonSound, playResultSound } = useSound()
 const { addHistory } = useCalculatorHistory()
 
 const expressionParts = ref([])
+const tempRecords = ref([]) // 存储最近的10条临时记录
 const error = ref(false)
 
 const expressionDisplay = (expressionParts) => {
@@ -21,6 +22,23 @@ const lastPartIsNumber = () => {
 
 const addExpressionPart = (part) => {
     expressionParts.value.push(part)
+}
+
+// 添加临时记录，最多保存10条
+const addTempRecord = (expression, result) => {
+    tempRecords.value.push({
+        expression,
+        result
+    })
+    // 保持最多10条记录
+    if (tempRecords.value.length > 10) {
+        tempRecords.value = tempRecords.value.slice(1)
+    }
+}
+
+// 清除临时记录
+const clearTempRecords = () => {
+    tempRecords.value = []
 }
 
 const handleButtonClick = (buttonData) => {
@@ -64,7 +82,10 @@ const calculate = () => {
     try {
         const result = math.evaluate(fullExpression)
         error.value = false
+        // 添加到历史记录
         addHistory(expressionParts.value, result)
+        // 添加到临时记录
+        addTempRecord(expressionParts.value, result)        
         clearExpression()
         addExpressionPart({ text: String(result), value: String(result), action: 'number' })
     } catch (err) {
@@ -121,10 +142,12 @@ export function useCalculator() {
     return {
         error,
         expressionParts,
+        tempRecords, // 导出临时记录
 
         expressionDisplay,
         addExpressionPart,
         clearExpression,
-        handleButtonClick
+        handleButtonClick,
+        clearTempRecords // 导出清除临时记录的方法
     }
 }
