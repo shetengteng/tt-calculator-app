@@ -2,7 +2,7 @@ import { ref } from 'vue'
 
 // 全局单例状态
 let globalHistory = ref([])
-
+const historyKey = 'calculator-history'
 // 过滤最近30天的历史记录
 const filterRecentHistory = (historyArray) => {
   const thirtyDaysAgo = new Date()
@@ -17,7 +17,7 @@ const filterRecentHistory = (historyArray) => {
 // 加载历史记录
 const loadHistory = () => {
   try {
-    const historyStr = uni.getStorageSync('calculator-history')
+    const historyStr = uni.getStorageSync(historyKey)
     if (historyStr) {
       const parsedHistory = JSON.parse(historyStr)
 
@@ -33,7 +33,7 @@ const loadHistory = () => {
 
         // 如果过滤后的数据和原数据不同，更新存储
         if (filteredHistory.length !== historyWithDates.length) {
-          uni.setStorageSync('calculator-history', JSON.stringify(filteredHistory))
+          uni.setStorageSync(historyKey, JSON.stringify(filteredHistory))
         }
       }
     } else {
@@ -42,7 +42,7 @@ const loadHistory = () => {
     }
   } catch (error) {
     console.error('[error] Failed to load calculator history:', error)
-    uni.removeStorageSync('calculator-history')
+    uni.removeStorageSync(historyKey)
     globalHistory.value = []
   }
 }
@@ -66,7 +66,7 @@ const addHistory = (expression, result) => {
 
   // 保存到本地存储
   try {
-    uni.setStorageSync('calculator-history', JSON.stringify(globalHistory.value))
+    uni.setStorageSync(historyKey, JSON.stringify(globalHistory.value))
   } catch (error) {
     console.error('[error] 保存历史记录失败:', error)
   }
@@ -76,7 +76,7 @@ const addHistory = (expression, result) => {
 const clearHistory = () => {
   globalHistory.value = []
   try {
-    uni.removeStorageSync('calculatorHistory')
+    uni.removeStorageSync(historyKey)
   } catch (error) {
     console.error('[error] 清空历史记录失败:', error)
   }

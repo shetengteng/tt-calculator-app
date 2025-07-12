@@ -1,7 +1,7 @@
 <template>
     <view class="temp-records-container">
         <scroll-view class="temp-records" scroll-y="true" scroll-x="true" show-scrollbar="false"
-            :scroll-into-view="lastItemId" :enhanced="true" :bounces="true">
+            :scroll-into-view="lastItemId">
             <view v-for="(record, index) in tempRecords" :key="index" class="temp-record-item"
                 :id="'temp-record-' + index">
                 <text class="temp-record-expression">{{ expressionDisplay(record.expression) }}</text>
@@ -48,6 +48,8 @@ watch(() => tempRecords.value.length, (newLength) => {
     display: flex; /* 添加flex布局 */
     overflow-y: auto; /* 垂直方向滚动 */
     overflow-x: auto; /* 水平方向滚动 */
+    /* 添加-webkit-overflow-scrolling支持iOS流畅滚动 */
+    -webkit-overflow-scrolling: touch;
 }
 
 .temp-record-item {

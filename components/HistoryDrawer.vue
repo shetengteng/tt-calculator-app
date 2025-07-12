@@ -252,6 +252,8 @@ onMounted(() => {
   width: 100%;
   box-sizing: border-box;
   overflow-x: hidden;
+  /* 添加iOS流畅滚动支持 */
+  -webkit-overflow-scrolling: touch;
 }
 
 .history-list {
