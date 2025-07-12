@@ -1,29 +1,33 @@
 <template>
   <view class="display-section">
     <view class="display-container">
-      <scroll-view 
-        class="current-display" 
-        :class="{ 'shake-animation': error }" 
-        scroll-x="true"
-        scroll-with-animation="true"
-        :scroll-left="scrollPosition"
-        show-scrollbar="false"
-        ref="displayScrollView">
-        <text class="result" :class="{ 'error-text': error, [fontSizeClass]: true }" ref="resultText">{{ expression }}</text>
+      <scroll-view
+          class="current-display"
+          :class="{ 'shake-animation': error }"
+          scroll-x="true"
+          scroll-with-animation="true"
+          :scroll-left="scrollPosition"
+          show-scrollbar="false"
+          ref="displayScrollView">
+        <text class="result"
+              :class="{ 'error-text': error, [fontSizeClass]: true }"
+              ref="resultText">
+          {{ expression }}
+        </text>
       </scroll-view>
     </view>
   </view>
 </template>
 
 <script setup>
-import { computed, ref, watch, nextTick } from 'vue'
-import { useSettings } from '@/composables/useSettings.js'
-import { useCalculator } from '@/composables/useCalculator.js'
+import {computed, nextTick, ref, watch} from 'vue'
+import {useSettings} from '@/composables/useSettings.js'
+import {useCalculator} from '@/composables/useCalculator.js'
 
 // 获取用户设置
-const { settings } = useSettings()
+const {settings} = useSettings()
 
-const { expressionParts, expressionDisplay, error } = useCalculator()
+const {expressionParts, expressionDisplay, error} = useCalculator()
 const expression = computed(() => {
   return expressionDisplay(expressionParts.value)
 })
@@ -36,51 +40,53 @@ const scrollPosition = ref(9999)
 // 监听表达式变化，自动滚动到最右侧
 watch(() => expression.value, () => {
   nextTick(() => {
-    updateScrollPosition()
+    // updateScrollPosition()
+    const textLength = expression.value.length
+    scrollPosition.value = textLength * 30 // 粗略估计每个字符的宽度
   })
-}, { immediate: true })
+}, {immediate: true})
 
 // 更新滚动位置
-const updateScrollPosition = () => {
-  // 在下一个渲染周期中获取滚动区域的尺寸信息
-  nextTick(() => {
-    // 某些平台可能需要使用不同的API获取元素尺寸
-    // #ifdef H5 || APP-PLUS
-    if (resultText.value && resultText.value.$el) {
-      const textWidth = resultText.value.$el.offsetWidth || 0
-      const scrollWidth = displayScrollView.value.$el.offsetWidth || 0
-      if (textWidth > scrollWidth) {
-        scrollPosition.value = textWidth - scrollWidth + 30 // 添加一些额外空间
-      }
-    }
-    // #endif
-    
-    // #ifdef MP-WEIXIN || MP-ALIPAY || MP-BAIDU || MP-TOUTIAO
-    // 微信小程序和其他小程序平台使用SelectorQuery获取元素尺寸
-    uni.createSelectorQuery()
-      .in(this)
-      .select('.result')
-      .boundingClientRect(textRect => {
-        uni.createSelectorQuery()
-          .in(this)
-          .select('.current-display')
-          .boundingClientRect(scrollRect => {
-            if (textRect && scrollRect && textRect.width > scrollRect.width) {
-              scrollPosition.value = textRect.width - scrollRect.width + 30 // 添加一些额外空间
-            }
-          })
-          .exec()
-      })
-      .exec()
-    // #endif
-    
-    // 兜底方案：如果无法获取实际尺寸，根据文本长度估算
-    if (scrollPosition.value === 9999) {
-      const textLength = expression.value.length
-      scrollPosition.value = textLength * 20 // 粗略估计每个字符的宽度
-    }
-  })
-}
+// const updateScrollPosition = () => {
+//   // 在下一个渲染周期中获取滚动区域的尺寸信息
+//   nextTick(() => {
+//     // 某些平台可能需要使用不同的API获取元素尺寸
+//     // #ifdef H5 || APP-PLUS
+//     if (resultText.value && resultText.value.$el) {
+//       const textWidth = resultText.value.$el.offsetWidth || 0
+//       const scrollWidth = displayScrollView.value.$el.offsetWidth || 0
+//       if (textWidth > scrollWidth) {
+//         scrollPosition.value = textWidth - scrollWidth + 30 // 添加一些额外空间
+//       }
+//     }
+//     // #endif
+//
+//     // #ifdef MP-WEIXIN || MP-ALIPAY || MP-BAIDU || MP-TOUTIAO
+//     // 微信小程序和其他小程序平台使用SelectorQuery获取元素尺寸
+//     uni.createSelectorQuery()
+//       .in(this)
+//       .select('.result')
+//       .boundingClientRect(textRect => {
+//         uni.createSelectorQuery()
+//           .in(this)
+//           .select('.current-display')
+//           .boundingClientRect(scrollRect => {
+//             if (textRect && scrollRect && textRect.width > scrollRect.width) {
+//               scrollPosition.value = textRect.width - scrollRect.width + 30 // 添加一些额外空间
+//             }
+//           })
+//           .exec()
+//       })
+//       .exec()
+//     // #endif
+//
+//     // 兜底方案：如果无法获取实际尺寸，根据文本长度估算
+//     if (scrollPosition.value === 9999) {
+//       const textLength = expression.value.length
+//       scrollPosition.value = textLength * 20 // 粗略估计每个字符的宽度
+//     }
+//   })
+// }
 
 // 字体大小调整
 const fontSizeClass = computed(() => {
