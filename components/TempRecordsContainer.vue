@@ -1,6 +1,7 @@
 <template>
     <view class="temp-records-container">
-        <view class="temp-records" ref="recordsContainer">
+        <scroll-view class="temp-records" scroll-y="true" scroll-x="true" show-scrollbar="false"
+            :scroll-into-view="lastItemId" :enhanced="true" :bounces="true">
             <view v-for="(record, index) in tempRecords" :key="index" class="temp-record-item"
                 :id="'temp-record-' + index">
                 <text class="temp-record-expression">{{ expressionDisplay(record.expression) }}</text>
@@ -8,7 +9,7 @@
             </view>
             <!-- 底部空白元素用于滚动定位 -->
             <view :id="'temp-record-' + (tempRecords.length)" class="scroll-anchor"></view>
-        </view>
+        </scroll-view>
     </view>
 </template>
 
@@ -17,16 +18,14 @@ import { computed, nextTick, ref, watch } from 'vue'
 import { useCalculator } from '@/composables/useCalculator.js'
 
 const { tempRecords, expressionDisplay } = useCalculator()
-const recordsContainer = ref(null)
 
 // 监听tempRecords变化，自动滚动到底部
+const lastItemId = ref('')
 watch(() => tempRecords.value.length, (newLength) => {
+    // 使用 scroll-into-view 功能滚动到最后一个元素
     if (newLength == 0) return
     nextTick(() => {
-        // 使用DOM方法滚动到底部
-        if (recordsContainer.value) {
-            recordsContainer.value.scrollTop = recordsContainer.value.scrollHeight
-        }
+        lastItemId.value = 'temp-record-' + (newLength - 1)
     })
 }, { immediate: true })
 </script>
@@ -47,7 +46,8 @@ watch(() => tempRecords.value.length, (newLength) => {
     width: 100%;
     flex-direction: column;
     display: flex; /* 添加flex布局 */
-    overflow: auto; /* 使用auto替代scroll-view */
+    overflow-y: auto; /* 垂直方向滚动 */
+    overflow-x: auto; /* 水平方向滚动 */
 }
 
 .temp-record-item {
@@ -56,6 +56,7 @@ watch(() => tempRecords.value.length, (newLength) => {
     flex-direction: column;
     align-items: flex-end;
     min-width: 100%; /* 改为min-width而不是width */
+    width: max-content; /* 允许内容扩展宽度 */
 }
 
 .temp-record-expression {
