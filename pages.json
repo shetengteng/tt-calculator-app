@@ -5,7 +5,6 @@
 			"style": {
 				"navigationBarTitleText": "Calculator",
 				"enablePullDownRefresh": false,
-				"disableScroll": true,
 				"app-plus": {
 					"titleNView": false,
 					"bounce": "none"
