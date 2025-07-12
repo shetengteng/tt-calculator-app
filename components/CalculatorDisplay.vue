@@ -88,12 +88,13 @@ const fontSizeClass = computed(() => {
 }
 
 .display-section {
-  flex: 1;
+  /* 移除 flex: 1，它会导致高度设置无效 */
   padding: 0 40rpx;
   text-align: right;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  height: 100rpx; /* 保持较小的高度 */
 }
 
 .display-container {
@@ -153,7 +154,7 @@ const fontSizeClass = computed(() => {
 
 @include tablet-screen {
   .display-section {
-    height: 180rpx;
+    height: 150rpx; /* 从180rpx减小到150rpx */
   }
 
   .result {
@@ -170,7 +171,7 @@ const fontSizeClass = computed(() => {
 /* 低高度屏幕适配 */
 @include low-height-screen {
   .display-section {
-    height: 120rpx;
+    height: 70rpx; /* 从120rpx减小到100rpx */
     padding: 10rpx 40rpx;
   }
 
@@ -182,7 +183,7 @@ const fontSizeClass = computed(() => {
 /* iPhone 4/4S 专门优化 - 严格控制显示区域高度 */
 @include iphone4-optimization {
   .display-section {
-    height: 100rpx;
+    height: 50rpx; /* 从100rpx减小到80rpx */
     padding: 5rpx 30rpx;
   }
 
@@ -194,7 +195,7 @@ const fontSizeClass = computed(() => {
 /* iPhone 5/SE 专门优化 - 严格控制显示区域高度 */
 @include iphone5-optimization {
   .display-section {
-    height: 110rpx;
+    height: 60rpx; /* 从110rpx减小到90rpx */
     padding: 8rpx 35rpx;
   }
 }
