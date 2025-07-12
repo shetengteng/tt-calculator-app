@@ -3,6 +3,7 @@
       class="temp-records"
       scroll-y="true"
       scroll-x="true"
+      :style="{height:'350px'}"
   >
     <view v-for="(record, index) in tempRecords" :key="index" class="temp-record-item"
           :id="'temp-record-' + index">
