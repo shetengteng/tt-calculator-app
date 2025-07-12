@@ -1,7 +1,20 @@
 <template>
     <view class="temp-records-container">
-        <scroll-view class="temp-records" :scroll-y="true" :scroll-x="true" :show-scrollbar="true"
-            :scroll-into-view="lastItemId">
+        <scroll-view 
+            class="temp-records" 
+            :scroll-y="true" 
+            :scroll-x="true" 
+            :show-scrollbar="true"
+            :scroll-into-view="lastItemId"
+            :enable-passive="true"
+            :scroll-anchoring="true"
+            :enable-back-to-top="false"
+            :scroll-with-animation="true"
+            :upper-threshold="50"
+            :lower-threshold="50"
+            :bounces="true"
+            :fast-deceleration="false"
+        >
             <view v-for="(record, index) in tempRecords" :key="index" class="temp-record-item"
                 :id="'temp-record-' + index">
                 <text class="temp-record-expression">{{ expressionDisplay(record.expression) }}</text>
@@ -42,13 +55,15 @@ watch(() => tempRecords.value.length, (newLength) => {
 }
 
 .temp-records {
-    height: 100%;
+    /* 为微信小程序设置固定高度 */
+    height: 25vh; /* 使用视口高度单位 */
     width: 100%;
-    flex-direction: column;
-    display: flex; /* 添加flex布局 */
-    overflow-y: auto; /* 垂直方向滚动 */
-    overflow-x: auto; /* 水平方向滚动 */
-    /* 添加-webkit-overflow-scrolling支持iOS流畅滚动 */
+    /* 移除冲突的CSS属性 */
+    /* overflow-y: auto; */
+    /* overflow-x: auto; */
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* 保留iOS流畅滚动支持 */
     -webkit-overflow-scrolling: touch;
 }
 

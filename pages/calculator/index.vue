@@ -135,10 +135,10 @@ export default {
 
 /* 为临时记录容器设置固定高度 */
 .temp-records {
-  height: 25vh; /* 或者使用具体像素值 */
-  min-height: 100rpx;
-  max-height: 30vh;
+  height: 25vh; /* 与组件内部保持一致 */
   /* 移除overflow-y，使用组件内部的scroll-view处理滚动 */
+  /* 确保容器样式不与scroll-view冲突 */
+  overflow: visible;
 }
 
 /* 为计算器显示区设置固定高度 */
