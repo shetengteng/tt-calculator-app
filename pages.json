@@ -5,13 +5,16 @@
 			"style": {
 				"navigationBarTitleText": "Calculator",
 				"enablePullDownRefresh": false,
+				"disableScroll": true,
 				"app-plus": {
-					"titleNView": false
+					"titleNView": false,
+					"bounce": "none"
 				},
 				"h5": {
 					"pullToRefresh": {
 						"use": false
-					}
+					},
+					"bounce": false
 				}
 			}
 		}
@@ -20,7 +23,8 @@
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "004 Calculator",
 		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#2C2C2E"
+		"backgroundColor": "#2C2C2E",
+		"enablePullDownRefresh": false
 	},
 	"uniIdRouter": {}
 }

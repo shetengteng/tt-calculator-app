@@ -26,4 +26,30 @@ uni-page-wrapper {
 
 .safe-area-inset-top {
   @include safe-area-top;
-} 
+}
+
+/* 禁用下拉刷新相关样式 */
+/* #ifdef H5 */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: fixed;
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
+uni-page-wrapper, uni-page-body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  overscroll-behavior: none;
+}
+
+:root {
+  overscroll-behavior: none;
+}
+/* #endif */ 

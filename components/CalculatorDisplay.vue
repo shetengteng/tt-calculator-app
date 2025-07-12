@@ -1,16 +1,5 @@
 <template>
   <view class="display-section">
-    <view class="temp-records-container">
-      <scroll-view class="temp-records" scroll-y="true" scroll-x="true" show-scrollbar="true"
-        :scroll-into-view="lastItemId" :enhanced="true" :bounces="false">
-        <view v-for="(record, index) in tempRecords" :key="index" class="temp-record-item" :id="'temp-record-' + index">
-          <text class="temp-record-expression">{{ expressionDisplay(record.expression) }}</text>
-          <text class="temp-record-result">= {{ record.result }}</text>
-        </view>
-        <!-- 底部空白元素用于滚动定位 -->
-        <view :id="'temp-record-' + (tempRecords.length)" class="scroll-anchor"></view>
-      </scroll-view>
-    </view>
     <view class="display-container">
       <scroll-view class="current-display" :class="{ 'shake-animation': error }" scroll-x="true"
         scroll-with-animation="true" :scroll-left="scrollPosition" show-scrollbar="false">
@@ -30,29 +19,18 @@ import { useCalculator } from '@/composables/useCalculator.js'
 // 获取用户设置
 const { settings } = useSettings()
 
-const { expressionParts, expressionDisplay, error, tempRecords } = useCalculator()
+const { expressionParts, expressionDisplay, error } = useCalculator()
 const expression = computed(() => {
   return expressionDisplay(expressionParts.value)
 })
 
 const scrollPosition = ref(9999)
-const tempRecordsScrollTop = ref(0)
 
 // 监听表达式变化，自动滚动到最右侧
 watch(() => expression.value, () => {
   nextTick(() => {
     const textLength = expression.value.length
     scrollPosition.value = textLength * 30 // 粗略估计每个字符的宽度
-  })
-}, { immediate: true })
-
-// 监听tempRecords变化，自动滚动到底部
-const lastItemId = ref('')
-watch(() => tempRecords.value.length, (newLength) => {
-  // 使用 scroll-into-view 功能滚动到最后一个元素
-  if (newLength == 0) return
-  nextTick(() => {
-    lastItemId.value = 'temp-record-' + (newLength - 1)
   })
 }, { immediate: true })
 
@@ -111,55 +89,11 @@ const fontSizeClass = computed(() => {
 
 .display-section {
   flex: 1;
-  padding: 20rpx 40rpx;
+  padding: 0 40rpx;
   text-align: right;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  min-height: 20vh;
-  max-height: 35vh;
-}
-
-.temp-records-container {
-  height: 60%; /* 明确指定固定高度比例 */
-  overflow: hidden;
-  margin-bottom: 10rpx;
-}
-
-.temp-records {
-  height: 100%; /* 保持100%以填满容器 */
-  width: 100%;
-  flex-direction: column;
-}
-
-.temp-record-item {
-  padding: 6rpx 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
-
-.temp-record-expression {
-  color: var(--theme-text-secondary);
-  font-size: 24rpx;
-  display: inline-block;
-  width: max-content;
-  text-align: right;
-}
-
-.temp-record-result {
-  color: var(--theme-text-primary);
-  font-size: 32rpx;
-  font-weight: 500;
-  display: inline-block;
-  width: max-content;
-  text-align: right;
-}
-
-/* 底部滚动锚点 */
-.scroll-anchor {
-  height: 1px;
-  width: 100%;
 }
 
 .display-container {
@@ -170,7 +104,6 @@ const fontSizeClass = computed(() => {
 }
 
 .current-display {
-  margin-bottom: 20rpx;
   width: 100%;
   white-space: nowrap;
 }
@@ -220,7 +153,7 @@ const fontSizeClass = computed(() => {
 
 @include tablet-screen {
   .display-section {
-    max-height: 40vh;
+    height: 180rpx;
   }
 
   .result {
@@ -237,8 +170,7 @@ const fontSizeClass = computed(() => {
 /* 低高度屏幕适配 */
 @include low-height-screen {
   .display-section {
-    min-height: 15vh;
-    max-height: 25vh;
+    height: 120rpx;
     padding: 10rpx 40rpx;
   }
 
@@ -250,77 +182,20 @@ const fontSizeClass = computed(() => {
 /* iPhone 4/4S 专门优化 - 严格控制显示区域高度 */
 @include iphone4-optimization {
   .display-section {
-    min-height: 12vh !important;
-    max-height: 18vh !important;
-    padding: 10rpx 30rpx !important;
-  }
-
-  .result {
-    font-size: calc(5.5vw + 28rpx) !important;
-    line-height: 1.0 !important;
+    height: 100rpx;
+    padding: 5rpx 30rpx;
   }
 
   .current-display {
-    margin-bottom: 10rpx !important;
-  }
-
-  .temp-record-expression {
-    font-size: 20rpx !important;
-  }
-
-  .temp-record-result {
-    font-size: 26rpx !important;
+    margin-bottom: 10rpx;
   }
 }
 
-/* iPhone 5/SE 专门优化 - 控制显示区域高度 */
+/* iPhone 5/SE 专门优化 - 严格控制显示区域高度 */
 @include iphone5-optimization {
   .display-section {
-    min-height: 14vh !important;
-    max-height: 22vh !important;
-    padding: 12rpx 30rpx !important;
-  }
-
-  .result {
-    font-size: calc(6vw + 30rpx) !important;
-    line-height: 1.1 !important;
-  }
-
-  .current-display {
-    margin-bottom: 12rpx !important;
-  }
-
-  .temp-record-expression {
-    font-size: 22rpx !important;
-  }
-
-  .temp-record-result {
-    font-size: 28rpx !important;
-  }
-}
-
-/* 超小高度屏幕 - 进一步减少显示区域 */
-@include extra-low-height-screen {
-  .display-section {
-    min-height: 10vh !important;
-    max-height: 15vh !important;
-    padding: 6rpx 30rpx !important;
-  }
-
-  .result {
-    font-size: calc(5vw + 24rpx) !important;
-  }
-
-  .temp-record-item {
-    padding: 4rpx 0 !important;
-  }
-
-  .temp-record-expression {
-    font-size: 18rpx !important;
-  }
-
-  .temp-record-result {
-    font-size: 24rpx !important;
+    height: 110rpx;
+    padding: 8rpx 35rpx;
   }
 }
 </style>

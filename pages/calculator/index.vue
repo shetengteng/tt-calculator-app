@@ -1,5 +1,7 @@
 <template>
-  <view class="calculator-container" :class="{[`${getCurrentPracticalTheme().class}`]: true}">
+  <view class="calculator-container" 
+        :class="{[`${getCurrentPracticalTheme().class}`]: true}"
+        @touchmove.prevent>
     <!-- 主计算器内容 -->
     <view
         class="calculator"
@@ -13,6 +15,9 @@
           @settings-click="openSettings"
           @history-click="openHistory"
       />
+
+      <!-- 临时记录容器 -->
+      <TempRecordsContainer />
 
       <!-- 2. Display Section -->
       <CalculatorDisplay />
@@ -47,13 +52,14 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
+import {ref, onMounted} from 'vue'
 import CalculatorHeader from '@/components/CalculatorHeader.vue'
 import CalculatorDisplay from '@/components/CalculatorDisplay.vue'
 import CalculatorButtonGrid from '@/components/CalculatorButtonGrid.vue'
 import SettingsDrawer from '@/components/SettingsDrawer.vue'
 import HistoryDrawer from '@/components/HistoryDrawer.vue'
 import Toast from '@/components/base/Toast.vue'
+import TempRecordsContainer from '@/components/TempRecordsContainer.vue'
 
 import {useTheme} from '@/composables/useTheme.js'
 import {useToast} from '@/composables/useToast.js'
@@ -86,12 +92,36 @@ const openHistory = () => {
 const closeHistory = () => {
   isHistoryOpen.value = false
 }
+
+// 在挂载时禁用页面滚动
+onMounted(() => {
+  // 针对H5，禁用默认的下拉刷新行为
+  // #ifdef H5
+  document.body.style.overflow = 'hidden'
+  document.body.style.position = 'fixed'
+  document.body.style.width = '100%'
+  document.body.style.height = '100%'
+  // #endif
+})
 </script>
 
 <script>
 export default {
   async onShow() {
     console.log('Calculator page show')
+  },
+  onLoad() {
+    // 禁用页面滚动和下拉刷新
+    uni.setPageMeta({
+      pullDownRefresh: {
+        enable: false
+      },
+      allowsBounceVertical: "NO"
+    })
+  },
+  // 监听页面触摸移动事件，阻止默认下拉行为
+  onPageScroll() {
+    return false
   }
 }
 </script>
@@ -102,6 +132,7 @@ export default {
   height: 100vh;
   width: 100%;
   overflow: hidden;
+  touch-action: none; /* 禁止默认触摸行为 */
 }
 
 /* 主计算器内容 */
