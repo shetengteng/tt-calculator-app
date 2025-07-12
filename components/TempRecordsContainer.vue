@@ -33,7 +33,7 @@ watch(() => tempRecords.value.length, (newLength) => {
 <style scoped lang="scss">
 .temp-records-container {
     padding: 0 40rpx;
-    height: 100%; /* 使用100%高度填满父容器 */
+    height: 200rpx; /* 使用100%高度填满父容器 */
     overflow: hidden;
     margin-bottom: 10rpx;
     display: flex;
@@ -42,8 +42,8 @@ watch(() => tempRecords.value.length, (newLength) => {
 }
 
 .temp-records {
-    height: 100%;
-    width: 100%;
+  height: 200rpx;
+  width: 100%;
     flex-direction: column;
     display: flex; /* 添加flex布局 */
     overflow-y: auto; /* 垂直方向滚动 */
