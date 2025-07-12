@@ -21,7 +21,7 @@ const lastPartIsNumber = () => {
 }
 
 const addExpressionPart = (part) => {
-  expressionParts.value.push(part)
+    expressionParts.value.push(part)
 }
 
 const handleButtonClick = (buttonData) => {
@@ -117,18 +117,6 @@ const toggleSign = () => {
     }
 }
 
-const percentage = () => {
-    try {
-        const currentExpression = expressionParts.value.map(part => part.value).join('')
-        if (currentExpression) {
-            const evalResult = math.evaluate(currentExpression) / 100
-            clearExpression()
-            addExpressionPart({ text: String(evalResult), value: String(evalResult), action: 'number' })
-        }
-    } catch (e) {
-        console.error('百分比计算错误:', e)
-    }
-}
 
 export function useCalculator() {
     return {
@@ -141,4 +129,3 @@ export function useCalculator() {
         handleButtonClick
     }
 }
-
