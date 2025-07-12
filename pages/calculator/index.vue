@@ -1,58 +1,37 @@
 <template>
-  <view class="calculator-container" 
-        :class="{[`${getCurrentPracticalTheme().class}`]: true}"
-        @touchmove.prevent>
+  <view class="calculator-container" :class="{ [`${getCurrentPracticalTheme().class}`]: true }" @touchmove.prevent>
     <!-- 主计算器内容 -->
-    <view
-        class="calculator"
-        :class="{
-        'calculator-shifted-left': isSettingsOpen,
-        'calculator-shifted-right': isHistoryOpen
-      }"
-    >
+    <view class="calculator" :class="{
+      'calculator-shifted-left': isSettingsOpen,
+      'calculator-shifted-right': isHistoryOpen
+    }">
       <!-- 1. Header Section -->
-      <CalculatorHeader
-          @settings-click="openSettings"
-          @history-click="openHistory"
-      />
+      <CalculatorHeader @settings-click="openSettings" @history-click="openHistory" />
 
-      <!-- 临时记录容器 -->
-      <TempRecordsContainer />
-
-      <!-- 2. Display Section -->
-      <CalculatorDisplay />
-
+      <view class="calculator-content">
+        <!-- 临时记录容器 -->
+        <TempRecordsContainer />
+        <!-- 2. Display Section -->
+        <CalculatorDisplay />
+      </view>
       <!-- 3. Button Group Section -->
       <CalculatorButtonGrid />
-
     </view>
 
     <!-- 设置抽屉组件 -->
-    <SettingsDrawer
-        :is-open="isSettingsOpen"
-        @close="closeSettings"
-    />
+    <SettingsDrawer :is-open="isSettingsOpen" @close="closeSettings" />
 
     <!-- 历史记录抽屉组件 -->
-    <HistoryDrawer
-        :is-open="isHistoryOpen"
-        @close="closeHistory"
-    />
+    <HistoryDrawer :is-open="isHistoryOpen" @close="closeHistory" />
 
     <!-- 全局Toast组件 -->
-    <Toast
-        :visible="toastState.visible"
-        :message="toastState.message"
-        :type="toastState.type"
-        :show-icon="toastState.showIcon"
-        :duration="toastState.duration"
-        @hide="hideToast"
-    />
+    <Toast :visible="toastState.visible" :message="toastState.message" :type="toastState.type"
+      :show-icon="toastState.showIcon" :duration="toastState.duration" @hide="hideToast" />
   </view>
 </template>
 
 <script setup>
-import {ref, onMounted} from 'vue'
+import { ref, onMounted } from 'vue'
 import CalculatorHeader from '@/components/CalculatorHeader.vue'
 import CalculatorDisplay from '@/components/CalculatorDisplay.vue'
 import CalculatorButtonGrid from '@/components/CalculatorButtonGrid.vue'
@@ -61,16 +40,16 @@ import HistoryDrawer from '@/components/HistoryDrawer.vue'
 import Toast from '@/components/base/Toast.vue'
 import TempRecordsContainer from '@/components/TempRecordsContainer.vue'
 
-import {useTheme} from '@/composables/useTheme.js'
-import {useToast} from '@/composables/useToast.js'
+import { useTheme } from '@/composables/useTheme.js'
+import { useToast } from '@/composables/useToast.js'
 
 
 
 // 使用主题系统
-const {getCurrentPracticalTheme} = useTheme()
+const { getCurrentPracticalTheme } = useTheme()
 
 // 使用Toast系统
-const {toastState, hideToast} = useToast()
+const { toastState, hideToast } = useToast()
 
 const isSettingsOpen = ref(false)
 const isHistoryOpen = ref(false)
@@ -132,7 +111,7 @@ export default {
   height: 100vh;
   width: 100%;
   overflow: hidden;
-  touch-action: none; /* 禁止默认触摸行为 */
+  touch-action: none;
 }
 
 /* 主计算器内容 */
@@ -146,6 +125,14 @@ export default {
   transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
   /* 主题样式现在通过themes.scss中的主题类定义 */
+}
+
+/* 计算器中间内容区域，自动填充剩余空间 */
+.calculator-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 /* 设置抽屉打开时向右滑动 */
@@ -198,4 +185,4 @@ export default {
     transform: translateX(-85%);
   }
 }
-</style> 
+</style>
