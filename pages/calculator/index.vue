@@ -10,9 +10,9 @@
 
       <view class="calculator-content">
         <!-- 临时记录容器 -->
-        <TempRecordsContainer />
+        <TempRecordsContainer class="temp-records" />
         <!-- 2. Display Section -->
-        <CalculatorDisplay />
+        <CalculatorDisplay class="calculator-display" />
       </view>
       <!-- 3. Button Group Section -->
       <CalculatorButtonGrid />
@@ -42,8 +42,6 @@ import TempRecordsContainer from '@/components/TempRecordsContainer.vue'
 
 import { useTheme } from '@/composables/useTheme.js'
 import { useToast } from '@/composables/useToast.js'
-
-
 
 // 使用主题系统
 const { getCurrentPracticalTheme } = useTheme()
@@ -133,6 +131,19 @@ export default {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+/* 为临时记录容器设置固定高度 */
+.temp-records {
+  height: 25vh; /* 或者使用具体像素值 */
+  min-height: 100rpx;
+  max-height: 30vh;
+  overflow-y: auto;
+}
+
+/* 为计算器显示区设置固定高度 */
+.calculator-display {
+  height: 100rpx;
 }
 
 /* 设置抽屉打开时向右滑动 */
