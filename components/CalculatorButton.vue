@@ -1,10 +1,6 @@
 <template>
-  <view 
-    :class="buttonClasses" 
-    @click="handleClick"
-    :style="customStyle"
-  >
-    {{ displayText }}
+  <view :class="buttonClasses" @click="handleClick" :style="customStyle">
+    {{ text }}
   </view>
 </template>
 
@@ -34,11 +30,6 @@ const props = defineProps({
       return ['small', 'medium', 'large'].includes(value)
     }
   },
-  // 是否激活状态（主要用于操作符按钮）
-  active: {
-    type: Boolean,
-    default: false
-  },
   // 是否禁用
   disabled: {
     type: Boolean,
@@ -57,10 +48,9 @@ const props = defineProps({
     type: Object,
     default: () => ({})
   },
-  // 按钮功能类型（用于事件处理）
-  action: {
-    type: String,
-    default: 'default'
+  info: {
+    type: Object,
+    default: () => ({})
   }
 })
 
@@ -75,24 +65,13 @@ const buttonClasses = computed(() => {
   const shapeClass = `shape-${props.shape}`
   const activeClass = props.active ? 'active' : ''
   const disabledClass = props.disabled ? 'disabled' : ''
-  
+
   return [baseClass, themeClass, sizeClass, shapeClass, activeClass, disabledClass].filter(Boolean).join(' ')
 })
 
-// 显示的文本（可以根据类型进行特殊处理）
-const displayText = computed(() => {
-  return props.text
-})
-
-// 处理点击事件
 const handleClick = () => {
-  if (!props.disabled) {
-    emit('click', {
-      text: props.text,
-      theme: props.theme,
-      action: props.action
-    })
-  }
+  if (props.disabled) return
+  emit('click', props.info)
 }
 </script>
 
@@ -149,17 +128,17 @@ const handleClick = () => {
   .calculator-button {
     @include button-size(small);
   }
-  
+
   .size-small {
     width: 100rpx;
     height: 100rpx;
     font-size: $font-size-button-small;
   }
-  
+
   .size-medium {
     @include button-size(small);
   }
-  
+
   .size-large {
     @include button-size(medium);
   }
@@ -172,19 +151,19 @@ const handleClick = () => {
     height: 100rpx;
     font-size: $font-size-button-small;
   }
-  
+
   .size-small {
     width: 80rpx;
     height: 80rpx;
     font-size: $font-size-button-xs;
   }
-  
+
   .size-medium {
     width: 100rpx;
     height: 100rpx;
     font-size: $font-size-button-small;
   }
-  
+
   .size-large {
     @include button-size(small);
   }
@@ -197,19 +176,19 @@ const handleClick = () => {
     height: 110rpx;
     font-size: 36rpx;
   }
-  
+
   .size-small {
     width: 90rpx;
     height: 90rpx;
     font-size: 32rpx;
   }
-  
+
   .size-medium {
     width: 110rpx;
     height: 110rpx;
     font-size: 36rpx;
   }
-  
+
   .size-large {
     width: 130rpx;
     height: 130rpx;
@@ -224,19 +203,19 @@ const handleClick = () => {
     height: 125rpx;
     font-size: 40rpx;
   }
-  
+
   .size-small {
     width: 105rpx;
     height: 105rpx;
     font-size: 36rpx;
   }
-  
+
   .size-medium {
     width: 125rpx;
     height: 125rpx;
     font-size: 40rpx;
   }
-  
+
   .size-large {
     width: 145rpx;
     height: 145rpx;
@@ -251,23 +230,23 @@ const handleClick = () => {
     height: 180rpx;
     font-size: 50rpx;
   }
-  
+
   .size-small {
     width: 160rpx;
     height: 160rpx;
     font-size: 46rpx;
   }
-  
+
   .size-medium {
     width: 180rpx;
     height: 180rpx;
     font-size: 50rpx;
   }
-  
+
   .size-large {
     width: 200rpx;
     height: 200rpx;
     font-size: 54rpx;
   }
 }
-</style> 
+</style>

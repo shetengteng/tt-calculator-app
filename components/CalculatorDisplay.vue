@@ -2,15 +2,19 @@
   <view class="display-section">
     <view class="display-container">
       <!-- Secondary calculation (previous operation) -->
-      <view class="secondary-display" v-if="calculator.secondaryCalculation.value && calculator.secondaryResult.value && calculator.secondaryCalculation.value !== '' && calculator.secondaryResult.value !== '' && calculator.secondaryCalculation.value !== 'null' && calculator.secondaryResult.value !== 'null'">
+      <!-- <view class="secondary-display" v-if="calculator.secondaryCalculation.value && calculator.secondaryResult.value && calculator.secondaryCalculation.value !== '' && calculator.secondaryResult.value !== '' && calculator.secondaryCalculation.value !== 'null' && calculator.secondaryResult.value !== 'null'">
         <text class="secondary-calculation">{{ calculator.secondaryCalculation.value || '' }}</text>
         <text class="secondary-result">{{ calculator.secondaryResult.value || '0' }}</text>
-      </view>
-      
+      </view> -->
+
       <!-- Current calculation -->
-      <view class="current-display">
+      <!-- <view class="current-display">
         <text class="calculation" v-if="calculator.calculation.value && calculator.calculation.value !== '' && calculator.calculation.value !== 'null'">{{ calculator.calculation.value || '' }}</text>
         <text class="result" v-else>{{ displayResult }}</text>
+      </view> -->
+      <view class="current-display">
+        <text class="result" v-if="expressionParts.length > 0">{{ expression }}</text>
+        <text class="result" v-else>{{ result }}</text>
       </view>
     </view>
   </view>
@@ -18,49 +22,17 @@
 
 <script setup>
 import { computed } from 'vue'
-import { calculator } from '@/composables/useCalculator.js'
 import { useSettings } from '@/composables/useSettings.js'
+import { useCalculator } from '@/composables/useCalculator.js'
 
 // 获取用户设置
 const { settings } = useSettings()
 
-// 格式化显示结果
-const displayResult = computed(() => {
-  // 处理特殊情况
-  if (calculator.result.value === 'Error') {
-    return 'Error'
-  }
-  
-  if (calculator.result.value === null || calculator.result.value === undefined || calculator.result.value === '') {
-    return '0'
-  }
-  
-  // 获取数值
-  const num = parseFloat(String(calculator.result.value))
-  if (isNaN(num)) return '0'
-  
-  // 处理科学计数法情况
-  if (Math.abs(num) >= 1e10 || (Math.abs(num) < 0.0001 && Math.abs(num) > 0)) {
-    return num.toExponential(settings.decimalPlaces || 5)
-  }
-  
-  // 处理小数位数和千位分隔符
-  let formattedNum
-  if (settings.decimalPlaces !== undefined && settings.decimalPlaces !== null) {
-    formattedNum = num.toFixed(settings.decimalPlaces)
-  } else {
-    formattedNum = String(num)
-  }
-  
-  // 应用千位分隔符（如果设置启用）
-  if (settings.thousandSeparator) {
-    const parts = formattedNum.split('.')
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-    formattedNum = parts.join('.')
-  }
-  
-  return formattedNum
+const { result, expressionParts, expressionDisplay } = useCalculator()
+const expression = computed(() => {
+  return expressionDisplay(expressionParts.value)
 })
+
 </script>
 
 <style scoped lang="scss">
@@ -122,15 +94,15 @@ const displayResult = computed(() => {
   .result {
     font-size: calc(6vw + 32rpx);
   }
-  
+
   .calculation {
     font-size: calc(3vw + 20rpx);
   }
-  
+
   .secondary-calculation {
     font-size: calc(2vw + 12rpx);
   }
-  
+
   .secondary-result {
     font-size: calc(3.5vw + 16rpx);
   }
@@ -140,11 +112,11 @@ const displayResult = computed(() => {
   .display-section {
     max-height: 40vh;
   }
-  
+
   .result {
     font-size: calc(4vw + 48rpx);
   }
-  
+
   .calculation {
     font-size: calc(2.5vw + 32rpx);
   }
@@ -154,7 +126,7 @@ const displayResult = computed(() => {
   .result {
     font-size: calc(3vw + 56rpx);
   }
-  
+
   .calculation {
     font-size: calc(2vw + 36rpx);
   }
@@ -167,11 +139,11 @@ const displayResult = computed(() => {
     max-height: 25vh;
     padding: 10rpx 40rpx;
   }
-  
+
   .result {
     font-size: calc(6vw + 32rpx);
   }
-  
+
   .calculation {
     font-size: calc(3vw + 20rpx);
   }
@@ -184,33 +156,33 @@ const displayResult = computed(() => {
     max-height: 18vh !important;
     padding: 10rpx 30rpx !important;
   }
-  
+
   .result {
     font-size: calc(5.5vw + 28rpx) !important;
     line-height: 1.0 !important;
   }
-  
+
   .calculation {
     font-size: calc(2.8vw + 16rpx) !important;
     margin-bottom: 6rpx !important;
     min-height: 36rpx !important;
   }
-  
+
   .secondary-display {
     font-size: calc(2.2vw + 12rpx) !important;
     margin-bottom: 4rpx !important;
   }
-  
+
   .secondary-calculation {
     font-size: calc(2vw + 10rpx) !important;
     margin-bottom: 2rpx !important;
   }
-  
+
   .secondary-result {
     font-size: calc(3vw + 12rpx) !important;
     margin-bottom: 10rpx !important;
   }
-  
+
   .current-display {
     margin-bottom: 10rpx !important;
   }
@@ -223,33 +195,33 @@ const displayResult = computed(() => {
     max-height: 22vh !important;
     padding: 12rpx 30rpx !important;
   }
-  
+
   .result {
     font-size: calc(6vw + 30rpx) !important;
     line-height: 1.1 !important;
   }
-  
+
   .calculation {
     font-size: calc(3vw + 18rpx) !important;
     margin-bottom: 8rpx !important;
     min-height: 38rpx !important;
   }
-  
+
   .secondary-display {
     font-size: calc(2.3vw + 14rpx) !important;
     margin-bottom: 6rpx !important;
   }
-  
+
   .secondary-calculation {
     font-size: calc(2.1vw + 12rpx) !important;
     margin-bottom: 4rpx !important;
   }
-  
+
   .secondary-result {
     font-size: calc(3.2vw + 14rpx) !important;
     margin-bottom: 12rpx !important;
   }
-  
+
   .current-display {
     margin-bottom: 12rpx !important;
   }
@@ -262,9 +234,9 @@ const displayResult = computed(() => {
     max-height: 15vh !important;
     padding: 6rpx 30rpx !important;
   }
-  
+
   .result {
     font-size: calc(5vw + 24rpx) !important;
   }
 }
-</style> 
+</style>

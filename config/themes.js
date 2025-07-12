@@ -1,5 +1,5 @@
 /**
- * 主题配置索引文件
+ * 主题配置文件
  * 统一管理所有主题配置
  * 实际样式由 themes.scss 负责，这里只保留元数据
  */
@@ -91,3 +91,11 @@ export const themes = [
     }
   }
 ]
+
+// 导出默认主题
+export const defaultTheme = "auto"
+
+// 获取主题对象方法
+export function getThemeById(id) {
+  return themes.find(theme => theme.id === id) || themes.find(theme => theme.id === defaultTheme)
+} 

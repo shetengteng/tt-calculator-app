@@ -54,12 +54,11 @@ import CalculatorButtonGrid from '@/components/CalculatorButtonGrid.vue'
 import SettingsDrawer from '@/components/SettingsDrawer.vue'
 import HistoryDrawer from '@/components/HistoryDrawer.vue'
 import Toast from '@/components/base/Toast.vue'
-import { calculator } from '@/composables/useCalculator.js'
+
 import {useTheme} from '@/composables/useTheme.js'
 import {useToast} from '@/composables/useToast.js'
 
-// 使用计算器组合函数，获取完整的计算器实例
-// const calculator = useCalculator() // 删除此行
+
 
 // 使用主题系统
 const {getCurrentPracticalTheme} = useTheme()

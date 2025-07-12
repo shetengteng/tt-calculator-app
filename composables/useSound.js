@@ -1,5 +1,9 @@
-import soundConfigModule from '../config/sounds/index.js'
+import soundConfigModule from '../config/sounds.js'
 import { PlatformAdapter } from '@/compatibility/index'
+import { useSettings } from './useSettings.js'
+
+// 获取设置
+const { settings } = useSettings()
 
 // 音效配置
 const soundConfig = soundConfigModule.soundConfig
@@ -55,11 +59,8 @@ const initializeSound = async () => {
 
 // 播放音效
 const playSound = async (soundType, scenario, volume = 1.0) => {
-
   if (soundType === 'none' || !soundConfig) return
-
   const cacheKey = `${soundType}_${scenario}`
-
   try {
     // 确保音效已加载
     if (!PlatformAdapter.audio.isAudioAvailable(cacheKey)) {
@@ -79,13 +80,17 @@ const playSound = async (soundType, scenario, volume = 1.0) => {
 }
 
 // 播放按键音效
-const playButtonSound = (soundType, volume = 1.0) => {
-  return playSound(soundType, 'buttonPress', volume)
+const playButtonSound = (volume = 1.0) => {
+  if (settings.soundType !== 'none') {
+    return playSound(settings.soundType, 'buttonPress', volume)
+  }
 }
 
 // 播放结果音效
-const playResultSound = (soundType, volume = 1.0) => {
-  return playSound(soundType, 'result', volume)
+const playResultSound = (volume = 1.0) => {
+  if (settings.soundType !== 'none') {
+    return playSound(settings.soundType, 'result', volume)
+  }
 }
 
 export function useSound() {

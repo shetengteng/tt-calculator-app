@@ -1,21 +1,21 @@
 <template>
   <view class="drawer-container">
     <!-- 历史记录抽屉 -->
-    <view 
-      class="history-drawer" 
-      :class="{ 'drawer-open': isOpen }"
-      @touchstart="handleDrawerTouchStart"
-      @touchend="handleDrawerTouchEnd"
+    <view
+        class="history-drawer"
+        :class="{ 'drawer-open': isOpen }"
+        @touchstart="handleDrawerTouchStart"
+        @touchend="handleDrawerTouchEnd"
     >
       <view class="drawer-content">
         <!-- 历史记录页面内容 -->
         <view class="drawer-header">
           <text class="drawer-title">{{ t('history.title') }}</text>
           <view class="header-actions">
-            <CloseButton @click="closeDrawer" />
+            <CloseButton @click="closeDrawer"/>
           </view>
         </view>
-        
+
         <!-- 历史记录列表 -->
         <scroll-view class="drawer-scroll" scroll-y="true">
           <view class="history-list">
@@ -27,23 +27,20 @@
               <view class="group-items">
                 <view class="history-item" v-for="(item) in group.items" :key="item.id">
                   <view class="history-info">
-                    <text class="history-title">{{ item.calculation }} {{ item.result }}</text>
+                    <text class="history-title">{{ expression(item) }} = {{ item.result }}</text>
                     <view class="history-description-with-icon">
-                      <SvgIcon 
-                        name="ri-time-line" 
-                        color="var(--settings-text-secondary)"
-                        size="24"
-                      />
+                      <SvgIcon name="ri-time-line" size="24"
+                          :color="getCurrentPracticalTheme().colors.settingsTextSecondary"/>
                       <text class="history-description">{{ item.formattedTimestamp }}</text>
                     </view>
                   </view>
                   <view class="history-control">
-                    <CopyButton :text="item.result" />
+                    <CopyButton :text="item.result"/>
                   </view>
                 </view>
               </view>
             </view>
-            
+
             <view class="empty-history" v-if="!hasHistory">
               <text class="empty-text">{{ t('history.empty') }}</text>
             </view>
@@ -51,25 +48,27 @@
         </scroll-view>
       </view>
     </view>
-    
+
     <!-- 遮罩层 -->
     <view
-      class="drawer-overlay"
-      :class="{ 'overlay-visible': isOpen }"
-      @click="closeDrawer"
+        class="drawer-overlay"
+        :class="{ 'overlay-visible': isOpen }"
+        @click="closeDrawer"
     />
 
   </view>
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import {computed, onMounted, ref, watch} from 'vue'
 import CloseButton from '@/components/base/CloseButton.vue'
 import CopyButton from '@/components/base/CopyButton.vue'
 import SvgIcon from '@/components/base/SvgIcon.vue'
-import { useI18n } from '@/composables/useI18n.js'
-import { useCalculatorHistory } from '@/composables/useCalculatorHistory.js'
-import { formatTimestamp, getDateKey, getDateTitle } from '@/utils/dateUtils.js'
+import {useI18n} from '@/composables/useI18n.js'
+import {useCalculatorHistory} from '@/composables/useCalculatorHistory.js'
+import {formatTimestamp, getDateKey, getDateTitle} from '@/utils/dateUtils.js'
+import {useCalculator} from "@/composables/useCalculator";
+import {useTheme} from "@/composables/useTheme";
 
 // Props
 const props = defineProps({
@@ -79,14 +78,17 @@ const props = defineProps({
   }
 })
 
-// Emits
+const {t} = useI18n()
+const {history, loadHistory} = useCalculatorHistory()
+const { expressionDisplay } = useCalculator()
+const {getCurrentPracticalTheme} = useTheme()
+
 const emit = defineEmits(['close'])
 
-// 使用国际化系统
-const { t } = useI18n()
 
-// 使用历史记录系统
-const { history, loadHistory } = useCalculatorHistory()
+const expression = (item) => {
+  return expressionDisplay(item.expression)
+}
 
 // 触摸相关
 const touchStartX = ref(0)
@@ -107,14 +109,14 @@ const groupedHistory = computed(() => {
   if (!history.value || !Array.isArray(history.value)) {
     return []
   }
-  
+
   const groups = {}
   const now = new Date()
-  
+
   history.value.forEach((item, index) => {
     const date = new Date(item.timestamp)
     const dateKey = getDateKey(date, now)
-    
+
     if (!groups[dateKey]) {
       groups[dateKey] = {
         date: dateKey,
@@ -123,14 +125,14 @@ const groupedHistory = computed(() => {
         sortDate: date
       }
     }
-    
+
     groups[dateKey].items.push({
       ...item,
       formattedTimestamp: formatHistoryTimestamp(item.timestamp),
       id: `history-${index}`
     })
   })
-  
+
   // 按日期排序，最新的在前面
   const sortedGroups = Object.values(groups).sort((a, b) => {
     // 今天和昨天的特殊处理
@@ -138,16 +140,16 @@ const groupedHistory = computed(() => {
     if (b.date === 'today') return 1
     if (a.date === 'yesterday') return -1
     if (b.date === 'yesterday') return 1
-    
+
     // 其他日期按时间排序
     return new Date(b.sortDate) - new Date(a.sortDate)
   })
-  
+
   // 对每个分组内的项目按时间排序（最新的在前面）
   sortedGroups.forEach(group => {
     group.items.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
   })
-  
+
   return sortedGroups
 })
 
@@ -165,10 +167,10 @@ const handleDrawerTouchStart = (e) => {
 const handleDrawerTouchEnd = (e) => {
   const touchEndX = e.changedTouches[0].clientX
   const touchEndY = e.changedTouches[0].clientY
-  
+
   const deltaX = touchEndX - touchStartX.value
   const deltaY = touchEndY - touchStartY.value
-  
+
   // 如果是向右滑动且水平距离大于垂直距离，关闭抽屉
   if (deltaX > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
     closeDrawer()
@@ -380,7 +382,7 @@ onMounted(() => {
     height: 50rpx !important;
     padding: 10rpx !important;
   }
-  
+
   .icon-svg {
     width: 32rpx !important;
     height: 32rpx !important;

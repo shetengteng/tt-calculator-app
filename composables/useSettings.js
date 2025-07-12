@@ -1,5 +1,5 @@
 import { ref, reactive } from 'vue'
-import PlatformAdapter from "@/compatibility";
+import { PlatformAdapter } from "@/compatibility"
 
 // 设置默认值
 const DEFAULT_SETTINGS = {
