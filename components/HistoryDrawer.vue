@@ -303,6 +303,9 @@ onMounted(() => {
   font-weight: 400;
   color: var(--settings-text-primary);
   line-height: 1.4;
+  word-break: break-word;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 .history-description-with-icon {

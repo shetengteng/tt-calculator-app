@@ -1,5 +1,8 @@
 <template>
   <view class="display-section">
+    <view>
+
+    </view>
     <view class="display-container">
       <scroll-view
           class="current-display"
@@ -7,11 +10,8 @@
           scroll-x="true"
           scroll-with-animation="true"
           :scroll-left="scrollPosition"
-          show-scrollbar="false"
-          ref="displayScrollView">
-        <text class="result"
-              :class="{ 'error-text': error, [fontSizeClass]: true }"
-              ref="resultText">
+          show-scrollbar="false">
+        <text class="result" :class="{ 'error-text': error, [fontSizeClass]: true }">
           {{ expression }}
         </text>
       </scroll-view>
@@ -32,61 +32,15 @@ const expression = computed(() => {
   return expressionDisplay(expressionParts.value)
 })
 
-// 创建引用和滚动位置
-const displayScrollView = ref(null)
-const resultText = ref(null)
 const scrollPosition = ref(9999)
 
 // 监听表达式变化，自动滚动到最右侧
 watch(() => expression.value, () => {
   nextTick(() => {
-    // updateScrollPosition()
     const textLength = expression.value.length
     scrollPosition.value = textLength * 30 // 粗略估计每个字符的宽度
   })
 }, {immediate: true})
-
-// 更新滚动位置
-// const updateScrollPosition = () => {
-//   // 在下一个渲染周期中获取滚动区域的尺寸信息
-//   nextTick(() => {
-//     // 某些平台可能需要使用不同的API获取元素尺寸
-//     // #ifdef H5 || APP-PLUS
-//     if (resultText.value && resultText.value.$el) {
-//       const textWidth = resultText.value.$el.offsetWidth || 0
-//       const scrollWidth = displayScrollView.value.$el.offsetWidth || 0
-//       if (textWidth > scrollWidth) {
-//         scrollPosition.value = textWidth - scrollWidth + 30 // 添加一些额外空间
-//       }
-//     }
-//     // #endif
-//
-//     // #ifdef MP-WEIXIN || MP-ALIPAY || MP-BAIDU || MP-TOUTIAO
-//     // 微信小程序和其他小程序平台使用SelectorQuery获取元素尺寸
-//     uni.createSelectorQuery()
-//       .in(this)
-//       .select('.result')
-//       .boundingClientRect(textRect => {
-//         uni.createSelectorQuery()
-//           .in(this)
-//           .select('.current-display')
-//           .boundingClientRect(scrollRect => {
-//             if (textRect && scrollRect && textRect.width > scrollRect.width) {
-//               scrollPosition.value = textRect.width - scrollRect.width + 30 // 添加一些额外空间
-//             }
-//           })
-//           .exec()
-//       })
-//       .exec()
-//     // #endif
-//
-//     // 兜底方案：如果无法获取实际尺寸，根据文本长度估算
-//     if (scrollPosition.value === 9999) {
-//       const textLength = expression.value.length
-//       scrollPosition.value = textLength * 20 // 粗略估计每个字符的宽度
-//     }
-//   })
-// }
 
 // 字体大小调整
 const fontSizeClass = computed(() => {

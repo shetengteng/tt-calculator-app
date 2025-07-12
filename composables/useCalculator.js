@@ -6,7 +6,6 @@ import { useCalculatorHistory } from "@/composables/useCalculatorHistory";
 const { playButtonSound, playResultSound } = useSound()
 const { addHistory } = useCalculatorHistory()
 
-
 const expressionParts = ref([])
 const error = ref(false)
 
