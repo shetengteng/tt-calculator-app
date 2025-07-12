@@ -2,7 +2,7 @@
 export default function createButtonsConfig() {
   return [
     // Row 1: Function buttons
-    { text: 'C', theme: 'light', action: 'clear', value: 'clear' },
+    { text: 'AC', theme: 'light', action: 'clear', value: 'clear' },
     { text: '+/-', theme: 'light', action: 'toggle-sign', value: 'toggle-sign' },
     { text: '%', theme: 'light', action: 'percentage', value: '%' },
     { text: '÷', theme: 'light', action: 'operator', value: '/' },

@@ -1,20 +1,8 @@
 <template>
   <view class="display-section">
     <view class="display-container">
-      <!-- Secondary calculation (previous operation) -->
-      <!-- <view class="secondary-display" v-if="calculator.secondaryCalculation.value && calculator.secondaryResult.value && calculator.secondaryCalculation.value !== '' && calculator.secondaryResult.value !== '' && calculator.secondaryCalculation.value !== 'null' && calculator.secondaryResult.value !== 'null'">
-        <text class="secondary-calculation">{{ calculator.secondaryCalculation.value || '' }}</text>
-        <text class="secondary-result">{{ calculator.secondaryResult.value || '0' }}</text>
-      </view> -->
-
-      <!-- Current calculation -->
-      <!-- <view class="current-display">
-        <text class="calculation" v-if="calculator.calculation.value && calculator.calculation.value !== '' && calculator.calculation.value !== 'null'">{{ calculator.calculation.value || '' }}</text>
-        <text class="result" v-else>{{ displayResult }}</text>
-      </view> -->
-      <view class="current-display">
-        <text class="result" v-if="expressionParts.length > 0">{{ expression }}</text>
-        <text class="result" v-else>{{ result }}</text>
+      <view class="current-display" :class="{ 'shake-animation': error }">
+        <text class="result" :class="{ 'error-text': error }">{{ expression }}</text>
       </view>
     </view>
   </view>
@@ -28,7 +16,7 @@ import { useCalculator } from '@/composables/useCalculator.js'
 // 获取用户设置
 const { settings } = useSettings()
 
-const { result, expressionParts, expressionDisplay } = useCalculator()
+const { expressionParts, expressionDisplay, error } = useCalculator()
 const expression = computed(() => {
   return expressionDisplay(expressionParts.value)
 })
@@ -36,6 +24,46 @@ const expression = computed(() => {
 </script>
 
 <style scoped lang="scss">
+/* 错误晃动动画 */
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+
+  10%,
+  90% {
+    transform: translateX(-10rpx);
+  }
+
+  20%,
+  80% {
+    transform: translateX(10rpx);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translateX(-8rpx);
+  }
+
+  40%,
+  60% {
+    transform: translateX(8rpx);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.shake-animation {
+  animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+.error-text {
+  color: var(--theme-error, #ff4d4f) !important;
+}
+
 .display-section {
   flex: 1;
   padding: 20rpx 40rpx;

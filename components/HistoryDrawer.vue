@@ -35,7 +35,7 @@
                     </view>
                   </view>
                   <view class="history-control">
-                    <CopyButton :text="item.result"/>
+                    <CopyButton :text="String(item.result)"/>
                   </view>
                 </view>
               </view>

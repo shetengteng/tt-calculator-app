@@ -1,9 +1,9 @@
 import soundConfigModule from '../config/sounds.js'
-import { PlatformAdapter } from '@/compatibility/index'
-import { useSettings } from './useSettings.js'
+import {PlatformAdapter} from '@/compatibility/index'
+import {useSettings} from './useSettings.js'
 
 // 获取设置
-const { settings } = useSettings()
+const {settings} = useSettings()
 
 // 音效配置
 const soundConfig = soundConfigModule.soundConfig
@@ -51,6 +51,7 @@ const initializeSound = async () => {
   try {
     // 使用兼容性适配器初始化音频系统
     await PlatformAdapter.audio.initializeAudioSystem()
+    await preloadSounds()
     console.log('Sound system initialized successfully')
   } catch (error) {
     console.error('[error] Failed to refresh sound cache:', error)
@@ -70,10 +71,7 @@ const playSound = async (soundType, scenario, volume = 1.0) => {
     // 获取推荐音量
     const recommendedVolume = soundConfig.recommendedVolume[scenario] || 1.0
     const finalVolume = volume * recommendedVolume
-
-    // 使用兼容性适配器播放音效
     await PlatformAdapter.audio.playAudio(cacheKey, finalVolume)
-
   } catch (error) {
     console.warn(`[warn] Failed to play sound: ${soundType}/${scenario}`, error)
   }
@@ -94,7 +92,7 @@ const playResultSound = (volume = 1.0) => {
 }
 
 export function useSound() {
-  
+
   return {
     // 方法
     initializeSound,
