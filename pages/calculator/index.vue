@@ -140,7 +140,9 @@ export default {
   max-height: 40vh;
   /* 移除overflow-y，使用组件内部的scroll-view处理滚动 */
   /* 确保容器样式不与scroll-view冲突 */
-  overflow: visible;
+  padding: 0 40rpx;
+  margin-bottom: 10rpx;
+  box-sizing: border-box; /* 确保内边距不会增加总高度 */
 }
 
 /* 为计算器显示区设置固定高度 */
