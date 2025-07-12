@@ -4,8 +4,14 @@
 			"path": "pages/calculator/index",
 			"style": {
 				"navigationBarTitleText": "Calculator",
+				"enablePullDownRefresh": false,
 				"app-plus": {
 					"titleNView": false
+				},
+				"h5": {
+					"pullToRefresh": {
+						"use": false
+					}
 				}
 			}
 		}

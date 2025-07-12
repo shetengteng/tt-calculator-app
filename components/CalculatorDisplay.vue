@@ -1,7 +1,7 @@
 <template>
   <view class="display-section">
     <view class="temp-records-container">
-      <scroll-view class="temp-records" scroll-y="true" scroll-x="true" show-scrollbar="false"
+      <scroll-view class="temp-records" scroll-y="true" scroll-x="true" show-scrollbar="true"
         :scroll-into-view="lastItemId" :enhanced="true" :bounces="false">
         <view v-for="(record, index) in tempRecords" :key="index" class="temp-record-item" :id="'temp-record-' + index">
           <text class="temp-record-expression">{{ expressionDisplay(record.expression) }}</text>
@@ -121,13 +121,13 @@ const fontSizeClass = computed(() => {
 }
 
 .temp-records-container {
-  flex: 1;
+  height: 60%; /* 明确指定固定高度比例 */
   overflow: hidden;
   margin-bottom: 10rpx;
 }
 
 .temp-records {
-  height: 100%;
+  height: 100%; /* 保持100%以填满容器 */
   width: 100%;
   flex-direction: column;
 }

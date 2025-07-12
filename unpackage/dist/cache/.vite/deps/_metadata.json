@@ -1,13 +1,13 @@
 {
-  "hash": "ed0622f3",
+  "hash": "9883c163",
   "configHash": "49fcd12d",
-  "lockfileHash": "eb7e0b4e",
-  "browserHash": "7b9f627a",
+  "lockfileHash": "8d5c4cc5",
+  "browserHash": "c9d5bd59",
   "optimized": {
     "mathjs": {
       "src": "../../../../../node_modules/mathjs/lib/esm/index.js",
       "file": "mathjs.js",
-      "fileHash": "cf6dfc67",
+      "fileHash": "499cea54",
       "needsInterop": false
     }
   },
