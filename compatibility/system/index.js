@@ -269,37 +269,35 @@ class SystemAdapter {
    */
   async vibrate(type = 'short') {
     try {
-      // #ifdef H5
-      // H5环境使用Vibration API
-      if (typeof navigator !== 'undefined' && navigator.vibrate) {
-        const duration = type === 'long' ? 1000 : 200
-        navigator.vibrate(duration)
+      console.log(`尝试触发${type}振动...`)
+      // 长震动
+      if (type === 'long') {
+        uni.vibrateLong({
+          success: function () {
+            console.log('长震动成功');
+          },
+          fail: function () {
+            console.log('长震动失败');
+          }
+        })
         return true
       }
-      // #endif
-
-      // #ifdef MP || APP-PLUS
-      // 小程序和App环境使用uni.vibrate
-      if (typeof uni !== 'undefined') {
-        const vibrateMethod = type === 'long' ? uni.vibrateLong : uni.vibrateShort
-        if (vibrateMethod) {
-          return new Promise((resolve) => {
-            vibrateMethod({
-              success: () => {
-                resolve(true)
-              },
-              fail: () => {
-                resolve(false)
-              }
-            })
-          })
-        }
+      if (type === 'short') {
+        uni.vibrateShort({
+          success: function () {
+            console.log('短震动成功');
+          },
+          fail: function () {
+            console.log('短震动失败');
+          }
+        })
+        return true
       }
-      // #endif
 
+      console.warn('没有可用的振动API')
       return false
     } catch (error) {
-      console.warn('Failed to vibrate:', error)
+      console.warn('振动失败:', error)
       return false
     }
   }

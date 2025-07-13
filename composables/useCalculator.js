@@ -2,9 +2,11 @@ import { ref } from 'vue'
 import * as math from 'mathjs'
 import { useSound } from './useSound.js'
 import { useCalculatorHistory } from "@/composables/useCalculatorHistory";
+import { useHapticFeedback } from './useHapticFeedback.js'
 
 const { playButtonSound, playResultSound } = useSound()
 const { addHistory } = useCalculatorHistory()
+const { triggerShortVibration, triggerLongVibration } = useHapticFeedback()
 
 const expressionParts = ref([])
 const tempRecords = ref([]) // 存储最近的10条临时记录
@@ -41,15 +43,36 @@ const clearTempRecords = () => {
     tempRecords.value = []
 }
 
-const handleButtonClick = (buttonData) => {
+const handleButtonClick = async (buttonData) => {
     const buttonInfo = { ...buttonData }
     error.value = false
+    
+    // 播放声音
     if (buttonInfo.action === 'equals') {
         playResultSound()
+        
+        // 触发长振动（等号按钮）
+        try {
+            await triggerLongVibration()
+        } catch (error) {
+            console.warn('触发长振动失败:', error)
+        }
+        
         calculate()
         return
     }
+    
+    // 其他按钮播放普通按键音效
     playButtonSound()
+    
+    // 触发短振动（普通按钮）
+    try {
+        await triggerShortVibration()
+    } catch (error) {
+        console.warn('触发短振动失败:', error)
+    }
+    
+    // 处理按钮动作
     switch (buttonInfo.action) {
         case 'number':
             addNumber(buttonInfo)
@@ -73,7 +96,7 @@ const handleButtonClick = (buttonData) => {
             backspace()
             break
         default:
-            console.log(`未处理的按钮动作: ${action}`)
+            console.log(`未处理的按钮动作: ${buttonInfo.action}`)
     }
 }
 

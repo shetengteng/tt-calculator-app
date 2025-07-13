@@ -88,13 +88,6 @@ export default {
     console.log('Calculator page show')
   },
   onLoad() {
-    // 禁用页面滚动和下拉刷新
-    uni.setPageMeta({
-      pullDownRefresh: {
-        enable: false
-      },
-      allowsBounceVertical: "NO"
-    })
   },
   // 监听页面触摸移动事件，阻止默认下拉行为
   onPageScroll() {
