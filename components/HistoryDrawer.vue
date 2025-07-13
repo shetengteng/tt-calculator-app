@@ -226,18 +226,16 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12rpx 40rpx 12rpx 40rpx;
-  padding-top: calc(12rpx + var(--status-bar-height));
+  padding: 0 30rpx;
   background: var(--settings-card-background);
   border-bottom: none;
-  height: 100rpx;
   box-sizing: border-box;
 }
 
 .drawer-title {
-  font-size: 32rpx;
+  font-size: 30rpx;
   font-weight: 600;
-  color: var(--theme-text-primary);
+  color: var(--settings-text-primary);
 }
 
 .header-actions {

@@ -203,6 +203,7 @@ const selectTheme = (theme) => {
   justify-content: center;
   border: none;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 /* Theme preview styles are now handled dynamically via :style binding */
