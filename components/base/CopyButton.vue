@@ -1,16 +1,20 @@
 <template>
   <view class="copy-button" @click="handleCopy">
-    <SvgIcon 
-      :name="currentIcon" 
-      color="var(--settings-text-secondary)"
-      size="28"
+    <SvgIcon
+        size="28"
+        :name="currentIcon"
+        :color="getCurrentPracticalTheme().colors.settingsTextSecondary"
     />
   </view>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+// 监听组件卸载
+import {computed, onUnmounted, ref} from 'vue'
 import SvgIcon from '@/components/base/SvgIcon.vue'
+import {useTheme} from "@/composables/useTheme";
+
+const {getCurrentPracticalTheme} = useTheme()
 
 // Props
 const props = defineProps({
@@ -51,22 +55,22 @@ const handleCopy = async () => {
       data: props.text,
       success: () => {
         isCopied.value = true
-        
+
         // 显示成功提示
         uni.showToast({
           title: props.successMessage,
           icon: 'none',
           duration: 1500
         })
-        
+
         // 触发成功事件
         emit('copy-success', props.text)
-        
+
         // 清除之前的定时器
         if (resetTimer.value) {
           clearTimeout(resetTimer.value)
         }
-        
+
         // 设置还原定时器
         resetTimer.value = setTimeout(() => {
           isCopied.value = false
@@ -79,7 +83,7 @@ const handleCopy = async () => {
           icon: 'none',
           duration: 1500
         })
-        
+
         // 触发失败事件
         emit('copy-fail', error)
       }
@@ -90,7 +94,7 @@ const handleCopy = async () => {
       icon: 'none',
       duration: 1500
     })
-    
+
     // 触发失败事件
     emit('copy-fail', error)
   }
@@ -104,8 +108,6 @@ const cleanup = () => {
   }
 }
 
-// 监听组件卸载
-import { onUnmounted } from 'vue'
 onUnmounted(() => {
   cleanup()
 })
@@ -136,5 +138,6 @@ onUnmounted(() => {
 .copy-button:hover {
   background: var(--settings-separator);
 }
+
 /* #endif */
 </style> 
