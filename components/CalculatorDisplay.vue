@@ -5,8 +5,9 @@
         scroll-with-animation="true" :scroll-left="scrollPosition" show-scrollbar="false">
         <text class="expression" :class="{ [expressionFontSizeClass]: true }">{{ expression }}</text>
       </scroll-view>
-      <text class="result" :class="{ 'error-text': error, [resultFontSizeClass]: true }">= {{ formatNumber(result)
-        }}</text>
+      <text class="result" :class="{ 'error-text': error, [resultFontSizeClass]: true }">
+        = {{ formatNumber(result)}}
+      </text>
     </view>
   </view>
 </template>
@@ -22,7 +23,6 @@ const { formatExpression, formatNumber } = useDisplay()
 const expression = computed(() => {
   return formatExpression(expressionParts.value)
 })
-
 
 const scrollPosition = ref(9999)
 
