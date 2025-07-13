@@ -27,7 +27,7 @@
               <view class="group-items">
                 <view class="history-item" v-for="(item) in group.items" :key="item.id">
                   <view class="history-info">
-                    <text class="history-title">{{ expression(item) }} = {{ item.result }}</text>
+                    <text class="history-title">{{ formatExpression(item.expression) }} = {{ formatNumber(item.result) }}</text>
                     <view class="history-description-with-icon">
                       <SvgIcon name="ri-time-line" size="24"
                           :color="getCurrentPracticalTheme().colors.settingsTextSecondary"/>
@@ -35,7 +35,7 @@
                     </view>
                   </view>
                   <view class="history-control">
-                    <CopyButton :text="String(item.result)"/>
+                    <CopyButton :text="formatNumber(item.result)"/>
                   </view>
                 </view>
               </view>
@@ -67,8 +67,8 @@ import SvgIcon from '@/components/base/SvgIcon.vue'
 import {useI18n} from '@/composables/useI18n.js'
 import {useCalculatorHistory} from '@/composables/useCalculatorHistory.js'
 import {formatTimestamp, getDateKey, getDateTitle} from '@/utils/dateUtils.js'
-import {useCalculator} from "@/composables/useCalculator";
 import {useTheme} from "@/composables/useTheme";
+import {useDisplay} from '@/composables/useDisplay.js'
 
 // Props
 const props = defineProps({
@@ -80,15 +80,10 @@ const props = defineProps({
 
 const {t} = useI18n()
 const {history, loadHistory} = useCalculatorHistory()
-const { expressionDisplay } = useCalculator()
 const {getCurrentPracticalTheme} = useTheme()
+const {formatNumber, formatExpression} = useDisplay()
 
 const emit = defineEmits(['close'])
-
-
-const expression = (item) => {
-  return expressionDisplay(item.expression)
-}
 
 // 触摸相关
 const touchStartX = ref(0)

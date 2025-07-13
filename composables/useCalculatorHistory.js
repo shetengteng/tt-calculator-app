@@ -49,6 +49,7 @@ const loadHistory = () => {
 
 // 添加历史记录
 const addHistory = (expression, result) => {
+  // 存储原始结果值，以便在显示时可以根据设置格式化
   const historyItem = {
     expression,
     result: result,

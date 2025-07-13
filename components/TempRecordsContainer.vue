@@ -15,8 +15,8 @@
   >
     <view v-for="(record, index) in tempRecords" :key="index" class="temp-record-item"
           :id="'temp-record-' + index">
-      <text class="temp-record-expression">{{ expressionDisplay(record.expression) }}</text>
-      <text class="temp-record-result">= {{ record.result }}</text>
+      <text class="temp-record-expression">{{ formatExpression(record.expression) }}</text>
+      <text class="temp-record-result">= {{ formatNumber(record.result) }}</text>
     </view>
     <!-- 底部空白元素用于滚动定位 -->
     <view :id="'temp-record-' + (tempRecords.length)" class="scroll-anchor"></view>
@@ -26,8 +26,10 @@
 <script setup>
 import {nextTick, ref, watch} from 'vue'
 import {useCalculator} from '@/composables/useCalculator.js'
+import {useDisplay} from '@/composables/useDisplay.js'
 
-const {tempRecords, expressionDisplay} = useCalculator()
+const {tempRecords} = useCalculator()
+const {formatNumber, formatExpression} = useDisplay()
 
 // 监听tempRecords变化，自动滚动到底部
 const lastItemId = ref('')

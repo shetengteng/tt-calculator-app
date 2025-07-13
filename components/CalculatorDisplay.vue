@@ -13,15 +13,13 @@
 
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue'
-import { useSettings } from '@/composables/useSettings.js'
 import { useCalculator } from '@/composables/useCalculator.js'
+import { useDisplay } from '@/composables/useDisplay.js'
 
-// 获取用户设置
-const { settings } = useSettings()
-
-const { expressionParts, expressionDisplay, error } = useCalculator()
+const { expressionParts, error } = useCalculator()
+const { formatExpression } = useDisplay()
 const expression = computed(() => {
-  return expressionDisplay(expressionParts.value)
+  return formatExpression(expressionParts.value)
 })
 
 const scrollPosition = ref(9999)

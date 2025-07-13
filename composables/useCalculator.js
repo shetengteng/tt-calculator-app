@@ -4,19 +4,18 @@ import { useSound } from './useSound.js'
 import { useCalculatorHistory } from "@/composables/useCalculatorHistory";
 import { useHapticFeedback } from './useHapticFeedback.js'
 import { useSettings } from './useSettings.js'
+import { useDisplay } from './useDisplay.js'
 
 const { playButtonSound, playResultSound } = useSound()
 const { triggerShortVibration } = useHapticFeedback()
 const { addHistory } = useCalculatorHistory()
 const { settings } = useSettings()
+const { shouldAllowDecimalInput } = useDisplay()
 
 const expressionParts = ref([])
 const tempRecords = ref([]) // 存储最近的10条临时记录
 const error = ref(false)
 
-const expressionDisplay = (expressionParts) => {
-    return expressionParts.map(part => part.text).join('')
-}
 const lastPart = () => {
     return expressionParts.value[expressionParts.value.length - 1]
 }
@@ -142,6 +141,15 @@ const addNumber = (buttonData) => {
             part.text = ''
             part.value = ''
         }
+        
+        // 检查是否添加小数点后的数字，如果超出小数位设置则不添加
+        if (part.text.includes('.') && buttonData.text !== '.') {
+            // 使用useDisplay中的方法检查是否允许输入
+            if (!shouldAllowDecimalInput(part.text)) {
+                return; // 不添加超过设置的小数位数
+            }
+        }
+        
         part.text += buttonData.text
         part.value += buttonData.value
         return
@@ -184,7 +192,6 @@ export function useCalculator() {
         expressionParts,
         tempRecords, // 导出临时记录
 
-        expressionDisplay,
         addExpressionPart,
         clearExpression,
         handleButtonClick,
