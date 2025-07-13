@@ -3,10 +3,12 @@ import * as math from 'mathjs'
 import { useSound } from './useSound.js'
 import { useCalculatorHistory } from "@/composables/useCalculatorHistory";
 import { useHapticFeedback } from './useHapticFeedback.js'
+import { useSettings } from './useSettings.js'
 
 const { playButtonSound, playResultSound } = useSound()
+const { triggerShortVibration } = useHapticFeedback()
 const { addHistory } = useCalculatorHistory()
-const { triggerShortVibration, triggerLongVibration } = useHapticFeedback()
+const { settings } = useSettings()
 
 const expressionParts = ref([])
 const tempRecords = ref([]) // 存储最近的10条临时记录
@@ -46,32 +48,15 @@ const clearTempRecords = () => {
 const handleButtonClick = async (buttonData) => {
     const buttonInfo = { ...buttonData }
     error.value = false
-    
+    await triggerShortVibration()
     // 播放声音
     if (buttonInfo.action === 'equals') {
-        playResultSound()
-        
-        // 触发长振动（等号按钮）
-        try {
-            await triggerLongVibration()
-        } catch (error) {
-            console.warn('触发长振动失败:', error)
-        }
-        
+        await playResultSound()
         calculate()
         return
     }
     
-    // 其他按钮播放普通按键音效
-    playButtonSound()
-    
-    // 触发短振动（普通按钮）
-    try {
-        await triggerShortVibration()
-    } catch (error) {
-        console.warn('触发短振动失败:', error)
-    }
-    
+    await playButtonSound()
     // 处理按钮动作
     switch (buttonInfo.action) {
         case 'number':
@@ -111,9 +96,41 @@ const calculate = () => {
         addTempRecord(expressionParts.value, result)        
         clearExpression()
         addExpressionPart({ text: String(result), value: String(result), action: 'number' })
+        
+        // 如果开启了自动复制结果，则复制到剪贴板
+        if (settings.autoCopyResult) {
+            copyResultToClipboard(String(result))
+        }
     } catch (err) {
         console.error('计算错误:', err)
         error.value = true
+    }
+}
+
+// 复制结果到剪贴板
+const copyResultToClipboard = (text) => {
+    try {
+        if (typeof uni === 'undefined' || !uni.setClipboardData) {
+            console.error('当前环境不支持剪贴板API')
+            return false
+        }
+        uni.setClipboardData({
+            data: text,
+            success: () => {
+                console.log('结果已成功复制到剪贴板:', text)
+                return true
+            },
+            fail: (err) => {
+                console.error('复制到剪贴板失败:', err)
+                return false
+            },
+            complete: () => {
+                console.log('复制操作完成')
+            }
+        })
+    } catch (error) {
+        console.error('复制到剪贴板出错:', error)
+        return false
     }
 }
 
@@ -171,6 +188,8 @@ export function useCalculator() {
         addExpressionPart,
         clearExpression,
         handleButtonClick,
-        clearTempRecords // 导出清除临时记录的方法
+        clearTempRecords, // 导出清除临时记录的方法
+        calculate, // 导出计算方法
+        copyResultToClipboard // 导出复制结果方法
     }
 }

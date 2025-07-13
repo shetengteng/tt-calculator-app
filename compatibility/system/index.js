@@ -270,9 +270,18 @@ class SystemAdapter {
   async vibrate(type = 'short') {
     try {
       console.log(`尝试触发${type}振动...`)
-      // 长震动
+
+      // #ifdef H5
+      if ("vibrate" in navigator) {
+        // 使用Web API震动功能
+        navigator.vibrate(200)
+        return true
+      }
+      // #endif
+
+      // #ifdef MP || APP-PLUS
       if (type === 'long') {
-        uni.vibrateLong({
+        uni.vibrateShort({
           success: function () {
             console.log('长震动成功');
           },
@@ -293,6 +302,7 @@ class SystemAdapter {
         })
         return true
       }
+      // #endif
 
       console.warn('没有可用的振动API')
       return false
