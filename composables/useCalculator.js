@@ -1,16 +1,16 @@
-import {ref} from 'vue'
+import { ref } from 'vue'
 import * as math from 'mathjs'
-import {useSound} from './useSound.js'
-import {useCalculatorHistory} from "@/composables/useCalculatorHistory";
-import {useHapticFeedback} from './useHapticFeedback.js'
-import {useSettings} from './useSettings.js'
-import {useDisplay} from './useDisplay.js'
+import { useSound } from './useSound.js'
+import { useCalculatorHistory } from "@/composables/useCalculatorHistory";
+import { useHapticFeedback } from './useHapticFeedback.js'
+import { useSettings } from './useSettings.js'
+import { useDisplay } from './useDisplay.js'
 
-const {playButtonSound, playResultSound} = useSound()
-const {triggerShortVibration} = useHapticFeedback()
-const {addHistory} = useCalculatorHistory()
-const {settings} = useSettings()
-const {shouldAllowDecimalInput} = useDisplay()
+const { playButtonSound, playResultSound } = useSound()
+const { triggerShortVibration } = useHapticFeedback()
+const { addHistory } = useCalculatorHistory()
+const { settings } = useSettings()
+const { shouldAllowDecimalInput } = useDisplay()
 
 const expressionParts = ref([])
 const result = ref('')
@@ -47,7 +47,7 @@ const clearTempRecords = () => {
 }
 
 const handleButtonClick = async (buttonData) => {
-  const buttonInfo = {...buttonData}
+  const buttonInfo = { ...buttonData }
   error.value = false
   await triggerShortVibration()
   // 播放声音
@@ -72,6 +72,7 @@ const handleButtonClick = async (buttonData) => {
       break
     case 'clear':
       clearExpression()
+      result.value = ''
       break
     case 'toggle-sign':
       toggleSign()
@@ -97,7 +98,7 @@ const calculate = () => {
     // 添加到临时记录
     addTempRecord(expressionParts.value, result.value)
     clearExpression()
-    addExpressionPart({text: String(result.value), value: String(result.value), action: 'number'})
+    addExpressionPart({ text: String(result.value), value: String(result.value), action: 'number' })
 
     // 如果开启了自动复制结果，则复制到剪贴板
     if (settings.autoCopyResult) {
