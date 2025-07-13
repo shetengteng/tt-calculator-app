@@ -1,13 +1,16 @@
 <template>
   <view class="display-section">
     <view class="display-container">
-      <scroll-view class="current-display" :class="{ 'shake-animation': error }" scroll-x="true"
+      <scroll-view class="current-display" scroll-x="true"
         scroll-with-animation="true" :scroll-left="scrollPosition" show-scrollbar="false">
         <text class="expression" :class="{ [expressionFontSizeClass]: true }">{{ expression }}</text>
       </scroll-view>
-      <text class="result" :class="{ 'error-text': error, [resultFontSizeClass]: true }">
-        = {{ formatNumber(result)}}
-      </text>
+      <scroll-view class="current-display" scroll-x="true"
+        scroll-with-animation="true" show-scrollbar="false">
+        <text class="result" :class="{ 'error-text': error, [resultFontSizeClass]: true }">
+          = {{ formatNumber(result) }}
+        </text>
+      </scroll-view>
     </view>
   </view>
 </template>
@@ -38,10 +41,9 @@ watch(() => expression.value, () => {
 const expressionFontSizeClass = computed(() => {
   const length = expression.value.length;
   if (length > 50) return 'expression-scale-xl';
-  if (length > 30) return 'expression-scale-l';
-  if (length > 20) return 'expression-scale-m';
-  if (length > 15) return 'expression-scale-s';
-  if (length > 10) return 'expression-scale';
+  if (length > 40) return 'expression-scale-l';
+  if (length > 30) return 'expression-scale-m';
+  if (length > 20) return 'expression-scale-s';
   return '';
 })
 
@@ -52,7 +54,6 @@ const resultFontSizeClass = computed(() => {
   if (length > 30) return 'result-scale-l';
   if (length > 20) return 'result-scale-m';
   if (length > 15) return 'result-scale-s';
-  if (length > 10) return 'result-scale';
   return '';
 })
 </script>
@@ -125,8 +126,8 @@ const resultFontSizeClass = computed(() => {
 
 .expression {
   color: var(--theme-text-secondary, #999999);
-  font-size: calc(3.5vw + 30rpx);
-  /* 减小表达式字体 */
+  font-size: calc(4vw + 34rpx);
+  /* 增大表达式字体 */
   font-weight: 300;
   line-height: 1.2;
   transition: font-size 0.2s ease;
@@ -140,7 +141,7 @@ const resultFontSizeClass = computed(() => {
 
 .result {
   color: var(--theme-text-primary);
-  font-size: calc(3.5vw + 32rpx);
+  font-size: calc(4vw + 36rpx);
   /* 比表达式字体大2rpx */
   font-weight: 500;
   /* 加粗结果字体 */
@@ -148,59 +149,59 @@ const resultFontSizeClass = computed(() => {
   transition: font-size 0.2s ease;
   white-space: nowrap;
   text-align: right;
-  padding:20rpx;
+  padding: 20rpx;
 }
 
 /* 表达式文本缩放类 - 比结果字体小 */
 .expression-scale {
-  font-size: calc(3.2vw + 18rpx);
+  font-size: calc(3.7vw + 22rpx);
 }
 
 .expression-scale-s {
-  font-size: calc(3vw + 16rpx);
+  font-size: calc(3.5vw + 20rpx);
 }
 
 .expression-scale-m {
-  font-size: calc(2.8vw + 14rpx);
+  font-size: calc(3.3vw + 18rpx);
 }
 
 .expression-scale-l {
-  font-size: calc(2.5vw + 12rpx);
+  font-size: calc(3vw + 16rpx);
 }
 
 .expression-scale-xl {
-  font-size: calc(2.2vw + 10rpx);
+  font-size: calc(2.7vw + 14rpx);
 }
 
 /* 结果文本缩放类 - 比表达式字体大2rpx */
 .result-scale {
-  font-size: calc(3.2vw + 20rpx);
+  font-size: calc(3.7vw + 24rpx);
 }
 
 .result-scale-s {
-  font-size: calc(3vw + 18rpx);
+  font-size: calc(3.5vw + 22rpx);
 }
 
 .result-scale-m {
-  font-size: calc(2.8vw + 16rpx);
+  font-size: calc(3.3vw + 20rpx);
 }
 
 .result-scale-l {
-  font-size: calc(2.5vw + 14rpx);
+  font-size: calc(3vw + 18rpx);
 }
 
 .result-scale-xl {
-  font-size: calc(2.2vw + 12rpx);
+  font-size: calc(2.7vw + 16rpx);
 }
 
 /* 响应式设计 */
 @include extra-small-screen {
   .expression {
-    font-size: calc(3vw + 16rpx);
+    font-size: calc(3.5vw + 20rpx);
   }
 
   .result {
-    font-size: calc(3vw + 18rpx);
+    font-size: calc(3.5vw + 22rpx);
   }
 }
 
@@ -211,21 +212,21 @@ const resultFontSizeClass = computed(() => {
   }
 
   .expression {
-    font-size: calc(2.2vw + 26rpx);
+    font-size: calc(2.7vw + 30rpx);
   }
 
   .result {
-    font-size: calc(2.2vw + 28rpx);
+    font-size: calc(2.7vw + 32rpx);
   }
 }
 
 @include desktop-screen {
   .expression {
-    font-size: calc(1.8vw + 32rpx);
+    font-size: calc(2.3vw + 36rpx);
   }
 
   .result {
-    font-size: calc(1.8vw + 34rpx);
+    font-size: calc(2.3vw + 38rpx);
   }
 }
 
@@ -238,11 +239,11 @@ const resultFontSizeClass = computed(() => {
   }
 
   .expression {
-    font-size: calc(2.8vw + 14rpx);
+    font-size: calc(3.3vw + 18rpx);
   }
 
   .result {
-    font-size: calc(2.8vw + 16rpx);
+    font-size: calc(3.3vw + 20rpx);
   }
 }
 
@@ -259,11 +260,11 @@ const resultFontSizeClass = computed(() => {
   }
 
   .expression {
-    font-size: calc(2.5vw + 12rpx);
+    font-size: calc(3vw + 16rpx);
   }
-  
+
   .result {
-    font-size: calc(2.5vw + 14rpx);
+    font-size: calc(3vw + 18rpx);
   }
 }
 
@@ -276,11 +277,11 @@ const resultFontSizeClass = computed(() => {
   }
 
   .expression {
-    font-size: calc(2.7vw + 14rpx);
+    font-size: calc(3.2vw + 18rpx);
   }
-  
+
   .result {
-    font-size: calc(2.7vw + 16rpx);
+    font-size: calc(3.2vw + 20rpx);
   }
 }
 </style>

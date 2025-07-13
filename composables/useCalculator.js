@@ -84,7 +84,6 @@ const handleButtonClick = async (buttonData) => {
       break
     case 'backspace':
       backspace()
-      doCalculate()
       break
     default:
       console.log(`未处理的按钮动作: ${buttonInfo.action}`)
