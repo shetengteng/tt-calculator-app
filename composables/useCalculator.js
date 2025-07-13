@@ -13,6 +13,8 @@ const { settings } = useSettings()
 const { shouldAllowDecimalInput } = useDisplay()
 
 const expressionParts = ref([])
+const result = ref('')
+
 const tempRecords = ref([]) // 存储最近的10条临时记录
 const error = ref(false)
 
@@ -87,22 +89,23 @@ const handleButtonClick = async (buttonData) => {
 const calculate = () => {
     const fullExpression = expressionParts.value.map(part => part.value).join('')
     try {
-        const result = math.evaluate(fullExpression)
+        result.value = math.evaluate(fullExpression)
         error.value = false
         // 添加到历史记录
-        addHistory(expressionParts.value, result)
+        addHistory(expressionParts.value, result.value)
         // 添加到临时记录
-        addTempRecord(expressionParts.value, result)        
+        addTempRecord(expressionParts.value, result.value)
         clearExpression()
-        addExpressionPart({ text: String(result), value: String(result), action: 'number' })
+        addExpressionPart({ text: String(result.value), value: String(result.value), action: 'number' })
         
         // 如果开启了自动复制结果，则复制到剪贴板
         if (settings.autoCopyResult) {
-            copyResultToClipboard(String(result))
+            copyResultToClipboard(String(result.value))
         }
     } catch (err) {
         console.error('计算错误:', err)
         error.value = true
+        result.value = 'error'
     }
 }
 
@@ -189,6 +192,7 @@ const toggleSign = () => {
 export function useCalculator() {
     return {
         error,
+        result,
         expressionParts,
         tempRecords, // 导出临时记录
 

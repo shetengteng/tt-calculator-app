@@ -129,12 +129,12 @@ export default {
     padding: 0 40rpx 10rpx;
     box-sizing: border-box; /* 确保内边距不会增加总高度 */
     min-height: 150rpx; /* 设置最小高度 */
-    max-height: calc(100vh - 120rpx); /* 留出足够空间给计算器显示区域 */
+    max-height: calc(100vh - 150rpx); /* 留出足够空间给计算器显示区域 */
     overflow: hidden; /* 防止内容溢出 */
   }
 
   .calculator-display {
-    height: 100rpx;
+    height: 150rpx;
     border: none !important; /* 覆盖主题中的边框样式 */
     margin-top: auto; /* 确保显示区域始终在底部 */
   }

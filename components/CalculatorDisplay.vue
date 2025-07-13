@@ -3,10 +3,10 @@
     <view class="display-container">
       <scroll-view class="current-display" :class="{ 'shake-animation': error }" scroll-x="true"
         scroll-with-animation="true" :scroll-left="scrollPosition" show-scrollbar="false">
-        <text class="result" :class="{ 'error-text': error, [fontSizeClass]: true }">
-          {{ expression }}
-        </text>
+        <text class="expression" :class="{ [expressionFontSizeClass]: true }">{{ expression }}</text>
       </scroll-view>
+      <text class="result" :class="{ 'error-text': error, [resultFontSizeClass]: true }">= {{ formatNumber(result)
+        }}</text>
     </view>
   </view>
 </template>
@@ -16,11 +16,13 @@ import { computed, nextTick, ref, watch } from 'vue'
 import { useCalculator } from '@/composables/useCalculator.js'
 import { useDisplay } from '@/composables/useDisplay.js'
 
-const { expressionParts, error } = useCalculator()
-const { formatExpression } = useDisplay()
+const { expressionParts, error, result } = useCalculator()
+const { formatExpression, formatNumber } = useDisplay()
+
 const expression = computed(() => {
   return formatExpression(expressionParts.value)
 })
+
 
 const scrollPosition = ref(9999)
 
@@ -32,14 +34,25 @@ watch(() => expression.value, () => {
   })
 }, { immediate: true })
 
-// 字体大小调整
-const fontSizeClass = computed(() => {
+// 表达式字体大小调整 - 比结果字体小
+const expressionFontSizeClass = computed(() => {
   const length = expression.value.length;
-  if (length > 50) return 'text-scale-xl';
-  if (length > 30) return 'text-scale-l';
-  if (length > 20) return 'text-scale-m';
-  if (length > 15) return 'text-scale-s';
-  if (length > 10) return 'text-scale';
+  if (length > 50) return 'expression-scale-xl';
+  if (length > 30) return 'expression-scale-l';
+  if (length > 20) return 'expression-scale-m';
+  if (length > 15) return 'expression-scale-s';
+  if (length > 10) return 'expression-scale';
+  return '';
+})
+
+// 结果字体大小调整 - 比表达式字体大
+const resultFontSizeClass = computed(() => {
+  const length = expression.value.length;
+  if (length > 50) return 'result-scale-xl';
+  if (length > 30) return 'result-scale-l';
+  if (length > 20) return 'result-scale-m';
+  if (length > 15) return 'result-scale-s';
+  if (length > 10) return 'result-scale';
   return '';
 })
 </script>
@@ -86,15 +99,15 @@ const fontSizeClass = computed(() => {
 }
 
 .display-section {
-  /* 移除 flex: 1，它会导致高度设置无效 */
   padding: 0 40rpx;
   text-align: right;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  height: 100rpx; /* 使用100%高度填充父容器 */
-  box-sizing: border-box; /* 确保padding不会增加元素高度 */
-  border: none; /* 移除边框 */
+  height: 180rpx;
+  /* 增加高度以确保两行显示 */
+  box-sizing: border-box;
+  border: none;
 }
 
 .display-container {
@@ -102,6 +115,7 @@ const fontSizeClass = computed(() => {
   flex-direction: column;
   justify-content: flex-end;
   width: 100%;
+  height: 100%;
 }
 
 .current-display {
@@ -109,11 +123,12 @@ const fontSizeClass = computed(() => {
   white-space: nowrap;
 }
 
-.result {
-  color: var(--theme-text-primary);
-  font-size: calc(7vw + 40rpx);
+.expression {
+  color: var(--theme-text-secondary, #999999);
+  font-size: calc(3.5vw + 20rpx);
+  /* 减小表达式字体 */
   font-weight: 300;
-  line-height: 1.3;
+  line-height: 1.2;
   transition: font-size 0.2s ease;
   white-space: nowrap;
   text-align: right;
@@ -123,80 +138,149 @@ const fontSizeClass = computed(() => {
   padding-right: 20rpx;
 }
 
-/* 文本缩放类 */
-.text-scale {
-  font-size: calc(6.2vw + 36rpx);
+.result {
+  color: var(--theme-text-primary);
+  font-size: calc(3.5vw + 22rpx);
+  /* 比表达式字体大2rpx */
+  font-weight: 500;
+  /* 加粗结果字体 */
+  line-height: 1.3;
+  transition: font-size 0.2s ease;
+  white-space: nowrap;
+  text-align: right;
+  padding:20rpx;
 }
 
-/* 文本超长时的额外缩放 */
-.text-scale-s {
-  font-size: calc(5.5vw + 32rpx);
+/* 表达式文本缩放类 - 比结果字体小 */
+.expression-scale {
+  font-size: calc(3.2vw + 18rpx);
 }
 
-.text-scale-m {
-  font-size: calc(4.8vw + 28rpx);
+.expression-scale-s {
+  font-size: calc(3vw + 16rpx);
 }
 
-.text-scale-l {
-  font-size: calc(4.2vw + 24rpx);
+.expression-scale-m {
+  font-size: calc(2.8vw + 14rpx);
 }
 
-.text-scale-xl {
-  font-size: calc(3.6vw + 20rpx);
+.expression-scale-l {
+  font-size: calc(2.5vw + 12rpx);
+}
+
+.expression-scale-xl {
+  font-size: calc(2.2vw + 10rpx);
+}
+
+/* 结果文本缩放类 - 比表达式字体大2rpx */
+.result-scale {
+  font-size: calc(3.2vw + 20rpx);
+}
+
+.result-scale-s {
+  font-size: calc(3vw + 18rpx);
+}
+
+.result-scale-m {
+  font-size: calc(2.8vw + 16rpx);
+}
+
+.result-scale-l {
+  font-size: calc(2.5vw + 14rpx);
+}
+
+.result-scale-xl {
+  font-size: calc(2.2vw + 12rpx);
 }
 
 /* 响应式设计 */
 @include extra-small-screen {
+  .expression {
+    font-size: calc(3vw + 16rpx);
+  }
+
   .result {
-    font-size: calc(6vw + 32rpx);
+    font-size: calc(3vw + 18rpx);
   }
 }
 
 @include tablet-screen {
   .display-section {
-    height: 150rpx; /* 从180rpx减小到150rpx */
+    height: 220rpx;
+    /* 增加高度以适应两行显示 */
+  }
+
+  .expression {
+    font-size: calc(2.2vw + 26rpx);
   }
 
   .result {
-    font-size: calc(4vw + 48rpx);
+    font-size: calc(2.2vw + 28rpx);
   }
 }
 
 @include desktop-screen {
+  .expression {
+    font-size: calc(1.8vw + 32rpx);
+  }
+
   .result {
-    font-size: calc(3vw + 56rpx);
+    font-size: calc(1.8vw + 34rpx);
   }
 }
 
 /* 低高度屏幕适配 */
 @include low-height-screen {
   .display-section {
-    height: 70rpx; /* 从120rpx减小到100rpx */
+    height: 140rpx;
+    /* 增加高度以适应两行显示 */
     padding: 10rpx 40rpx;
   }
 
+  .expression {
+    font-size: calc(2.8vw + 14rpx);
+  }
+
   .result {
-    font-size: calc(6vw + 32rpx);
+    font-size: calc(2.8vw + 16rpx);
   }
 }
 
 /* iPhone 4/4S 专门优化 - 严格控制显示区域高度 */
 @include iphone4-optimization {
   .display-section {
-    height: 50rpx; /* 从100rpx减小到80rpx */
+    height: 120rpx;
+    /* 增加高度以适应两行显示 */
     padding: 5rpx 30rpx;
   }
 
   .current-display {
-    margin-bottom: 10rpx;
+    margin-bottom: 5rpx;
+  }
+
+  .expression {
+    font-size: calc(2.5vw + 12rpx);
+  }
+  
+  .result {
+    font-size: calc(2.5vw + 14rpx);
   }
 }
 
 /* iPhone 5/SE 专门优化 - 严格控制显示区域高度 */
 @include iphone5-optimization {
   .display-section {
-    height: 60rpx; /* 从110rpx减小到90rpx */
+    height: 130rpx;
+    /* 增加高度以适应两行显示 */
     padding: 8rpx 35rpx;
+  }
+
+  .expression {
+    font-size: calc(2.7vw + 14rpx);
+  }
+  
+  .result {
+    font-size: calc(2.7vw + 16rpx);
   }
 }
 </style>
