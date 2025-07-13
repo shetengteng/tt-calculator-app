@@ -125,7 +125,7 @@ const resultFontSizeClass = computed(() => {
 
 .expression {
   color: var(--theme-text-secondary, #999999);
-  font-size: calc(3.5vw + 20rpx);
+  font-size: calc(3.5vw + 30rpx);
   /* 减小表达式字体 */
   font-weight: 300;
   line-height: 1.2;
@@ -140,7 +140,7 @@ const resultFontSizeClass = computed(() => {
 
 .result {
   color: var(--theme-text-primary);
-  font-size: calc(3.5vw + 22rpx);
+  font-size: calc(3.5vw + 32rpx);
   /* 比表达式字体大2rpx */
   font-weight: 500;
   /* 加粗结果字体 */

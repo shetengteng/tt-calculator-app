@@ -18,7 +18,7 @@ import { useI18n } from '@/composables/useI18n.js'
 const props = defineProps({
   version: {
     type: String,
-    default: 'Calculator App v1.0'
+    default: 'TT Calculator App v1.0'
   }
 })
 
