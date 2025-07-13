@@ -47,7 +47,7 @@ const expressionFontSizeClass = computed(() => {
 
 // 结果字体大小调整 - 比表达式字体大
 const resultFontSizeClass = computed(() => {
-  const length = expression.value.length;
+  const length = result.value.length;
   if (length > 50) return 'result-scale-xl';
   if (length > 30) return 'result-scale-l';
   if (length > 20) return 'result-scale-m';
