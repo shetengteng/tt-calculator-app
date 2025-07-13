@@ -128,13 +128,13 @@ export default {
     flex: 1; /* 让临时记录容器占据剩余空间 */
     padding: 0 40rpx 10rpx;
     box-sizing: border-box; /* 确保内边距不会增加总高度 */
-    min-height: 150rpx; /* 设置最小高度 */
-    max-height: calc(100vh - 150rpx); /* 留出足够空间给计算器显示区域 */
+    min-height: 120rpx; /* 设置最小高度 */
+    max-height: calc(100vh - 180rpx); /* 留出足够空间给计算器显示区域 */
     overflow: hidden; /* 防止内容溢出 */
   }
 
   .calculator-display {
-    height: 150rpx;
+    height: 180rpx;
     border: none !important; /* 覆盖主题中的边框样式 */
     margin-top: auto; /* 确保显示区域始终在底部 */
   }
