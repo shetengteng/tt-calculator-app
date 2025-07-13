@@ -121,8 +121,6 @@ export default {
   overflow: hidden;
   position: relative;
   transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-
-  /* 主题样式现在通过themes.scss中的主题类定义 */
 }
 
 /* 计算器中间内容区域，自动填充剩余空间 */
@@ -131,25 +129,24 @@ export default {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  justify-content: space-between; /* 确保内容分布在顶部和底部 */
+
+  .temp-records {
+    flex: 1; /* 让临时记录容器占据剩余空间 */
+    padding: 0 40rpx 10rpx;
+    box-sizing: border-box; /* 确保内边距不会增加总高度 */
+    min-height: 150rpx; /* 设置最小高度 */
+    max-height: calc(100vh - 120rpx); /* 留出足够空间给计算器显示区域 */
+    overflow: hidden; /* 防止内容溢出 */
+  }
+
+  .calculator-display {
+    height: 100rpx;
+    border: none !important; /* 覆盖主题中的边框样式 */
+    margin-top: auto; /* 确保显示区域始终在底部 */
+  }
 }
 
-/* 为临时记录容器设置固定高度 */
-.temp-records {
-  height: 40vh; /* 与组件内部保持一致 */
-  min-height: 100rpx;
-  max-height: 40vh;
-  /* 移除overflow-y，使用组件内部的scroll-view处理滚动 */
-  /* 确保容器样式不与scroll-view冲突 */
-  padding: 0 40rpx;
-  margin-bottom: 10rpx;
-  box-sizing: border-box; /* 确保内边距不会增加总高度 */
-}
-
-/* 为计算器显示区设置固定高度 */
-.calculator-display {
-  height: 100rpx;
-  border: none !important; /* 覆盖主题中的边框样式 */
-}
 
 /* 设置抽屉打开时向右滑动 */
 .calculator.calculator-shifted-left {

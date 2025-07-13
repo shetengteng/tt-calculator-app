@@ -3,7 +3,15 @@
       class="temp-records"
       scroll-y="true"
       scroll-x="true"
-      :style="{height:'350px'}"
+      :scroll-into-view="lastItemId"
+      enable-passive="true"
+      scroll-anchoring="true"
+      enable-back-to-top="false"
+      scroll-with-animation="true"
+      upper-threshold="50"
+      lower-threshold="50"
+      bounces="true"
+      fast-deceleration="false"
   >
     <view v-for="(record, index) in tempRecords" :key="index" class="temp-record-item"
           :id="'temp-record-' + index">
@@ -31,13 +39,6 @@ watch(() => tempRecords.value.length, (newLength) => {
   })
 }, {immediate: true})
 
-
-const onTouchMove = (e) => {
-  // 处理触摸移动
-  // console.log('触摸移动', e)
-  // 防止事件冒泡导致页面滚动
-  e.stopPropagation && e.stopPropagation()
-}
 </script>
 
 <style scoped lang="scss">
@@ -47,6 +48,9 @@ const onTouchMove = (e) => {
   width: 100%;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y; /* 明确指定支持垂直滚动触摸操作 */
+  flex: 1; /* 确保填充父容器的可用空间 */
+  overflow-y: auto; /* 确保垂直方向可滚动 */
+  overflow-x: auto; /* 确保水平方向可滚动 */
 }
 
 .temp-record-item {
