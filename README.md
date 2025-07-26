@@ -1,6 +1,9 @@
 # TT Calculator App | TT 计算器应用
 
-[English](#english) | [中文](#chinese)
+[English](#english) | [Chinese](#chinese)
+
+<!-- 添加居中显示的二维码图片 -->
+<img src="QR-code.png" alt="TT Calculator QR Code" width="200" style="display: block; margin: 20px auto;">
 
 <a name="english"></a>
 ## 🧮 TT Calculator - Simple, Fast, and Free
