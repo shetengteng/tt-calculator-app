@@ -92,10 +92,25 @@ export default {
   // 监听页面触摸移动事件，阻止默认下拉行为
   onPageScroll() {
     return false
+  },
+  // 好友分享配置
+  onShareAppMessage() {
+    return {
+      title: 'TT计算器',
+      path: '/pages/calculator/index',
+      imageUrl: '/static/logo.png'
+    }
+  },
+  // 朋友圈分享配置
+  onShareTimeline() {
+    return {
+      title: 'TT计算器',
+      query: 'from=timeline',
+      imageUrl: '/static/logo.png'
+    }
   }
 }
 </script>
-
 <style lang="scss">
 .calculator-container {
   position: relative;
